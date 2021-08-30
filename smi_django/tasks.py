@@ -1,16 +1,10 @@
-import logging
-from datetime import timedelta
-import datetime
+from smi_django.celery.celery import app
 
-import requests
-from django.db.models import Q
-
-from core.models import Sources, KeywordSource, Keyword, SourcesItems
-from core.parsing_by_hashtag import parsing_hashtag
-from core.parsing_by_username import parsing_username
-from core.utils.utils import update_time_timezone
-from tiktok.celery.celery import app
-from django.utils import timezone
+from core.sites.utils import get_late_date, update_proxy, stop_proxy, save_articles
+from core.sites.echo import parsing_radio_echo, RADIO_URL as ECHO_RADIO_URL
+from core.sites.radio import parsing_radio, RADIO_URL
+from core.sites.radiozenit import parsing_radio_zenit, RADIO_URL as ZENIT_RADIO_URL
+from core.sites.svoboda import parsing_radiosvoboda, RADIO_URL as SVOBODA_RADIO_URL
 
 
 @app.task
