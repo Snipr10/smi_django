@@ -10,7 +10,7 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup, NavigableString
 
-from core.sites.utils import update_proxy, parse_date
+from core.sites.utils import update_proxy, parse_date, DEFAULTS_TIMEOUT
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
 RADIO_PAGE_URL = "https://www.svoboda.org/news?p=%s"
@@ -24,9 +24,9 @@ def parsing_radio_url(page, limit_date, proxy, body):
         res = requests.get(RADIO_PAGE_URL % page, headers={
             "user-agent": USER_AGENT
         },
-         proxies = proxy.get(list(proxy.keys())[0]),
-                    timeout = DEFAULTS_TIMEOUT
-        )
+                           proxies=proxy.get(list(proxy.keys())[0]),
+                           timeout=DEFAULTS_TIMEOUT
+                           )
 
     except Exception as e:
         print(e)
