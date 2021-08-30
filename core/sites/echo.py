@@ -52,7 +52,7 @@ def parsing_radio_url(page, limit_date, proxy, body):
             else:
                 article_date = parse_date(tabel_datetime, "%d %m %Y, %H:%M")
 
-            if article_date >= limit_date:
+            if article_date.date() >= limit_date.date():
                 try:
                     href = table.find("a", {"class": "view"}).attrs.get("href")
                 except Exception:
