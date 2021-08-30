@@ -147,7 +147,7 @@ def get_proxy():
                 return {used_proxy: proxies}
         return {None: None}
     except Exception as e:
-        logger.error(e)
+        print(e)
         return get_proxy()
 
 
