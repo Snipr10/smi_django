@@ -27,6 +27,8 @@ def parsing_radio_url(page, limit_date, proxy, body):
         )
     except Exception:
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
+    print(res.status_code)
+
     if res.ok:
         new_datas = False
         soup = BeautifulSoup(res.text)
@@ -34,6 +36,7 @@ def parsing_radio_url(page, limit_date, proxy, body):
         if len(tables) == 0:
             return False, body, False, proxy
         for table in tables:
+
             article_date = datetime.strptime(table.find("font", {"size": 1}).text, "%d-%m-%Y")
 
             if article_date >= limit_date:
