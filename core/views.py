@@ -17,6 +17,7 @@ from core.sites.utils import update_proxy, stop_proxy, get_md5_text, get_sphinx_
 @api_view(["GET"])
 @permission_classes((AllowAny,))
 def test_echo(request):
+    print(get_late_date(ECHO_RADIO_URL))
     return Response("Ok")
 
     articles, proxy = parsing_radio_echo(get_late_date(ECHO_RADIO_URL), update_proxy(None))
