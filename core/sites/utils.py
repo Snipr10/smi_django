@@ -125,7 +125,7 @@ def get_proxy():
                                         login__isnull=False).last()
 
         if proxy is not None:
-            new_proxy = Proxy.objects.create(id=proxy.id)
+            new_proxy = models.Proxy.objects.create(id=proxy.id)
             proxies = get_proxies(new_proxy)
             return {used_proxy: proxies}
 
