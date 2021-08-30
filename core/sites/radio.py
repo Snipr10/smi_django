@@ -67,6 +67,7 @@ def get_page(articles, url, limit_date, proxy):
             timeout=DEFAULTS_TIMEOUT
         )
         if res.ok:
+            print("res.status_code" + str(res.status_code))
             soup = BeautifulSoup(res.text)
             for face in soup.find_all("font", {"face": "Arial"}):
                 if len(face.find_all("font", {"size": 1})) > 0:
