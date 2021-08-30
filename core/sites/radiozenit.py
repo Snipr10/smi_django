@@ -10,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup, NavigableString
 from dateutil.parser import parse
 
-from utils import update_proxy, parse_date
+from core.sites.utils import update_proxy, parse_date
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
 RADIO_PAGE_URL = "https://www.radiozenit.ru/news/page/%s"
