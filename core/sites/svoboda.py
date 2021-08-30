@@ -106,6 +106,5 @@ def parsing_radiosvoboda(limit_date, proxy):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_radiosvoboda(datetime.strptime("21/07/2021", "%d/%m/%Y"), update_proxy(None))
-    print(1)
+    articles, proxy = parsing_radiosvoboda(datetime.strptime("01/01/2021", "%d/%m/%Y"), update_proxy(None))
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
