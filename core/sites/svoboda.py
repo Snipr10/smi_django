@@ -20,6 +20,8 @@ RADIO_URL = "https://www.svoboda.org"
 
 def parsing_radio_url(page, limit_date, proxy, body):
     try:
+        print(RADIO_PAGE_URL % page)
+
         print(proxy.get(list(proxy.keys())[0]))
         res = requests.get(RADIO_PAGE_URL % page, headers={
             "user-agent": USER_AGENT
