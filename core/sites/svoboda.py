@@ -28,7 +28,8 @@ def parsing_radio_url(page, limit_date, proxy, body):
                     timeout = DEFAULTS_TIMEOUT
         )
 
-    except Exception:
+    except Exception as e:
+        print(e)
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
     if res.ok:
         soup = BeautifulSoup(res.text)
