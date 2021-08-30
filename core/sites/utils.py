@@ -192,3 +192,7 @@ def add_error(proxy):
     proxy.taken = False
     proxy.last_used = update_time_timezone(timezone.localtime())
     proxy.save()
+
+
+def update_time_timezone(my_time):
+    return my_time + datetime.timedelta(hours=3)
