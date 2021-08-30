@@ -105,6 +105,6 @@ def parsing_radio_zenit(limit_date, proxy):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_radio_zenit(datetime.strptime("21/05/2021", "%d/%m/%Y"), update_proxy(None))
+    articles, proxy = parsing_radio_zenit(datetime.strptime("1/04/2021", "%d/%m/%Y"), update_proxy(None))
     print(1)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

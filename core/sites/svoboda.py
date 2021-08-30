@@ -85,7 +85,7 @@ def get_page(articles, article_body, limit_date, proxy):
 
 def parsing_radiosvoboda(limit_date, proxy):
     is_not_stopped = True
-    page = 0
+    page = 85
     body = []
     last_page = None
     is_time = False
