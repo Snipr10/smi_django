@@ -20,9 +20,6 @@ RADIO_URL = "https://www.svoboda.org"
 
 def parsing_radio_url(page, limit_date, proxy, body):
     try:
-        print(RADIO_PAGE_URL % page)
-
-        print(proxy.get(list(proxy.keys())[0]))
         res = requests.get(RADIO_PAGE_URL % page, headers={
             "user-agent": USER_AGENT
         },
@@ -31,10 +28,7 @@ def parsing_radio_url(page, limit_date, proxy, body):
                            )
 
     except Exception as e:
-        print(e)
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
-    print(RADIO_PAGE_URL % page)
-    print("status" + str(res.status_code))
     if res.ok:
         soup = BeautifulSoup(res.text)
         tables = soup.find_all("div", {"class": "media-block"})
@@ -54,6 +48,8 @@ def parsing_radio_url(page, limit_date, proxy, body):
                 print("parsing_radio_url" + str(e))
                 pass
         return True, body, False, proxy
+    elif res.status_code == 404:
+        return False, body, True, proxy
     else:
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
 
@@ -99,7 +95,7 @@ def get_page(articles, article_body, limit_date, proxy):
 
 def parsing_radiosvoboda(limit_date, proxy):
     is_not_stopped = True
-    page = 102
+    page = 0
     body = []
     last_page = None
     is_time = False
