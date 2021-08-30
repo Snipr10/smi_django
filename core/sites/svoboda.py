@@ -94,9 +94,10 @@ def parsing_radiosvoboda(limit_date, proxy):
     is_time = False
     while is_not_stopped:
         try:
+            print(page)
+
             is_not_stopped, body, is_time, proxy = parsing_radio_url(page, limit_date, proxy, body)
             page += 1
-            print(page)
         except Exception as e:
             print(e)
             is_not_stopped = False
