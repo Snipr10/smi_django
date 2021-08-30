@@ -31,6 +31,7 @@ def parsing_radio_url(page, limit_date, proxy, body):
     except Exception as e:
         print(e)
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
+    print(RADIO_PAGE_URL % page)
     print("status" + str(res.status_code))
     if res.ok:
         soup = BeautifulSoup(res.text)
