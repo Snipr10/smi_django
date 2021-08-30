@@ -24,14 +24,14 @@ app.conf.beat_schedule = {
     #     'schedule': crontab(minute='10, 40')
     #
     # },
-    'start_task_parsing_zenit': {
-        'task': 'smi_django.tasks.start_task_parsing_zenit',
-        #'schedule': crontab(minute='15, 45')
+    # 'start_task_parsing_zenit': {
+    #     'task': 'smi_django.tasks.start_task_parsing_zenit',
+    #     'schedule': crontab(minute='15, 45')
+    # },
+    'start_task_parsing_radiosvodoba': {
+        'task': 'smi_django.tasks.start_task_parsing_radiosvodoba',
+        # 'schedule': crontab(minute='20, 50')
         'schedule': crontab(minute='*/1')
 
     },
-    # 'start_task_parsing_radiosvodoba': {
-    #     'task': 'smi_django.tasks.start_task_parsing_radiosvodoba',
-    #     'schedule': crontab(minute='20, 50')
-    # },
 }
