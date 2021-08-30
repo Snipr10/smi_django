@@ -31,6 +31,7 @@ def parsing_radio_url(page, limit_date, proxy, body):
     except Exception as e:
         print(e)
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
+    print("status" + str(res.status_code))
     if res.ok:
         soup = BeautifulSoup(res.text)
         tables = soup.find_all("div", {"class": "media-block"})
@@ -88,7 +89,8 @@ def get_page(articles, article_body, limit_date, proxy):
                              })
             return False, articles, proxy
         return True, articles, proxy
-    except Exception:
+    except Exception as e:
+        print(e)
         return get_page(articles, article_body, limit_date, update_proxy(proxy))
 
 
