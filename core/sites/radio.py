@@ -100,6 +100,7 @@ def parsing_radio(limit_date, proxy):
     is_time = False
     while is_not_stopped:
         try:
+            print(limit_date)
             is_not_stopped, body, is_time, proxy = parsing_radio_url(page, limit_date, proxy, body)
             page += 1
         except Exception:
