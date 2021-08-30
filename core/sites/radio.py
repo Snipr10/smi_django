@@ -76,7 +76,7 @@ def get_page(articles, url, limit_date, proxy):
             for face in soup.find_all("font", {"face": "Arial"}):
                 if len(face.find_all("font", {"size": 1})) > 0:
                     date = datetime.strptime(face.find_all("font", {"size": 1})[-1].text, "%d-%m-%Y")
-                    if date and date >= limit_date:
+                    if date and date.date() >= limit_date.date():
                         title = face.find_all("font", {"size": 3})[-1].text.encode('ISO-8859-1').decode("windows-1251")
                         text = ''
                         for justify in face.find_all("p", {"align": "justify"}):
