@@ -10,11 +10,11 @@ from core import models
 
 batch_size = 1000
 first_date = "01/05/2021"
-
+DEFAULTS_TIMEOUT = 100
 
 def update_proxy(proxy):
     try:
-        stop_proxy(proxy, error=1)
+        stop_proxy(list(proxy.keys())[0], error=1)
     except Exception:
         pass
     return get_proxy()
