@@ -2,11 +2,12 @@ import time
 import random
 import hashlib
 import django.db
+import datetime
 
 from django.db.models import Q
 from django.utils import timezone
+import datetime
 
-from datetime import datetime
 from core import models
 
 
@@ -46,7 +47,7 @@ def parse_date(s_date, format):
         str_date += " " + d
     str_date = str_date.strip()
 
-    return datetime.strptime(str_date, format)
+    return datetime.datetime.strptime(str_date, format)
 
 
 def month_from_ru_to_eng(month):
@@ -114,7 +115,7 @@ def save_articles(display_link, articles):
 def get_late_date(display_link):
     last_post = models.Post.objects.filter(display_link=display_link).order_by("-created_date").first()
     if last_post is None:
-        min_date = datetime.strptime(first_date, "%d/%m/%Y")
+        min_date = datetime.datetime.strptime(first_date, "%d/%m/%Y")
     else:
         min_date = last_post.created_date
     return min_date
