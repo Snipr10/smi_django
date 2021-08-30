@@ -21,8 +21,8 @@ def parsing_radio_url(page, limit_date, proxy, body):
         res = requests.get(RADIO_PAGE_URL % page, headers={
             "user-agent": USER_AGENT
         }, proxies=proxy.get(list(proxy.keys())[0]),
-                           timeout=DEFAULTS_TIMEOUT
-                           )
+           timeout=DEFAULTS_TIMEOUT
+        )
     except Exception:
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
     if res.ok:
@@ -75,7 +75,10 @@ def get_page(articles, article_body, limit_date, proxy):
     try:
         res = requests.get(RADIO_URL + article_body['href'], headers={
             "user-agent": USER_AGENT
-        })
+        },
+            proxies=proxy.get(list(proxy.keys())[0]),
+            timeout=DEFAULTS_TIMEOUT
+        )
         if res.ok:
             soup = BeautifulSoup(res.text)
             if "/news/" in article_body['href']:

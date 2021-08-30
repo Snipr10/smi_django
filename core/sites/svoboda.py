@@ -62,8 +62,9 @@ def get_page(articles, article_body, limit_date, proxy):
 
     try:
         res = requests.get(RADIO_URL + article_body['href'], headers={
-            "user-agent": USER_AGENT
-        })
+            "user-agent": USER_AGENT,
+        }, proxies=proxy.get(list(proxy.keys())[0]),
+                           timeout=DEFAULTS_TIMEOUT)
         if res.ok:
             soup = BeautifulSoup(res.text)
             title = soup.find("h1", {"class": "title pg-title"}).text.strip()

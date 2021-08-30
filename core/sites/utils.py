@@ -10,7 +10,6 @@ import datetime
 
 from core import models
 
-
 batch_size = 1000
 first_date = "01/05/2021"
 DEFAULTS_TIMEOUT = 100
@@ -18,7 +17,6 @@ DEFAULTS_TIMEOUT = 100
 
 def update_proxy(proxy):
     try:
-        print(list(proxy.keys())[0])
         stop_proxy(list(proxy.keys())[0], error=1)
     except Exception:
         pass
@@ -52,18 +50,30 @@ def parse_date(s_date, format):
 
 def month_from_ru_to_eng(month):
     out = month
-    if 'дек' in month: out = '12'
-    elif 'янв' in month: out = '1'
-    elif 'фев' in month: out = '2'
-    elif 'мар' in month: out = '3'
-    elif 'апр' in month: out = '4'
-    elif 'ма' in month: out = '5'
-    elif 'июн' in month: out = '6'
-    elif 'июл' in month: out = '7'
-    elif 'авг' in month: out = '8'
-    elif 'сент' in month: out = '9'
-    elif 'окт' in month: out = '10'
-    elif 'ноя' in month: out = '11'
+    if 'дек' in month:
+        out = '12'
+    elif 'янв' in month:
+        out = '1'
+    elif 'фев' in month:
+        out = '2'
+    elif 'мар' in month:
+        out = '3'
+    elif 'апр' in month:
+        out = '4'
+    elif 'ма' in month:
+        out = '5'
+    elif 'июн' in month:
+        out = '6'
+    elif 'июл' in month:
+        out = '7'
+    elif 'авг' in month:
+        out = '8'
+    elif 'сент' in month:
+        out = '9'
+    elif 'окт' in month:
+        out = '10'
+    elif 'ноя' in month:
+        out = '11'
     return out
 
 
@@ -127,7 +137,7 @@ def get_proxy():
         added_proxy_list = list(models.Proxy.objects.all().values_list('id', flat=True))
 
         proxy = models.AllProxy.objects.filter(~Q(id__in=added_proxy_list), ~Q(port=0), ip__isnull=False,
-                                        login__isnull=False).last()
+                                               login__isnull=False).last()
 
         if proxy is not None:
             new_proxy = models.Proxy.objects.create(id=proxy.id)
@@ -141,9 +151,9 @@ def get_proxy():
 
         if used_proxy is None:
             used_proxy = Proxy.objects.filter(
-                                              last_used__lte=update_time_timezone(
-                                                  timezone.localtime()
-                                              ) - datetime.timedelta(minutes=5)).order_by('taken', 'last_used').first()
+                last_used__lte=update_time_timezone(
+                    timezone.localtime()
+                ) - datetime.timedelta(minutes=5)).order_by('taken', 'last_used').first()
         if used_proxy is not None:
             used_proxy.taken = True
             used_proxy.save(update_fields=['taken'])
@@ -161,6 +171,7 @@ def get_proxy():
 
 
 def stop_proxy(proxy, error=0, banned=0):
+    proxy = list(proxy.keys())[0]
     try:
         if error:
             proxy.errors = proxy.errors + 1
@@ -172,19 +183,18 @@ def stop_proxy(proxy, error=0, banned=0):
     except Exception as e:
         print("stop_proxy" + str(e))
 
+
 def get_proxies(proxy):
     proxy_info = models.AllProxy.objects.filter(id=proxy.id).first()
     if proxy_info is not None:
-        # return format_proxies(proxy_info)
         return format_proxies(proxy_info)
     return None
 
 
 def format_proxies(proxy_info):
-
-    return {'http': 'http://{}:{}@{}:{}'.format(proxy_info.login, proxy_info.proxy_password,proxy_info.ip,
+    return {'http': 'http://{}:{}@{}:{}'.format(proxy_info.login, proxy_info.proxy_password, proxy_info.ip,
                                                 str(proxy_info.port)),
-            'https': 'http://{}:{}@{}:{}'.format(proxy_info.login, proxy_info.proxy_password,proxy_info.ip,
+            'https': 'http://{}:{}@{}:{}'.format(proxy_info.login, proxy_info.proxy_password, proxy_info.ip,
                                                  str(proxy_info.port))
             }
 
