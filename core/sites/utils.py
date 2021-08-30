@@ -120,7 +120,7 @@ def get_proxy():
         time.sleep(random.randint(0, 10) / 10)
         added_proxy_list = list(models.Proxy.objects.all().values_list('id', flat=True))
 
-        proxy = AllProxy.objects.filter(~Q(id__in=added_proxy_list), ~Q(port=0), ip__isnull=False,
+        proxy = models.AllProxy.objects.filter(~Q(id__in=added_proxy_list), ~Q(port=0), ip__isnull=False,
                                         login__isnull=False).last()
 
         if proxy is not None:
@@ -165,7 +165,7 @@ def stop_proxy(proxy, error=0, banned=0):
 
 
 def get_proxies(proxy):
-    proxy_info = AllProxy.objects.filter(id=proxy.id).first()
+    proxy_info = models.AllProxy.objects.filter(id=proxy.id).first()
     if proxy_info is not None:
         # return format_proxies(proxy_info)
         return proxy_info
