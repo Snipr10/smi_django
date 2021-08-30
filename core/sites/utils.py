@@ -9,11 +9,11 @@ first_date = "01/05/2021"
 
 
 def update_proxy(proxy):
-    return proxy
-
-
-def stop_proxy(proxy):
-    return proxy
+    try:
+        stop_proxy(proxy, error=1)
+    except Exception:
+        pass
+    return get_proxy()
 
 
 def get_md5_text(text):
@@ -110,3 +110,78 @@ def get_late_date(display_link):
     else:
         min_date = last_post.created_date
     return min_date
+
+
+def get_proxy():
+    try:
+        time.sleep(random.randint(0, 10) / 10)
+        added_proxy_list = list(Proxy.objects.all().values_list('id', flat=True))
+
+        proxy = AllProxy.objects.filter(~Q(id__in=added_proxy_list), ~Q(port=0), ip__isnull=False,
+                                        login__isnull=False).last()
+
+        if proxy is not None:
+            new_proxy = Proxy.objects.create(id=proxy.id)
+            proxies = get_proxies(new_proxy)
+            return {used_proxy: proxies}
+
+        used_proxy = Proxy.objects.filter(banned=False,
+                                          last_used__lte=update_time_timezone(
+                                              timezone.localtime()
+                                          ) - datetime.timedelta(minutes=5)).order_by('taken', 'last_used').first()
+
+        if used_proxy is None:
+            used_proxy = Proxy.objects.filter(
+                                              last_used__lte=update_time_timezone(
+                                                  timezone.localtime()
+                                              ) - datetime.timedelta(minutes=5)).order_by('taken', 'last_used').first()
+        if used_proxy is not None:
+            used_proxy.taken = True
+            used_proxy.save(update_fields=['taken'])
+            proxies = get_proxies(used_proxy)
+            if proxies is None:
+                used_proxy.banned = True
+                used_proxy.save(update_fields=['banned'])
+                return get_proxy()
+            else:
+                return {used_proxy: proxies}
+        return {None: None}
+    except Exception as e:
+        logger.error(e)
+        return get_proxy()
+
+
+def stop_proxy(proxy, error=0, banned=0):
+    if error:
+        proxy.errors = proxy.errors + 1
+
+    proxy.taken = 0
+    proxy.banned = banned
+    proxy.last_used = update_time_timezone(timezone.localtime())
+    proxy.save()
+
+
+def get_proxies(proxy):
+    proxy_info = AllProxy.objects.filter(id=proxy.id).first()
+    if proxy_info is not None:
+        # return format_proxies(proxy_info)
+        return proxy_info
+    return None
+
+
+def format_proxies(proxy_info):
+
+    return {'http': 'http://{}:{}@{}:{}'.format(proxy_info.login, proxy_info.proxy_password,proxy_info.ip,
+                                                str(proxy_info.port)),
+            'https': 'http://{}:{}@{}:{}'.format(proxy_info.login, proxy_info.proxy_password,proxy_info.ip,
+                                                 str(proxy_info.port))
+            }
+
+
+def add_error(proxy):
+    proxy.errors = proxy.errors + 1
+    if proxy.errors > 10:
+        proxy.banned = True
+    proxy.taken = False
+    proxy.last_used = update_time_timezone(timezone.localtime())
+    proxy.save()
