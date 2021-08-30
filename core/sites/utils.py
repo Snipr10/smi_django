@@ -3,6 +3,7 @@ import random
 import hashlib
 import django.db
 
+from django.db.models import Q
 from datetime import datetime
 from core import models
 
