@@ -34,6 +34,8 @@ def parsing_radio_url(page, limit_date, proxy, body):
             try:
                 article_date = parse_date(table.find("span", {"class": re.compile("^date date")}).text, "%d %m %Y")
                 if article_date >= limit_date:
+                    print(article_date)
+                    print(limit_date)
                     href = table.find("a", {"href": re.compile("^/a/")}).attrs["href"]
                     body.append({"date": article_date, "href": href})
                 else:
