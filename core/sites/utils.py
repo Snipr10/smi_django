@@ -1,8 +1,11 @@
+import time
+import random
 import hashlib
 import django.db
 
 from datetime import datetime
 from core import models
+
 
 batch_size = 1000
 first_date = "01/05/2021"
