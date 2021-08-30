@@ -28,6 +28,7 @@ def parsing_radio_url(page, limit_date, proxy, body):
     except Exception:
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
     if res.ok:
+        new_datas = False
         soup = BeautifulSoup(res.text)
         tables = soup.find("p", {"align": "center"}).find_all("table", {"id": "AutoNumber5"})
         if len(tables) == 0:
@@ -39,7 +40,10 @@ def parsing_radio_url(page, limit_date, proxy, body):
                 href = table.find("a", {"class": "base"}).attrs.get("href")
                 body.append({"date": article_date, "href": href})
             else:
-                return False, body, True, proxy
+                new_datas = True
+        if new_datas:
+            return False, body, False, proxy
+
         return True, body, False, proxy
     else:
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
