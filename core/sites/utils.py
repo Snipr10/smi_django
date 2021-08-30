@@ -4,6 +4,8 @@ import hashlib
 import django.db
 
 from django.db.models import Q
+from django.utils import timezone
+
 from datetime import datetime
 from core import models
 
@@ -11,6 +13,7 @@ from core import models
 batch_size = 1000
 first_date = "01/05/2021"
 DEFAULTS_TIMEOUT = 100
+
 
 def update_proxy(proxy):
     try:
