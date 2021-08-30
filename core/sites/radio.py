@@ -114,6 +114,7 @@ def parsing_radio(limit_date, proxy):
         except Exception:
             is_not_stopped = False
     articles = []
+    print("articles" + str(len(body)))
     for article in body:
         try:
             is_time, articles, proxy = get_page(articles, article['href'], limit_date, proxy)
