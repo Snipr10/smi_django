@@ -127,7 +127,7 @@ def get_proxy():
         if proxy is not None:
             new_proxy = models.Proxy.objects.create(id=proxy.id)
             proxies = get_proxies(new_proxy)
-            return {used_proxy: proxies}
+            return {new_proxy: proxies}
 
         used_proxy = Proxy.objects.filter(banned=False,
                                           last_used__lte=update_time_timezone(
