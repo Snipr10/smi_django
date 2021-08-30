@@ -33,6 +33,7 @@ def parsing_radio_url(page, limit_date, proxy, body):
         new_datas = False
         soup = BeautifulSoup(res.text)
         tables = soup.find("p", {"align": "center"}).find_all("table", {"id": "AutoNumber5"})
+        print("tables" + str(len(tables)))
         if len(tables) == 0:
             return False, body, False, proxy
         for table in tables:
