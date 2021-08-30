@@ -157,14 +157,16 @@ def get_proxy():
 
 
 def stop_proxy(proxy, error=0, banned=0):
-    if error:
-        proxy.errors = proxy.errors + 1
+    try:
+        if error:
+            proxy.errors = proxy.errors + 1
 
-    proxy.taken = 0
-    proxy.banned = banned
-    proxy.last_used = update_time_timezone(timezone.localtime())
-    proxy.save()
-
+        proxy.taken = 0
+        proxy.banned = banned
+        proxy.last_used = update_time_timezone(timezone.localtime())
+        proxy.save()
+    except Exception as e:
+        print("stop_proxy" + str(e))
 
 def get_proxies(proxy):
     proxy_info = models.AllProxy.objects.filter(id=proxy.id).first()
