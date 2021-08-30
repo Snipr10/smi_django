@@ -100,7 +100,8 @@ def get_page(articles, url, limit_date, proxy):
             # res.text
             return False, articles, proxy
         return True, articles, proxy
-    except Exception:
+    except Exception as e:
+        print(e)
         return get_page(articles, url, limit_date, update_proxy(proxy))
 
 
