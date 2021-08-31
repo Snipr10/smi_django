@@ -134,7 +134,7 @@ def save_articles(display_link, articles):
             owner_sphinx_id=author.profile_id,
             created=article.get('date'),
             display_link=display_link,
-            owner=article.username,
+            owner=author.username,
             title=article.get('title'),
             link=article.get('href'),
             image=image,
