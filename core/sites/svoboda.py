@@ -8,7 +8,7 @@ import re
 from datetime import datetime
 
 import requests
-from bs4 import BeautifulSoup, NavigableString
+from bs4 import BeautifulSoup
 
 from core.sites.utils import update_proxy, parse_date, DEFAULTS_TIMEOUT
 

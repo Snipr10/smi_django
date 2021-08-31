@@ -41,47 +41,86 @@ class Proxy(models.Model):
         db_table = 'prsr_parser_proxy_smi'
 
 
-class Post(models.Model):
-    cache_id = models.IntegerField(primary_key=True)
-    created_date = models.DateTimeField(null=True, blank=True)
-    found_date = models.DateField(auto_now_add=True)
-    last_modified = models.DateTimeField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC), null=True, blank=True)
-    content_hash = models.CharField(max_length=255, null=True, blank=True)
+class PostAuthor(models.Model):
+    profile_id = models.IntegerField(primary_key=True)
+    username = models.CharField(max_length=255, null=True, blank=True)
+    image = models.CharField(max_length=255, null=True, blank=True)
     url = models.CharField(max_length=255, null=True, blank=True)
-    display_link = models.CharField(max_length=255, null=True, blank=True)
-    title = models.CharField(max_length=255, null=True, blank=True)
+    federal = models.IntegerField()
+    followers = models.IntegerField()
 
     class Meta:
-        db_table = 'prsr_parser_smi_posts'
+        db_table = 'prsr_parser_global_authors'
+
+
+class Post(models.Model):
+    cache_id = models.IntegerField(primary_key=True)
+    owner_sphinx_id = models.IntegerField()
+    created_date = models.DateTimeField(null=True, blank=True)
+    display_link = models.CharField(max_length=255, null=True, blank=True)
+    owner = models.CharField(max_length=255, null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
+    link = models.CharField(max_length=255, null=True, blank=True)
+    image = models.CharField(max_length=255, null=True, blank=True)
+    keyword_id = models.IntegerField(default=0)
+    trust = models.IntegerField(default=0)
+    update = models.DateTimeField(auto_now_add=True)
+    found_date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'prsr_parser_global_posts'
 
 
 class PostContent(models.Model):
     cache_id = models.IntegerField(primary_key=True)
     content = models.CharField(max_length=4096, null=True, blank=True)
+    keyword_id = models.IntegerField(default=0)
 
     class Meta:
-        db_table = 'prsr_parser_smi_content'
+        db_table = 'prsr_parser_global_post_kw_content'
 
 
-class PostPhoto(models.Model):
-    cache_id = models.IntegerField(primary_key=True)
-    photo_url = models.CharField(max_length=255, null=True, blank=True)
-
-    class Meta:
-        db_table = 'prsr_parser_smi_photo'
-
-
-class PostVideo(models.Model):
-    cache_id = models.IntegerField(primary_key=True)
-    video_url = models.CharField(max_length=255, null=True, blank=True)
-
-    class Meta:
-        db_table = 'prsr_parser_smi_video'
-
-
-class PostSound(models.Model):
-    cache_id = models.IntegerField(primary_key=True)
-    sound_url = models.CharField(max_length=255, null=True, blank=True)
-
-    class Meta:
-        db_table = 'prsr_parser_smi_sound'
+# class Post(models.Model):
+#     cache_id = models.IntegerField(primary_key=True)
+#     created_date = models.DateTimeField(null=True, blank=True)
+#     found_date = models.DateField(auto_now_add=True)
+#     last_modified = models.DateTimeField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC), null=True, blank=True)
+#     content_hash = models.CharField(max_length=255, null=True, blank=True)
+#     url = models.CharField(max_length=255, null=True, blank=True)
+#     display_link = models.CharField(max_length=255, null=True, blank=True)
+#     title = models.CharField(max_length=255, null=True, blank=True)
+#
+#     class Meta:
+#         db_table = 'prsr_parser_smi_posts'
+#
+#
+# class PostContent(models.Model):
+#     cache_id = models.IntegerField(primary_key=True)
+#     content = models.CharField(max_length=4096, null=True, blank=True)
+#
+#     class Meta:
+#         db_table = 'prsr_parser_smi_content'
+#
+#
+# class PostPhoto(models.Model):
+#     cache_id = models.IntegerField(primary_key=True)
+#     photo_url = models.CharField(max_length=255, null=True, blank=True)
+#
+#     class Meta:
+#         db_table = 'prsr_parser_smi_photo'
+#
+#
+# class PostVideo(models.Model):
+#     cache_id = models.IntegerField(primary_key=True)
+#     video_url = models.CharField(max_length=255, null=True, blank=True)
+#
+#     class Meta:
+#         db_table = 'prsr_parser_smi_video'
+#
+#
+# class PostSound(models.Model):
+#     cache_id = models.IntegerField(primary_key=True)
+#     sound_url = models.CharField(max_length=255, null=True, blank=True)
+#
+#     class Meta:
+#         db_table = 'prsr_parser_smi_sound'
