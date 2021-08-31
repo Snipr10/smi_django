@@ -52,6 +52,7 @@ def test_radiosvodoba(request):
     save_articles(SVOBODA_RADIO_URL, articles)
     return Response("Ok")
 
+
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes((AllowAny,))
