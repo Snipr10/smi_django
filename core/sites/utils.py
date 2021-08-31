@@ -118,7 +118,7 @@ def save_articles(display_link, articles):
         print(article.get('href'))
         author = get_or_create_author(display_link)
         text = article.get('text')
-        image = None
+        image = ""
         for photo in article['photos']:
             image = photo
             text += "\n" + photo
