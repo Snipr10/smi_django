@@ -56,7 +56,7 @@ class PostAuthor(models.Model):
 class Post(models.Model):
     cache_id = models.IntegerField(primary_key=True)
     owner_sphinx_id = models.IntegerField()
-    created_date = models.DateTimeField(null=True, blank=True)
+    created = models.DateTimeField(null=True, blank=True)
     display_link = models.CharField(max_length=255, null=True, blank=True)
     owner = models.CharField(max_length=255, null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)
