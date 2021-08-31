@@ -129,7 +129,6 @@ def save_articles(display_link, articles):
         cache_id = get_sphinx_id(article.get('href'))
 
         posts.append(models.Post(
-            content_hash=get_md5_text(text),
             cache_id=cache_id,
             owner_sphinx_id=author.profile_id,
             created=article.get('date'),
