@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from core.views import test_echo, test_radio, test_radiozenit, test_radiosvodoba
+from core.views import test_echo, test_radio, test_radiozenit, test_radiosvodoba,\
+    test_echo_full, test_radio_full, test_radiozenit_full, test_radiosvodoba_full
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +25,8 @@ urlpatterns = [
     path('test_radio', test_radio),
     path('test_radiozenit', test_radiozenit),
     path('test_radiosvodoba', test_radiosvodoba),
-
+    path('test_echo_full', test_echo_full),
+    path('test_radio_full', test_radio_full),
+    path('test_radiozenit_full', test_radiozenit_full),
+    path('test_radiosvodoba_full', test_radiosvodoba_full),
 ]
