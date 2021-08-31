@@ -127,24 +127,43 @@ def save_articles(display_link, articles):
         for sound in article['sounds']:
             text += "\n" + sound
         cache_id = get_sphinx_id(article.get('href'))
+        models.Post.objects.create(
+                cache_id=cache_id,
+                owner_sphinx_id=author.profile_id,
+                created=article.get('date'),
+                display_link=display_link,
+                owner=author.username,
+                title=article.get('title'),
+                link=article.get('href'),
+                image=image,
+                keyword_id=0,
+                trust=0
+            )
+        models.PostContent.objects.create(
+                content=text,
+                cache_id=cache_id,
+                keyword_id=0,
 
-        posts.append(models.Post(
-            cache_id=cache_id,
-            owner_sphinx_id=author.profile_id,
-            created=article.get('date'),
-            display_link=display_link,
-            owner=author.username,
-            title=article.get('title'),
-            link=article.get('href'),
-            image=image,
-            keyword_id=0,
-            trust=None
-        ))
+        )
+        # posts.append(models.Post(
+        #     cache_id=cache_id,
+        #     owner_sphinx_id=author.profile_id,
+        #     created=article.get('date'),
+        #     display_link=display_link,
+        #     owner=author.username,
+        #     title=article.get('title'),
+        #     link=article.get('href'),
+        #     image=image,
+        #     keyword_id=0,
+        #     trust=0
+        # ))
+        #
+        # posts_content.append(models.PostContent(
+        #     content=text,
+        #     cache_id=cache_id,
+        # keyword_id = 0,
 
-        posts_content.append(models.PostContent(
-            content=text,
-            cache_id=cache_id
-        ))
+        # ))
 
     models.Post.objects.bulk_create(posts, batch_size=batch_size, ignore_conflicts=True)
     models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size, ignore_conflicts=True)
