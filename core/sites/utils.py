@@ -131,7 +131,7 @@ def save_articles(display_link, articles):
             content_hash=get_md5_text(text),
             cache_id=cache_id,
             owner_sphinx_id=author.id,
-            created_date=article.get('date'),
+            created=article.get('date'),
             display_link=display_link,
             owner=article.username,
             title=article.get('title'),
@@ -151,11 +151,11 @@ def save_articles(display_link, articles):
 
 
 def get_late_date(display_link):
-    last_post = models.Post.objects.filter(display_link=display_link).order_by("-created_date").first()
+    last_post = models.Post.objects.filter(display_link=display_link).order_by("-created").first()
     if last_post is None:
         min_date = datetime.datetime.strptime(first_date, "%d/%m/%Y")
     else:
-        min_date = last_post.created_date
+        min_date = last_post.created
     return min_date
 
 
