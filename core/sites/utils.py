@@ -115,6 +115,7 @@ def save_articles(display_link, articles):
     django.db.close_old_connections()
 
     for article in articles:
+        print(article.get('href'))
         author = get_or_create_author(display_link)
         text = article.get('text')
         image = None
@@ -130,7 +131,7 @@ def save_articles(display_link, articles):
         posts.append(models.Post(
             content_hash=get_md5_text(text),
             cache_id=cache_id,
-            owner_sphinx_id=author.id,
+            owner_sphinx_id=author.profile_id,
             created=article.get('date'),
             display_link=display_link,
             owner=article.username,
@@ -146,8 +147,8 @@ def save_articles(display_link, articles):
             cache_id=cache_id
         ))
 
-    models.Post.objects.bulk_create(posts, batch_size=batch_size, ignore_conflicts=True)
-    models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size, ignore_conflicts=True)
+    # models.Post.objects.bulk_create(posts, batch_size=batch_size, ignore_conflicts=True)
+    # models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size, ignore_conflicts=True)
 
 
 def get_late_date(display_link):
