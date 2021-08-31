@@ -52,3 +52,41 @@ def test_radiosvodoba(request):
     save_articles(SVOBODA_RADIO_URL, articles)
     return Response("Ok")
 
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((AllowAny,))
+def test_echo_full(request):
+    articles, proxy = parsing_radio_echo(get_late_date(None), update_proxy(None))
+    stop_proxy(proxy)
+    save_articles(ECHO_RADIO_URL, articles)
+    return Response("Ok")
+
+
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((AllowAny,))
+def test_radio_full(request):
+    articles, proxy = parsing_radio(get_late_date(RADIO_URL), update_proxy(None))
+    stop_proxy(proxy)
+    save_articles(RADIO_URL, articles)
+    return Response("Ok")
+
+
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((AllowAny,))
+def test_radiozenit_full(request):
+    articles, proxy = parsing_radio_zenit(get_late_date(ZENIT_RADIO_URL), update_proxy(None))
+    stop_proxy(proxy)
+    save_articles(ZENIT_RADIO_URL, articles)
+    return Response("Ok")
+
+
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((AllowAny,))
+def test_radiosvodoba_full(request):
+    articles, proxy = parsing_radiosvoboda(get_late_date(SVOBODA_RADIO_URL), update_proxy(None))
+    stop_proxy(proxy)
+    save_articles(SVOBODA_RADIO_URL, articles)
+    return Response("Ok")
