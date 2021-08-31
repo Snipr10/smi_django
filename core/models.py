@@ -64,7 +64,7 @@ class Post(models.Model):
     image = models.CharField(max_length=255, null=True, blank=True)
     keyword_id = models.IntegerField(default=0)
     trust = models.IntegerField(default=0)
-    update = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
     found_date = models.DateField(auto_now_add=True)
 
     class Meta:
