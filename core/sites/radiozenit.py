@@ -1,14 +1,7 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-# radio
 from datetime import datetime
 
 import requests
-from bs4 import BeautifulSoup, NavigableString
-from dateutil.parser import parse
+from bs4 import BeautifulSoup
 
 from core.sites.utils import update_proxy, parse_date, DEFAULTS_TIMEOUT
 
@@ -45,7 +38,6 @@ def parsing_radio_url(page, limit_date, proxy, body):
 
 
 def get_page(articles, article_body, proxy):
-    title = ""
     text = ""
     photos = []
     sounds = []
