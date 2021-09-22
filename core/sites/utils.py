@@ -144,7 +144,7 @@ def save_articles(display_link, articles):
         posts_content.append(models.PostContent(
             content=text,
             cache_id=cache_id,
-            keyword_id=0,
+            keyword_id=10000002,
 
         ))
 
