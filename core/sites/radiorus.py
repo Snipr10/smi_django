@@ -88,17 +88,18 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
             return True, body, False, proxy
         for article in res.json().get("data", []):
             article_date = datetime.strptime(article.get("date"), "%d-%m-%Y %H:%M:%S")
-            if article_date.date() < limit_date.date():
+            # if article_date.date() < limit_date.date():
+            #     return True, body, True, proxy
+            if page < 100:
                 return True, body, True, proxy
-
-            body.append(
-                {
-                    "href": f"brand/{article.get('brands')[0].get('id')}/episode/{article.get('id')}",
-                    "date": article_date,
-                    "title": article.get("title")
-                }
-            )
-
+            if article_date.date() >= limit_date.date():
+                body.append(
+                    {
+                        "href": f"brand/{article.get('brands')[0].get('id')}/episode/{article.get('id')}",
+                        "date": article_date,
+                        "title": article.get("title")
+                    }
+                )
         return get_urls(keyword, limit_date, update_proxy(proxy), body, page + 1, attempts)
     elif res.status_code == 404:
         return False, body, False, proxy
