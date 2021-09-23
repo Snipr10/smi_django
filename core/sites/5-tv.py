@@ -97,7 +97,10 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
         return False, body, False, proxy
     if res.ok:
         soup = BeautifulSoup(res.text)
-        article_col3 = _get_class_container(soup).find_all("div", {"class": "col3"})
+        try:
+            article_col3 = _get_class_container(soup).find_all("div", {"class": "col3"})
+        except Exception:
+            article_col3 = []
         if len(article_col3) == 0:
             return True, body, False, proxy
         for article in article_col3:
