@@ -1,31 +1,54 @@
 from datetime import datetime
 
+import dateparser
 import requests
 from bs4 import BeautifulSoup
 
 from core.sites.utils import update_proxy, parse_date, DEFAULTS_TIMEOUT
+
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
 RADIO_PAGE_URL = "https://www.radiozenit.ru/news/page/%s"
 RADIO_URL = "https://www.radiozenit.ru/"
 
 
-def parsing_radio_url(page, limit_date, proxy, body):
+def parsing_radio_zenit(limit_date, proxy, body):
+    is_not_stopped = True
+    page = 1
+    body = []
+    while is_not_stopped:
+        try:
+            is_not_stopped, body, is_time, proxy = get_urls(page, limit_date, proxy, body)
+            page += 1
+        except Exception:
+            is_not_stopped = False
+    articles = []
+    for article in body:
+        try:
+            is_time, articles, proxy = get_page(articles, article, proxy)
+        except Exception:
+            pass
+
+    return articles, proxy
+
+
+def get_urls(page, limit_date, proxy, body):
     try:
         res = requests.get(RADIO_PAGE_URL % page, headers={
             "user-agent": USER_AGENT
-        }, proxies=proxy.get(list(proxy.keys())[0]),
+        },
+            proxies=proxy.get(list(proxy.keys())[0]),
             timeout=DEFAULTS_TIMEOUT
         )
     except Exception:
-        return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
+        return get_urls(page, limit_date, update_proxy(proxy), body)
     if res.ok:
         soup = BeautifulSoup(res.text)
         tables = soup.find_all("div", {"class": "news-preview labelable"})
         if len(tables) == 0:
             return False, body, False, proxy
         for table in tables:
-            article_date = parse_date(table.find("p", {"class": "news-preview__publish-time"}).text, "%d %m %Y %H:%M")
+            article_date = dateparser.parse(table.find("p", {"class": "news-preview__publish-time"}).text)
             if article_date.date() >= limit_date.date():
 
                 href = table.find("a", {"class": "news-preview__link"}).attrs.get("href")
@@ -34,7 +57,7 @@ def parsing_radio_url(page, limit_date, proxy, body):
                 return False, body, True, proxy
         return True, body, False, proxy
     else:
-        return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
+        return get_urls(page, limit_date, update_proxy(proxy), body)
 
 
 def get_page(articles, article_body, proxy, attempt=0):
@@ -83,28 +106,8 @@ def get_page(articles, article_body, proxy, attempt=0):
         return get_page(articles, article_body, update_proxy(proxy), attempt+1)
 
 
-def parsing_radio_zenit(limit_date, proxy):
-    is_not_stopped = True
-    page = 1
-    body = []
-    while is_not_stopped:
-        try:
-            is_not_stopped, body, is_time, proxy = parsing_radio_url(page, limit_date, proxy, body)
-            page += 1
-        except Exception:
-            is_not_stopped = False
-    articles = []
-    for article in body:
-        try:
-            is_time, articles, proxy = get_page(articles, article, proxy)
-        except Exception:
-            pass
-
-    return articles, proxy
-
-
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_radio_zenit(datetime.strptime("1/04/2021", "%d/%m/%Y"), update_proxy(None))
+    articles, proxy = parsing_radio_zenit(datetime.strptime("1/04/2021", "%d/%m/%Y"), update_proxy(None), [])
     print(1)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
