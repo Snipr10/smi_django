@@ -56,7 +56,7 @@ def parsing_radio_url(page, limit_date, proxy, body):
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
 
 
-def get_page(articles, url, limit_date, proxy):
+def get_page(articles, url, limit_date, proxy, attempt=0):
     title = ""
     text = ""
     date = None
@@ -101,8 +101,10 @@ def get_page(articles, url, limit_date, proxy):
             return False, articles, proxy
         return True, articles, proxy
     except Exception as e:
+        if attempt > 2:
+            return False, articles, proxy
         print(e)
-        return get_page(articles, url, limit_date, update_proxy(proxy))
+        return get_page(articles, url, limit_date, update_proxy(proxy), attempt+1)
 
 
 def parsing_radio(limit_date, proxy):

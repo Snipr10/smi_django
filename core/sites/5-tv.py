@@ -28,7 +28,7 @@ def parsing_5_tv(keyword, limit_date, proxy, body):
     return articles, proxy
 
 
-def get_page(articles, article_body, proxy):
+def get_page(articles, article_body, proxy, attempt=0):
     photos = []
     sounds = []
     videos = []
@@ -76,7 +76,9 @@ def get_page(articles, article_body, proxy):
             return False, articles, proxy
         return False, articles, proxy
     except Exception:
-        return get_page(articles, article_body, update_proxy(proxy))
+        if attempt > 2:
+            return False, articles, proxy
+        return get_page(articles, article_body, update_proxy(proxy), attempt+1)
 
 
 def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
