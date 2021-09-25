@@ -142,8 +142,9 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
         return False, body, False, proxy
     return False, body, False, proxy
 
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_echo_msk(datetime.strptime("21/07/2021", "%d/%m/%Y"), update_proxy(None))
+    articles, proxy = parsing_echo_msk("msk", datetime.strptime("21/07/2021", "%d/%m/%Y"), update_proxy(None), [])
     print(1)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

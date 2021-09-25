@@ -1,18 +1,19 @@
-from datetime import datetime, date
+import re
+from datetime import datetime
 
 import dateparser
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from core.sites.utils import update_proxy, DEFAULTS_TIMEOUT
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
-SEARCH_PAGE_URL = "https://www.interfax.ru/search/news/?sw="
+SEARCH_PAGE_URL = "https://moika78.ru/page/%s/"
 PAGE_URL = "https://www.interfax.ru"
 
 
-def parsing_interfax(keyword, limit_date, proxy, body):
-    is_not_stopped, body, is_time, proxy = get_urls(keyword, limit_date, proxy, [], body, 1)
+def parsing_moika78(keyword, limit_date, proxy, body):
+    is_not_stopped, body, is_time, proxy = get_urls(keyword, limit_date, proxy, body, 1)
     articles = []
     for article in body:
         try:
@@ -23,18 +24,15 @@ def parsing_interfax(keyword, limit_date, proxy, body):
     return articles, proxy
 
 
-def get_urls(keyword, limit_date, proxy, body, urls, page, attempts=0):
+def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
     try:
 
-        res = requests.get(SEARCH_PAGE_URL + requests.utils.quote(keyword.encode('windows-1251')),
+        res = requests.get(SEARCH_PAGE_URL % page,
                            headers={
                                "user-agent": USER_AGENT
                            },
-                           params={"sec": 0,
-                                   "df": limit_date.date().strftime("%d.%m.%Y"),
-                                   "dt": date.today().strftime("%d.%m.%Y"),
-                                   "sort": "date",
-                                   "p": "page_" + str(page)
+                           params={
+                               "s": keyword,
                                    },
                            proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
@@ -43,47 +41,42 @@ def get_urls(keyword, limit_date, proxy, body, urls, page, attempts=0):
     except Exception as e:
         # logger.info(str(e))
         if attempts < 10:
-            return get_urls(keyword, limit_date, update_proxy(proxy), body, urls, page, attempts + 1)
+            return get_urls(keyword, limit_date, update_proxy(proxy), body, page, attempts + 1)
         return False, body, False, proxy
     if res.ok:
-        soup = BeautifulSoup(res.content.decode("windows-1251"))
+        soup = BeautifulSoup(res.text)
         articles = []
         try:
-            divs = soup.find("div", {"class": "sPageResult"}).find_all("div")
-            for div in divs:
-                for d in div.find_all("div"):
-                    if len(d.find_all("a")) > 1:
-                        articles.append(d)
+            sections = soup.find_all("section")
+            for section in sections:
+                try:
+                    for section_div in section.find_all("div", {"class": "container"}):
+                        for div_row in section_div.find_all("div", {"class": "row"}):
+                            for row in div_row.find_all("div", {"class": "row"}):
+                                articles = row.find_all("div", class_=re.compile("sol-xs-"))
+                except Exception:
+                    pass
         except Exception:
             pass
         if len(articles) == 0:
             return True, body, False, proxy
-        repeat = 0
         for article in articles:
+            if not isinstance(article, Tag):
+                continue
             article_date = dateparser.parse(article.find("time").attrs.get("datetime"))
-            if article_date.date() < limit_date.date():
-                return True, body, True, proxy
+            if page > 2:
+                if article_date.date() < limit_date.date():
+                    return True, body, True, proxy
             if page > 100:
                 return True, body, True, proxy
-
-            href_data = article.find_all("a")[-1]
-            href = href_data.attrs.get("href")
-            if href in urls:
-                repeat += 1
-                if repeat == len(articles):
-                    return True, body, False, proxy
-            else:
-                if article_date.date() >= limit_date.date():
-
-                    body.append(
+            body.append(
                         {
-                            "href": href,
+                            "href": article.find("a", class_="thumbnail_narrow").attrs.get("href"),
                             "date": article_date,
-                            "title": href_data.text
+                            "title": article.find("span", itemprop="headline").text
                         }
                     )
-                urls.append(href)
-        return get_urls(keyword, limit_date, update_proxy(proxy), body, urls, page + 1, attempts)
+        return get_urls(keyword, limit_date, update_proxy(proxy), body, page + 1, attempts)
     elif res.status_code == 404:
         return False, body, False, proxy
     return False, body, False, proxy
@@ -95,23 +88,32 @@ def get_page(articles, article_body, proxy, attempt=0):
     sounds = []
     videos = []
     try:
-        url = PAGE_URL + article_body['href']
+        url = article_body['href']
         res = requests.get(url, headers={
             "user-agent": USER_AGENT
         },
-                           # proxies=proxy.get(list(proxy.keys())[0]),
+                           proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
         if res.ok:
-            soup = BeautifulSoup(res.content.decode("windows-1251"))
-            article = soup.find("article", {"itemprop": "articleBody"})
-            for p in article.find_all("p"):
+            soup = BeautifulSoup(res.text)
+            article = soup.find("section", {"class": "single-body"})
+            main_article = article.find("div", {"class": "post-content article"})
+            for p in main_article.find_all("p"):
                 text += p.text
                 text += "\n"
             try:
-                for img in article.find_all("figure", {"class": "inner"}):
+                for img in article.find_all("div", {"class": "image-box"}):
                     try:
                         photos.append(img.find("img").attrs.get("src"))
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+            try:
+                for img in main_article.find_all("img"):
+                    try:
+                        photos.append(img.attrs.get("data-src"))
                     except Exception:
                         pass
             except Exception:
@@ -133,4 +135,4 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    parsing_interfax("красота", datetime.strptime("01/09/2021", "%d/%m/%Y"), update_proxy(None), [])
+    parsing_moika78("красота", datetime.strptime("01/09/2021", "%d/%m/%Y"), update_proxy(None), [])
