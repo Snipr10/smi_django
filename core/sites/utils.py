@@ -34,7 +34,7 @@ def get_md5_text(text):
 def get_sphinx_id(url):
     m = hashlib.md5()
     m.update(url.encode())
-    return int(str(int(m.hexdigest(), 16))[:16])
+    return int(str(int(m.hexdigest()[:16], 16))[:16])
 
 
 def parse_date(s_date, format):
