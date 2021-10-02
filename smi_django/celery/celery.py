@@ -16,18 +16,18 @@ app.conf.beat_schedule = {
     'start_task_parsing_by_time': {
         'task': 'smi_django.tasks.start_task_parsing_by_time',
         # 'schedule': crontab(minute='5, 35')
-        'schedule': crontab(minute='*/8')
+        'schedule': crontab(minute='*/1')
     },
-    'add_new_key': {
-        'task': 'smi_django.tasks.add_new_key',
-        # 'schedule': crontab(minute='5, 35')
-        'schedule': crontab(minute='*/12')
-    },
-    'task_parsing_key': {
-        'task': 'smi_django.tasks.task_parsing_key',
-        # 'schedule': crontab(minute='5, 35')
-        'schedule': crontab(minute='*/2')
-    }
+    # 'add_new_key': {
+    #     'task': 'smi_django.tasks.add_new_key',
+    #     # 'schedule': crontab(minute='5, 35')
+    #     'schedule': crontab(minute='*/12')
+    # },
+    # 'task_parsing_key': {
+    #     'task': 'smi_django.tasks.task_parsing_key',
+    #     # 'schedule': crontab(minute='5, 35')
+    #     'schedule': crontab(minute='*/2')
+    # }
     # 'start_task_parsing_echo': {
     #     'task': 'smi_django.tasks.start_task_parsing_echo',
     #     'schedule': crontab(minute='5, 35')
