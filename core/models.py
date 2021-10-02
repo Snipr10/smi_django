@@ -101,7 +101,6 @@ class Keyword(models.Model):
     created_date = models.DateTimeField(null=True, blank=True)
     modified_date = models.DateTimeField(null=True, blank=True)
     depth = models.DateField(null=True, blank=True)
-    last_modified = models.DateTimeField(null=True, blank=True)
     taken = models.BooleanField(default=0)
     reindexing = models.BooleanField(default=0)
     forced = models.BooleanField(default=0)
