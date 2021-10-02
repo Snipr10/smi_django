@@ -78,6 +78,7 @@ class GlobalSite(models.Model):
     url = models.CharField(max_length=255, null=True, blank=True)
     is_keyword = models.IntegerField()
     last_parsing = models.DateTimeField(auto_now_add=True)
+    taken = models.IntegerField()
 
     class Meta:
         db_table = 'prsr_parser_global_sites'

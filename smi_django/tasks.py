@@ -18,6 +18,10 @@ def start_task_parsing_by_time():
     for site in GlobalSite.objects.filter(is_keyword=0, last_parsing__gte=update_time_timezone(
             timezone.localtime()
     ) - datetime.timedelta(minutes=5)):
+
+        site.taken = 1
+        site.save(update_fields=["taken"])
+
         try:
             if site.url == RADIO_URL:
                 articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
@@ -25,9 +29,13 @@ def start_task_parsing_by_time():
                 articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
             save_articles(RADIO_URL, articles)
             site.last_parsing = update_time_timezone(timezone.localtime())
-            site.save(update_fields=["last_parsing"])
+            site.taken = 0
+            site.save(update_fields=["taken", "last_parsing"])
+
         except Exception as e:
             print(e)
+            site.taken = 0
+            site.save(update_fields=["taken"])
 
 
 @app.task
