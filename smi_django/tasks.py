@@ -43,7 +43,8 @@ def start_task_parsing_by_time():
                 articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
             if site.url == ZENIT_RADIO_URL:
                 articles, proxy = parsing_radio_zenit(site.last_parsing, update_proxy(None))
-            save_articles(RADIO_URL, articles)
+            stop_proxy(proxy)
+            save_articles(site.url, articles)
             site.last_parsing = update_time_timezone(timezone.localtime())
             site.taken = 0
             site.save(update_fields=["taken", "last_parsing"])
@@ -175,6 +176,10 @@ def parsing_key(key_word, last_update, key):
         else:
             print("site_id not founded")
             raise Exception("site_id not founded")
+        stop_proxy(proxy)
+
+        #TODO fix
+        save_articles(key_word.site_id, articles)
         key_word.taken = 0
         key_word.last_parsing = update_time_timezone(timezone.localtime())
         key_word.save(update_fields=["taken", "last_parsing"])
