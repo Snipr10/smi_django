@@ -9,7 +9,6 @@ from core.sites.utils import update_proxy, DEFAULTS_TIMEOUT
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
 SEARCH_PAGE_URL = "https://moika78.ru/page/%s/"
-PAGE_URL = "https://www.interfax.ru"
 
 
 def parsing_moika78(keyword, limit_date, proxy, body):

@@ -33,7 +33,7 @@ def parsing_echo_msk(keyword, limit_date, proxy, body):
     return articles, proxy
 
 
-def get_page(articles, article_body, proxy, attempt):
+def get_page(articles, article_body, proxy, attempt=0):
     text = ""
     photos = []
     videos = []
