@@ -95,7 +95,7 @@ def task_parsing_key():
             if last_update < datetime.datetime(2001, 1, 1, 0, 0, tzinfo=UTC):
                 # depth = key_word.depth
                 retro_date = select_source.retro
-                last_update = datetime.datetime(retro_date.year, retro_date.month, retro_date.day, 0, 0)
+                last_update = datetime.datetime(retro_date.year, retro_date.month, retro_date.day, 0, 0, tzinfo=UTC)
             time = select_source.sources
             if time is None:
                 time = 10
