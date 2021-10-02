@@ -126,16 +126,16 @@ def parsing_radio(limit_date, proxy):
             last_page = int(article['href'].split("id=")[-1])
         except Exception:
             pass
-    if last_page is not None:
-        try:
-            last_page -= 1
-            search_page = 0
-            while not is_time and search_page < 10_000:
-                is_time, articles, proxy = get_page(articles, NEW_PAGE_URL + str(last_page), limit_date, proxy)
-                search_page += 1
-                last_page -= 1
-        except Exception:
-            pass
+    # if last_page is not None:
+    #     try:
+    #         last_page -= 1
+    #         search_page = 0
+    #         while not is_time and search_page < 10_000:
+    #             is_time, articles, proxy = get_page(articles, NEW_PAGE_URL + str(last_page), limit_date, proxy)
+    #             search_page += 1
+    #             last_page -= 1
+    #     except Exception:
+    #         pass
     return articles, proxy
 
 # Press the green button in the gutter to run the script.
