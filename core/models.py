@@ -71,6 +71,18 @@ class Post(models.Model):
         db_table = 'prsr_parser_global_posts'
 
 
+class GlobalSite(models.Model):
+    site_id = models.IntegerField(primary_key=True)
+    username = models.CharField(max_length=255, null=True, blank=True)
+    image = models.CharField(max_length=255, null=True, blank=True)
+    url = models.CharField(max_length=255, null=True, blank=True)
+    is_keyword = models.IntegerField()
+    last_parsing = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'prsr_parser_global_sites'
+
+
 class PostContent(models.Model):
     cache_id = models.IntegerField(primary_key=True)
     content = models.CharField(max_length=4096, null=True, blank=True)
