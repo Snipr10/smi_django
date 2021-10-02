@@ -116,57 +116,70 @@ def task_parsing_key():
 
 
 def parsing_key(key_word, last_update, key):
-    print("start parsing_key")
+    print(f"start parsing_key {key}")
     try:
         # https://www.radiorus.ru/
         if key_word.site_id == 1865850141197341:
+            print("radiorus")
             articles, proxy = parsing_radio_rus(key, last_update, update_proxy(None), [])
 
         # https://vecherkaspb.ru
         elif key_word.site_id == 8227953169434178:
+            print("vecherkaspb")
             articles, proxy = parsing_vecherkaspb(key, last_update, update_proxy(None), [])
 
         # https://gorod-812.ru
         elif key_word.site_id == 833670931634090723:
+            print("gorod-812")
             articles, proxy = parsing_gorod_812(key, last_update, update_proxy(None), [])
 
         # https://expertnw.com
         elif key_word.site_id == 3584747628370255388:
+            print("expertnw")
             articles, proxy = parsing_expertnw(key, last_update, update_proxy(None), [])
 
         # https://www.5-tv.ru
         elif key_word.site_id == 5561022471722978546:
+            print("www.5-tv")
             articles, proxy = parsing_5_tv(key, last_update, update_proxy(None), [])
 
         # https://echo.msk.ru
         elif key_word.site_id == 7440394629060532294:
+            print("echo.msk.")
             articles, proxy = parsing_echo_msk(key, last_update, update_proxy(None), [])
 
         # https://www.svoboda.org
         elif key_word.site_id == 9223372036854775807:
+            print("svoboda")
             articles, proxy = parsing_svoboda_new(key, last_update, update_proxy(None), [])
 
         # https://moika78.ru
         elif key_word.site_id == 9392529751024449716:
+            print("moika78")
             articles, proxy = parsing_moika78(key, last_update, update_proxy(None), [])
 
         # http://novayagazeta.spb.ru
         elif key_word.site_id == 11450716446227110385:
+            print("novayagazeta")
             articles, proxy = parsing_novayagazeta(key, last_update, update_proxy(None), [])
 
         # https://www.interfax.ru
         elif key_word.site_id == 14036259156137978615:
+            print("interfax")
             articles, proxy = parsing_interfax(key, last_update, update_proxy(None), [])
 
         # https://www.fontanka.ru
         elif key_word.site_id == 17097923825390536162:
+            print("fontanka")
             articles, proxy = parsing_fontanka(key, last_update, update_proxy(None), [])
         else:
+            print("site_id not founded")
             raise Exception("site_id not founded")
         key_word.taken = 0
         key_word.last_parsing = update_time_timezone(timezone.localtime())
         key_word.save(update_fields=["taken", "last_parsing"])
     except Exception as e:
+        print("Exception" + str(e))
         key_word.taken = 1
         key_word.is_active = 0
         key_word.save(update_fields=["taken", "is_active"])
