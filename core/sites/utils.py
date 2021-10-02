@@ -34,7 +34,7 @@ def get_md5_text(text):
 def get_sphinx_id(url):
     m = hashlib.md5()
     m.update(url.encode())
-    return int(str(int(m.hexdigest(), 16))[:16])
+    return int(str(int(m.hexdigest()[:16], 16))[:16])
 
 
 def parse_date(s_date, format):
@@ -144,7 +144,7 @@ def save_articles(display_link, articles):
         posts_content.append(models.PostContent(
             content=text,
             cache_id=cache_id,
-            keyword_id=0,
+            keyword_id=10000002,
 
         ))
 
