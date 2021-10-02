@@ -112,9 +112,41 @@ class SiteKeyword(models.Model):
     site_id = models.IntegerField()
     keyword_id = models.IntegerField()
     last_parsing = models.DateTimeField(default=datetime(2000, 1, 1, 0, 0, tzinfo=pytz.UTC))
+    taken = models.BooleanField(default=0)
+    is_active = models.BooleanField(default=1)
 
     class Meta:
         db_table = 'prsr_parser_global_sites_keyword'
+
+
+class KeywordSource(models.Model):
+    keyword_id = models.IntegerField(primary_key=True)
+    source_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'prsr_parser_source_keywords'
+
+
+class Sources(models.Model):
+    uid = models.IntegerField(default=0)
+    published = models.IntegerField(default=1)
+    status = models.BooleanField(default=0)
+    type = models.CharField(default="profiles", max_length=4096)
+    retro = models.DateField(null=True, blank=True)
+    retro_max = models.DateField(null=True, blank=True)
+    networks = models.IntegerField(default=0)
+    # last_modify = models.DateTimeField(null=True, blank=True)
+    # links_modify = models.DateTimeField(null=True, blank=True)
+    # n2_modify = models.DateTimeField(null=True, blank=True)
+    taken = models.BooleanField(default=1)
+    linking = models.BooleanField(default=0)
+    sources = models.IntegerField(default=15)
+    profiles = models.IntegerField(default=15)
+    stats_params = models.CharField(null=True, blank=True, max_length=4096)
+
+    class Meta:
+        db_table = 'prsr_parser_sources'
+
 
 
 # class Post(models.Model):
