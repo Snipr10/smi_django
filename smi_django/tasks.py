@@ -1,7 +1,9 @@
 import datetime
+
+from django.db.models import Q
 from django.utils import timezone
 
-from core.models import GlobalSite
+from core.models import GlobalSite, SiteKeyword, Keyword
 from smi_django.celery.celery import app
 
 from core.sites.utils import get_late_date, update_proxy, stop_proxy, save_articles, update_time_timezone
@@ -27,9 +29,17 @@ def start_task_parsing_by_time():
         except Exception as e:
             print(e)
 
-    # articles, proxy = parsing_radio_echo(get_late_date(ECHO_RADIO_URL), update_proxy(None))
-    # stop_proxy(proxy)
-    # save_articles(ECHO_RADIO_URL, articles)
+
+@app.task
+def add_new_key():
+    new_key_list = []
+    for site in GlobalSite.objects.filter(is_keyword=1):
+        keywords_list = list(SiteKeyword.objects.filter(site_id=site.site_id).values_list('keyword_id', flat=True))
+        new_keys = Keyword.objects.filter(~Q(id__in=keywords_list), network_id=1, disable=0)
+        for new_key in new_keys:
+            new_key_list.append(SiteKeyword(site_id=site.site_id, keyword_id=new_key.id))
+    SiteKeyword.objects.bulk_create(new_key_list, batch_size=200, ignore_conflicts=True)
+
 
 # @app.task
 # def start_task_parsing_echo():

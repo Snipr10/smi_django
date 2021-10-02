@@ -92,6 +92,32 @@ class PostContent(models.Model):
         db_table = 'prsr_parser_global_post_kw_content'
 
 
+class Keyword(models.Model):
+    id = models.IntegerField(primary_key=True)
+    network_id = models.IntegerField(default=0)
+    keyword = models.CharField(default='nexta_live', max_length=4096)
+    enabled = models.IntegerField(default=0)
+    created_date = models.DateTimeField(null=True, blank=True)
+    modified_date = models.DateTimeField(null=True, blank=True)
+    depth = models.DateField(null=True, blank=True)
+    last_modified = models.DateTimeField(null=True, blank=True)
+    taken = models.BooleanField(default=0)
+    reindexing = models.BooleanField(default=0)
+    forced = models.BooleanField(default=0)
+
+    class Meta:
+        db_table = 'prsr_parser_keywords'
+
+
+class SiteKeyword(models.Model):
+    site_id = models.IntegerField()
+    keyword_id = models.IntegerField()
+    last_parsing = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'prsr_parser_global_sites_keyword'
+
+
 # class Post(models.Model):
 #     cache_id = models.IntegerField(primary_key=True)
 #     created_date = models.DateTimeField(null=True, blank=True)
