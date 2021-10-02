@@ -35,7 +35,7 @@ def add_new_key():
     new_key_list = []
     for site in GlobalSite.objects.filter(is_keyword=1):
         keywords_list = list(SiteKeyword.objects.filter(site_id=site.site_id).values_list('keyword_id', flat=True))
-        new_keys = Keyword.objects.filter(~Q(id__in=keywords_list), network_id=1, disable=0)
+        new_keys = Keyword.objects.filter(~Q(id__in=keywords_list), network_id=1, disabled=0)
         for new_key in new_keys:
             new_key_list.append(SiteKeyword(site_id=site.site_id, keyword_id=new_key.id))
     SiteKeyword.objects.bulk_create(new_key_list, batch_size=200, ignore_conflicts=True)
