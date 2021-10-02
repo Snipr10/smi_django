@@ -167,8 +167,9 @@ def get_late_date(display_link):
 
 def get_proxy():
     try:
-        time.sleep(random.randint(0, 10) / 10)
+        time.sleep(random.randint(0, 100) / 10)
         added_proxy_list = list(models.Proxy.objects.all().values_list('id', flat=True))
+        time.sleep(random.randint(0, 10) / 10)
 
         proxy = models.AllProxy.objects.filter(~Q(id__in=added_proxy_list), ~Q(port=0), ip__isnull=False,
                                                login__isnull=False).last()
@@ -177,6 +178,7 @@ def get_proxy():
             new_proxy = models.Proxy.objects.create(id=proxy.id)
             proxies = get_proxies(new_proxy)
             return {new_proxy: proxies}
+        time.sleep(random.randint(0, 100) / 10)
 
         used_proxy = models.Proxy.objects.filter(banned=False,
                                                  last_used__lte=update_time_timezone(
