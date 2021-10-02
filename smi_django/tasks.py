@@ -15,7 +15,7 @@ from core.sites.svoboda import parsing_radiosvoboda, RADIO_URL as SVOBODA_RADIO_
 
 @app.task
 def start_task_parsing_by_time():
-    for site in GlobalSite.objects.filter(is_keyword=0, last_parsing__gte=update_time_timezone(
+    for site in GlobalSite.objects.filter(is_keyword=0, last_parsing__lte=update_time_timezone(
             timezone.localtime()
     ) - datetime.timedelta(minutes=5)):
 
