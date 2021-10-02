@@ -65,7 +65,7 @@ def add_new_key():
 
 
 @app.task
-def parsing_key():
+def task_parsing_key():
     pool_source = ThreadPoolExecutor(10)
     futures = []
     select_sources = Sources.objects.filter(
