@@ -114,7 +114,7 @@ class Keyword(models.Model):
 class SiteKeyword(models.Model):
     site_id = models.IntegerField()
     keyword_id = models.IntegerField()
-    last_parsing = models.DateTimeField(null=True, blank=True)
+    last_parsing = models.DateTimeField(default=datetime(2000, 1, 1, 0, 0, tzinfo=pytz.UTC))
 
     class Meta:
         db_table = 'prsr_parser_global_sites_keyword'
