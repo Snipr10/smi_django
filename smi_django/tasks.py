@@ -116,6 +116,7 @@ def task_parsing_key():
 
 
 def parsing_key(key_word, last_update, key):
+    print("start parsing_key")
     try:
         # https://www.radiorus.ru/
         if key_word.site_id == 1865850141197341:
