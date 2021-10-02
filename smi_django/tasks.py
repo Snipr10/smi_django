@@ -29,7 +29,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 def start_task_parsing_by_time():
     for site in GlobalSite.objects.filter(taken=0, is_keyword=0, last_parsing__lte=update_time_timezone(
             timezone.localtime()
-    ) - datetime.timedelta(minutes=5)):
+    ) - datetime.timedelta(minutes=60)):
 
         site.taken = 1
         site.save(update_fields=["taken"])
