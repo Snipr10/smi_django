@@ -1,16 +1,28 @@
+import concurrent
 import datetime
 
 from django.db.models import Q
 from django.utils import timezone
 
 from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource
+from core.sites.echo_msk import parsing_echo_msk
+from core.sites.expertnw import parsing_expertnw
+from core.sites.fontanka import parsing_fontanka
+from core.sites.gorod_812 import parsing_gorod_812
+from core.sites.interfax import parsing_interfax
+from core.sites.moika_78 import parsing_moika78
+from core.sites.novayagazeta import parsing_novayagazeta
+from core.sites.radiorus import parsing_radio_rus
+from core.sites.svoboda_new import parsing_svoboda_new
+from core.sites.vecherkaspb import parsing_vecherkaspb
 from smi_django.celery.celery import app
 
 from core.sites.utils import get_late_date, update_proxy, stop_proxy, save_articles, update_time_timezone
 from core.sites.echo import parsing_radio_echo, RADIO_URL as ECHO_RADIO_URL
 from core.sites.radio import parsing_radio, RADIO_URL
 from core.sites.radiozenit import parsing_radio_zenit, RADIO_URL as ZENIT_RADIO_URL
-from core.sites.svoboda import parsing_radiosvoboda, RADIO_URL as SVOBODA_RADIO_URL
+from core.sites.five_tv import parsing_5_tv
+from concurrent.futures.thread import ThreadPoolExecutor
 
 
 @app.task
@@ -23,6 +35,9 @@ def start_task_parsing_by_time():
         site.save(update_fields=["taken"])
 
         try:
+            print(site.url)
+            print(RADIO_URL)
+            print(ZENIT_RADIO_URL)
             if site.url == RADIO_URL:
                 articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
             if site.url == ZENIT_RADIO_URL:
@@ -51,6 +66,8 @@ def add_new_key():
 
 @app.task
 def parsing_key():
+    pool_source = ThreadPoolExecutor(10)
+    futures = []
     select_sources = Sources.objects.filter(
         Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
         status=1)
@@ -66,51 +83,89 @@ def parsing_key():
                                                 ).order_by('last_modified')
     iteration = 0
     MAX_SIZE_PARSE_BY_WORD = 10
-    for key_word in site_key_words:
+    for site_key_word in site_key_words:
         if iteration > MAX_SIZE_PARSE_BY_WORD or \
-                SiteKeyword.objects.filter(network_id=1, taken=1).count() > MAX_SIZE_PARSE_BY_WORD:
+                SiteKeyword.objects.filter(network_id=1, taken=1).count() > MAX_SIZE_PARSE_BY_WORD * MAX_SIZE_PARSE_BY_WORD:
             break
-        if key_word is not None:
-            select_source = select_sources.get(id=key_source.filter(keyword_id=key_word.keyword_id).first().source_id)
-            last_update = key_word.last_modified
+        if site_key_word is not None:
+            key_word = key_words.get(id=site_key_word.keyword_id).depth
+            select_source = select_sources.get(id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
+            last_update = site_key_word.last_parsing
             if last_update < datetime.datetime(2001, 1, 1, 0, 0):
-                depth = key_words.get(id=key_word.keyword_id).depth
-                last_update = datetime.datetime(depth.year, depth.month, depth.day, 0, 0)
+                # depth = key_word.depth
+                retro_date = select_source.retro
+                last_update = datetime.datetime(retro_date.year, retro_date.month, retro_date.day, 0, 0)
             time = select_source.sources
             if time is None:
                 time = 10
             if last_update is None or (last_update + datetime.timedelta(minutes=time) <
                                        update_time_timezone(timezone.localtime())):
-                key_word.taken = 1
-                key_word.save(update_fields=['taken'])
+                site_key_word.taken = 1
+                site_key_word.save(update_fields=['taken'])
                 try:
-                    print(1)
+                    futures.append(
+                        pool_source.submit(parsing_key, site_key_word, last_update, key_word.keyword))
                 except Exception as e:
                     print(e)
-                    key_word.taken = 0
-                    key_word.save(update_fields=['taken'])
-# def start_task_parsing_echo():
-#     articles, proxy = parsing_radio_echo(get_late_date(ECHO_RADIO_URL), update_proxy(None))
-#     stop_proxy(proxy)
-#     save_articles(ECHO_RADIO_URL, articles)
-#
-#
-# @app.task
-# def start_task_parsing_radio():
-#     articles, proxy = parsing_radio(get_late_date(RADIO_URL), update_proxy(None))
-#     stop_proxy(proxy)
-#     save_articles(RADIO_URL, articles)
-#
-#
-# @app.task
-# def start_task_parsing_zenit():
-#     articles, proxy = parsing_radio_zenit(get_late_date(ZENIT_RADIO_URL), update_proxy(None))
-#     stop_proxy(proxy)
-#     save_articles(ZENIT_RADIO_URL, articles)
-#
-#
-# @app.task
-# def start_task_parsing_radiosvodoba():
-#     articles, proxy = parsing_radiosvoboda(get_late_date(SVOBODA_RADIO_URL), update_proxy(None))
-#     stop_proxy(proxy)
-#     save_articles(SVOBODA_RADIO_URL, articles)
+                    site_key_word.taken = 0
+                    site_key_word.save(update_fields=['taken'])
+
+    for future in concurrent.futures.as_completed(futures, timeout=300):
+        print(future.result())
+
+
+def parsing_key(key_word, last_update, key):
+    try:
+        # https://www.radiorus.ru/
+        if key_word.site_id == 1865850141197341:
+            articles, proxy = parsing_radio_rus(key, last_update, update_proxy(None), [])
+
+        # https://vecherkaspb.ru
+        elif key_word.site_id == 8227953169434178:
+            articles, proxy = parsing_vecherkaspb(key, last_update, update_proxy(None), [])
+
+        # https://gorod-812.ru
+        elif key_word.site_id == 833670931634090723:
+            articles, proxy = parsing_gorod_812(key, last_update, update_proxy(None), [])
+
+        # https://expertnw.com
+        elif key_word.site_id == 3584747628370255388:
+            articles, proxy = parsing_expertnw(key, last_update, update_proxy(None), [])
+
+        # https://www.5-tv.ru
+        elif key_word.site_id == 5561022471722978546:
+            articles, proxy = parsing_5_tv(key, last_update, update_proxy(None), [])
+
+        # https://echo.msk.ru
+        elif key_word.site_id == 7440394629060532294:
+            articles, proxy = parsing_echo_msk(key, last_update, update_proxy(None), [])
+
+        # https://www.svoboda.org
+        elif key_word.site_id == 9223372036854775807:
+            articles, proxy = parsing_svoboda_new(key, last_update, update_proxy(None), [])
+
+        # https://moika78.ru
+        elif key_word.site_id == 9392529751024449716:
+            articles, proxy = parsing_moika78(key, last_update, update_proxy(None), [])
+
+        # http://novayagazeta.spb.ru
+        elif key_word.site_id == 11450716446227110385:
+            articles, proxy = parsing_novayagazeta(key, last_update, update_proxy(None), [])
+
+        # https://www.interfax.ru
+        elif key_word.site_id == 14036259156137978615:
+            articles, proxy = parsing_interfax(key, last_update, update_proxy(None), [])
+
+        # https://www.fontanka.ru
+        elif key_word.site_id == 17097923825390536162:
+            articles, proxy = parsing_fontanka(key, last_update, update_proxy(None), [])
+        else:
+            raise Exception("site_id not founded")
+        key_word.taken = 0
+        key_word.last_parsing = update_time_timezone(timezone.localtime())
+        key_word.save(update_fields=["taken", "last_parsing"])
+    except Exception as e:
+        key_word.taken = 1
+        key_word.is_active = 0
+        key_word.save(update_fields=["taken", "is_active"])
+        print(e)
