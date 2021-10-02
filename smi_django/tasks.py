@@ -89,7 +89,7 @@ def task_parsing_key():
                 SiteKeyword.objects.filter(taken=1).count() > MAX_SIZE_PARSE_BY_WORD * MAX_SIZE_PARSE_BY_WORD:
             break
         if site_key_word is not None:
-            key_word = key_words.get(id=site_key_word.keyword_id).depth
+            key_word = key_words.get(id=site_key_word.keyword_id)
             select_source = select_sources.get(id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
             last_update = site_key_word.last_parsing
             if last_update < datetime.datetime(2001, 1, 1, 0, 0, tzinfo=UTC):
