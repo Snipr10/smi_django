@@ -111,7 +111,7 @@ def task_parsing_key():
                     site_key_word.taken = 0
                     site_key_word.save(update_fields=['taken'])
 
-    for future in concurrent.futures.as_completed(futures, timeout=300):
+    for future in concurrent.futures.as_completed(futures, timeout=30000):
         print(future.result())
 
 
