@@ -3,6 +3,7 @@ import datetime
 
 from django.db.models import Q
 from django.utils import timezone
+from pytz import UTC
 
 from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource
 from core.sites.echo_msk import parsing_echo_msk
@@ -91,7 +92,7 @@ def task_parsing_key():
             key_word = key_words.get(id=site_key_word.keyword_id).depth
             select_source = select_sources.get(id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
             last_update = site_key_word.last_parsing
-            if last_update < datetime.datetime(2001, 1, 1, 0, 0):
+            if last_update < datetime.datetime(2001, 1, 1, 0, 0, tzinfo=UTC):
                 # depth = key_word.depth
                 retro_date = select_source.retro
                 last_update = datetime.datetime(retro_date.year, retro_date.month, retro_date.day, 0, 0)
