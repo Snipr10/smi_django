@@ -20,6 +20,8 @@ RADIO_URL = "https://www.rtr.spb.ru/radio/"
 def parsing_radio_url(page, limit_date, proxy, body):
     if page > 100:
         return False, body, False, proxy
+    print(f"page {page}")
+
     try:
         res = requests.get(RADIO_PAGE_URL % page, headers={
             "user-agent": USER_AGENT
@@ -29,23 +31,17 @@ def parsing_radio_url(page, limit_date, proxy, body):
         )
     except Exception:
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
-    print(res.status_code)
 
     if res.ok:
         new_datas = False
         soup = BeautifulSoup(res.text)
         tables = soup.find("p", {"align": "center"}).find_all("table", {"id": "AutoNumber5"})
-        print("tables" + str(len(tables)))
         if len(tables) == 0:
             return False, body, False, proxy
         for table in tables:
 
             article_date = datetime.strptime(table.find("font", {"size": 1}).text, "%d-%m-%Y")
-            print(article_date)
-            print(limit_date)
             if article_date.date() >= limit_date.date():
-                print(str(article_date) + str(limit_date))
-
                 href = table.find("a", {"class": "base"}).attrs.get("href")
                 body.append({"date": article_date, "href": href})
             else:
@@ -73,7 +69,6 @@ def get_page(articles, url, limit_date, proxy, attempt=0):
             timeout=DEFAULTS_TIMEOUT
         )
         if res.ok:
-            print("res.status_code" + str(res.status_code))
             soup = BeautifulSoup(res.text)
             for face in soup.find_all("font", {"face": "Arial"}):
                 if len(face.find_all("font", {"size": 1})) > 0:
@@ -117,14 +112,14 @@ def parsing_radio(limit_date, proxy):
     is_time = False
     while is_not_stopped:
         try:
-            print(limit_date)
             is_not_stopped, body, is_time, proxy = parsing_radio_url(page, limit_date, proxy, body)
             page += 1
         except Exception:
             is_not_stopped = False
     articles = []
-    print("articles" + str(len(body)))
     for article in body:
+        print(article['date'])
+
         try:
             is_time, articles, proxy = get_page(articles, article['href'], limit_date, proxy)
             # print(article)
