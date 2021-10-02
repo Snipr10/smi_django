@@ -12,7 +12,7 @@ RADIO_PAGE_URL = "https://www.radiozenit.ru/news/page/%s"
 RADIO_URL = "https://www.radiozenit.ru/"
 
 
-def parsing_radio_zenit(limit_date, proxy, body):
+def parsing_radio_zenit(limit_date, proxy, body=[]):
     is_not_stopped = True
     page = 1
     body = []

@@ -25,8 +25,8 @@ def start_task_parsing_by_time():
         try:
             if site.url == RADIO_URL:
                 articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
-            if site.url == RADIO_URL:
-                articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
+            if site.url == ZENIT_RADIO_URL:
+                articles, proxy = parsing_radio_zenit(site.last_parsing, update_proxy(None))
             save_articles(RADIO_URL, articles)
             site.last_parsing = update_time_timezone(timezone.localtime())
             site.taken = 0

@@ -18,6 +18,8 @@ RADIO_URL = "https://www.rtr.spb.ru/radio/"
 
 
 def parsing_radio_url(page, limit_date, proxy, body):
+    if page > 100:
+        return False, body, False, proxy
     try:
         res = requests.get(RADIO_PAGE_URL % page, headers={
             "user-agent": USER_AGENT
