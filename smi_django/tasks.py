@@ -80,7 +80,7 @@ def task_parsing_key():
 
     site_key_words = SiteKeyword.objects.filter(taken=0, is_active=1,
                                                 keyword_id__in=list(key_words.values_list('id', flat=True))
-                                                ).order_by('last_modified')
+                                                ).order_by('last_parsing')
     iteration = 0
     MAX_SIZE_PARSE_BY_WORD = 10
     for site_key_word in site_key_words:
