@@ -32,7 +32,7 @@ def start_task_parsing_by_time():
     print("start_task_parsing_by_time")
     for site_key in SiteKeyword.objects.all().order_by('-last_parsing'):
         delete = False
-        for duplicate in SiteKeyword.objects.filter(~Q(id=site_key.id)):
+        for duplicate in SiteKeyword.objects.filter(~Q(id=site_key.id), site_id=site_key.site_id, keyword_id==site_key.keyword_id):
             duplicate.delete()
             delete = True
         print(i)
