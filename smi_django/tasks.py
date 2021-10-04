@@ -105,15 +105,16 @@ def task_parsing_key():
                 site_key_word.taken = 1
                 site_key_word.save(update_fields=['taken'])
                 try:
-                    futures.append(
-                        pool_source.submit(parsing_key, site_key_word, last_update, key_word.keyword))
+                    parsing_key(site_key_word, last_update, key_word.keyword)
+                    # futures.append(
+                    #     pool_source.submit(parsing_key, site_key_word, last_update, key_word.keyword))
                 except Exception as e:
                     print(e)
                     site_key_word.taken = 0
                     site_key_word.save(update_fields=['taken'])
 
-    for future in concurrent.futures.as_completed(futures, timeout=30000):
-        print(future.result())
+    # for future in concurrent.futures.as_completed(futures, timeout=30000):
+    #     print(future.result())
 
 
 def parsing_key(key_word, last_update, key):
@@ -185,7 +186,9 @@ def parsing_key(key_word, last_update, key):
         key_word.save(update_fields=["taken", "last_parsing"])
     except Exception as e:
         print("Exception" + str(e))
-        key_word.taken = 1
+        print("Exception" + str(key_word.site_id))
+
+        key_word.taken = 0
         key_word.is_active = 0
         key_word.save(update_fields=["taken", "is_active"])
         print(e)
