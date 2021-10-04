@@ -59,8 +59,14 @@ def start_task_parsing_by_time():
 @app.task
 def add_new_key():
     new_key_list = []
+    print("start delete")
+    z=0
     for s in SiteKeyword.objects.all():
+        z+=1
+        print(z)
         s.delete()
+
+    print("start add")
     for site in GlobalSite.objects.filter(is_keyword=1):
         i = 0
         keywords_list = list(SiteKeyword.objects.filter(site_id=site.site_id).values_list('keyword_id', flat=True))
