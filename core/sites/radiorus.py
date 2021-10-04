@@ -15,6 +15,7 @@ PAGE_URL = "https://www.radiorus.ru/"
 
 
 def parsing_radio_rus(keyword, limit_date, proxy, body):
+    print("parsing_radio_rus")
     is_not_stopped, body, is_time, proxy = get_urls(keyword, limit_date, proxy, [], 0)
     articles = []
     for article in body:
@@ -69,6 +70,8 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 
 def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
+    print(f"get_urls {page}")
+
     try:
         res = requests.get(SEARCH_PAGE_URL,
                            headers={
