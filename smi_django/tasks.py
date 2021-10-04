@@ -63,7 +63,7 @@ def add_new_key():
     z=0
     for s in SiteKeyword.objects.all():
         z+=1
-        print(z)
+        print("delete " + str(z))
         s.delete()
 
     print("start add")
