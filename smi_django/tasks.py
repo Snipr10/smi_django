@@ -28,6 +28,16 @@ from concurrent.futures.thread import ThreadPoolExecutor
 
 @app.task
 def start_task_parsing_by_time():
+    i = 0
+    for site_key in SiteKeyword.objects.all().order_by('-last_parsing'):
+        delete = False
+        for duplicate in SiteKeyword.objects.filter(~Q(id=site_key.id)):
+            duplicate.delete()
+            delete = True
+        print(i)
+        i += 1
+
+
     for site in GlobalSite.objects.filter(taken=0, is_keyword=0, last_parsing__lte=update_time_timezone(
             timezone.localtime()
     ) - datetime.timedelta(minutes=60)):
