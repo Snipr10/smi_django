@@ -29,6 +29,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 @app.task
 def start_task_parsing_by_time():
     i = 0
+    print("start_task_parsing_by_time")
     for site_key in SiteKeyword.objects.all().order_by('-last_parsing'):
         delete = False
         for duplicate in SiteKeyword.objects.filter(~Q(id=site_key.id)):
