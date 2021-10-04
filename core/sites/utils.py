@@ -96,7 +96,7 @@ def get_or_create_author(display_link):
     author = models.PostAuthor.objects.filter(url=display_link).first()
     if author is not None:
         return author
-    author = models.PostAuthor.objects.filter(id=display_link).first()
+    author = models.PostAuthor.objects.filter(profile_id=display_link).first()
     if author is not None:
         return author
     author = models.PostAuthor.objects.create(

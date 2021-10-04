@@ -124,7 +124,7 @@ def parsing_key(key_word, last_update, key):
         if key_word.site_id == 1865850141197341:
             print("radiorus")
             articles, proxy = parsing_radio_rus(key, last_update, update_proxy(None), [])
-
+            print("radiorus ok")
         # https://vecherkaspb.ru
         elif key_word.site_id == 8227953169434178:
             print("vecherkaspb")
@@ -180,6 +180,7 @@ def parsing_key(key_word, last_update, key):
         stop_proxy(proxy)
 
         #TODO fix
+        print("save")
         save_articles(key_word.site_id, articles)
         key_word.taken = 0
         key_word.last_parsing = update_time_timezone(timezone.localtime())
