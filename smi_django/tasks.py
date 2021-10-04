@@ -28,17 +28,6 @@ from concurrent.futures.thread import ThreadPoolExecutor
 
 @app.task
 def start_task_parsing_by_time():
-    i = 0
-    print("start_task_parsing_by_time")
-    for site_key in SiteKeyword.objects.all().order_by('-last_parsing'):
-        delete = False
-        if len(SiteKeyword.objects.filter(id=site_key.id)) > 0:
-            for duplicate in SiteKeyword.objects.filter(~Q(id=site_key.id), site_id=site_key.site_id, keyword_id=site_key.keyword_id):
-                duplicate.delete()
-                delete = True
-            print(i)
-            i += 1
-
     print("start")
     for site in GlobalSite.objects.filter(taken=0, is_keyword=0, last_parsing__lte=update_time_timezone(
             timezone.localtime()
@@ -77,6 +66,16 @@ def add_new_key():
             new_key_list.append(SiteKeyword(site_id=site.site_id, keyword_id=new_key.id))
     SiteKeyword.objects.bulk_create(new_key_list, batch_size=200, ignore_conflicts=True)
 
+    # i = 0
+    # print("start_task_parsing_by_time")
+    # for site_key in SiteKeyword.objects.all().order_by('-last_parsing'):
+    #     delete = False
+    #     if len(SiteKeyword.objects.filter(id=site_key.id)) > 0:
+    #         for duplicate in SiteKeyword.objects.filter(~Q(id=site_key.id), site_id=site_key.site_id, keyword_id=site_key.keyword_id):
+    #             duplicate.delete()
+    #             delete = True
+    #         print(i)
+    #         i += 1
 
 @app.task
 def task_parsing_key():

@@ -13,16 +13,15 @@ app.config_from_object('django.conf:settings')
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    'start_task_parsing_by_time': {
-        'task': 'smi_django.tasks.start_task_parsing_by_time',
-        # 'schedule': crontab(minute='5, 35')
-        'schedule': crontab(hour='13', minute='55')
-    },
-    # 'add_new_key': {
-    #     'task': 'smi_django.tasks.add_new_key',
+    # 'start_task_parsing_by_time': {
+    #     'task': 'smi_django.tasks.start_task_parsing_by_time',
     #     # 'schedule': crontab(minute='5, 35')
-    #     'schedule': crontab(minute='*/12')
     # },
+    'add_new_key': {
+        'task': 'smi_django.tasks.add_new_key',
+        'schedule': crontab(hour='15', minute='5')
+        # 'schedule': crontab(minute='*/12')
+    },
     # 'task_parsing_key': {
     #     'task': 'smi_django.tasks.task_parsing_key',
     #     # 'schedule': crontab(minute='5, 35')
