@@ -104,6 +104,7 @@ def task_parsing_key():
     MAX_SIZE_PARSE_BY_WORD = 10
     site_key_word = site_key_words.last()
     # for site_key_word in site_key_words:
+    print("start")
     if True:
         # if iteration > MAX_SIZE_PARSE_BY_WORD or \
         #         SiteKeyword.objects.filter(taken=1).count() > MAX_SIZE_PARSE_BY_WORD * MAX_SIZE_PARSE_BY_WORD:
