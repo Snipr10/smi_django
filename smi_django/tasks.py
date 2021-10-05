@@ -112,6 +112,8 @@ def task_parsing_key():
         print("start1")
 
         if site_key_word is not None:
+            print("start2")
+
             key_word = key_words.get(id=site_key_word.keyword_id)
             select_source = select_sources.get(id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
             last_update = site_key_word.last_parsing
@@ -120,12 +122,16 @@ def task_parsing_key():
                 retro_date = select_source.retro
                 last_update = datetime.datetime(retro_date.year, retro_date.month, retro_date.day, 0, 0, tzinfo=UTC)
             time = select_source.sources
+            print("start3")
+
             if time is None:
                 time = 10
             if last_update is None or (last_update + datetime.timedelta(minutes=time) <
                                        update_time_timezone(timezone.localtime())):
                 site_key_word.taken = 1
                 site_key_word.save(update_fields=['taken'])
+                print("start4")
+
                 try:
                     print("parsing_key")
 
