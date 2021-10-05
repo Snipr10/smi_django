@@ -109,6 +109,8 @@ def task_parsing_key():
         # if iteration > MAX_SIZE_PARSE_BY_WORD or \
         #         SiteKeyword.objects.filter(taken=1).count() > MAX_SIZE_PARSE_BY_WORD * MAX_SIZE_PARSE_BY_WORD:
         #     break
+        print("start1")
+
         if site_key_word is not None:
             key_word = key_words.get(id=site_key_word.keyword_id)
             select_source = select_sources.get(id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
@@ -125,6 +127,8 @@ def task_parsing_key():
                 site_key_word.taken = 1
                 site_key_word.save(update_fields=['taken'])
                 try:
+                    print("parsing_key")
+
                     parsing_key(site_key_word, last_update, key_word.keyword)
                     # futures.append(
                     #     pool_source.submit(parsing_key, site_key_word, last_update, key_word.keyword))
