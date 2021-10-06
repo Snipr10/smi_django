@@ -25,7 +25,7 @@ app.conf.beat_schedule = {
     'task_parsing_key': {
         'task': 'smi_django.tasks.task_parsing_key',
         # 'schedule': crontab(minute='5, 35')
-        'schedule': 10.0,
+        'schedule': 2.0,
     }
     # 'start_task_parsing_echo': {
     #     'task': 'smi_django.tasks.start_task_parsing_echo',
