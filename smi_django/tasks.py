@@ -16,7 +16,7 @@ from core.sites.novayagazeta import parsing_novayagazeta
 from core.sites.radiorus import parsing_radio_rus
 from core.sites.svoboda_new import parsing_svoboda_new
 from core.sites.vecherkaspb import parsing_vecherkaspb
-from smi_django.celery.celery import app
+from core.celery import app
 
 from core.sites.utils import get_late_date, update_proxy, stop_proxy, save_articles, update_time_timezone
 from core.sites.echo import parsing_radio_echo, RADIO_URL as ECHO_RADIO_URL
