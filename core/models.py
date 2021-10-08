@@ -124,7 +124,7 @@ class SiteKeywordNew(models.Model):
         unique_together = (('keyword_id', 'site_id'),)
         db_table = 'prsr_parser_global_sites_keyword_1'
     site_id = models.IntegerField()
-    keyword_id = models.IntegerField()
+    keyword_id = models.IntegerField(primary_key=True)
     last_parsing = models.DateTimeField(default=datetime(2000, 1, 1, 0, 0, tzinfo=pytz.UTC))
     taken = models.BooleanField(default=0)
     is_active = models.BooleanField(default=1)
