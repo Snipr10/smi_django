@@ -19,7 +19,7 @@ app.conf.beat_schedule = {
     # },
     'add_new_key': {
         'task': 'smi_django.tasks.add_new_key',
-        'schedule': crontab(hour='15', minute='50')
+        'schedule': crontab(hour='15', minute='56')
         # 'schedule': crontab(minute='*/12')
     },
     # 'task_parsing_key': {
