@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 from pytz import UTC
 
-from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource
+from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource, SiteKeywordNew
 from core.sites.echo_msk import parsing_echo_msk
 from core.sites.expertnw import parsing_expertnw
 from core.sites.fontanka import parsing_fontanka
@@ -58,19 +58,25 @@ def start_task_parsing_by_time():
 
 @app.task
 def add_new_key():
-    new_key_list = []
-    print("start add")
-    for site in GlobalSite.objects.filter(is_keyword=1):
-        i = 0
-        keywords_list = list(SiteKeyword.objects.filter(site_id=site.site_id).values_list('keyword_id', flat=True))
-        new_keys = Keyword.objects.filter(~Q(id__in=keywords_list), network_id=1, disabled=0, enabled=1)
-        for new_key in new_keys:
-            new_key_list.append(SiteKeyword(site_id=site.site_id, keyword_id=new_key.id))
+    for r in SiteKeyword.objects.all():
+        try:
+            SiteKeywordNew.objects.create(site_id=r.site_id, keyword_id=r.keyword_id, last_parsing=r.last_parsing, is_active=r.is_active)
+        except Exception as e:
+            print(e)
 
-            if i % 1000:
-                print(i)
-            i += 1
-    SiteKeyword.objects.bulk_create(new_key_list, batch_size=200, ignore_conflicts=True)
+    # new_key_list = []
+    # print("start add")
+    # for site in GlobalSite.objects.filter(is_keyword=1):
+    #     i = 0
+    #     keywords_list = list(SiteKeyword.objects.filter(site_id=site.site_id).values_list('keyword_id', flat=True))
+    #     new_keys = Keyword.objects.filter(~Q(id__in=keywords_list), network_id=1, disabled=0, enabled=1)
+    #     for new_key in new_keys:
+    #         new_key_list.append(SiteKeyword(site_id=site.site_id, keyword_id=new_key.id))
+    #
+    #         if i % 1000:
+    #             print(i)
+    #         i += 1
+    # SiteKeyword.objects.bulk_create(new_key_list, batch_size=200, ignore_conflicts=True)
 
     # i = 0
     # print("start_task_parsing_by_time")
