@@ -21,7 +21,6 @@ python-dotenv==0.15.0
 pytz==2020.4
 pyxdg==0.26
 redis==3.5.3
-redis-server==5.0.7
 reportlab==3.5.34
 requests==2.22.0
 sqlparse==0.4.1
