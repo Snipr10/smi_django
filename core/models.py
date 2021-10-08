@@ -119,7 +119,7 @@ class Keyword(models.Model):
 #         db_table = 'prsr_parser_global_sites_keyword'
 
 
-class SiteKeywordNew(models.Model):
+class SiteKeyword(models.Model):
     class Meta:
         unique_together = (('keyword_id', 'site_id'),)
         db_table = 'prsr_parser_global_sites_keyword_1'
