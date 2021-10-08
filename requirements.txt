@@ -10,6 +10,7 @@ click-didyoumean==0.0.3
 click-plugins==1.1.1
 click-repl==0.2.0
 cssselect==1.1.0
+dateparser==1.1.0
 Django==3.2.4
 djangorestframework==3.12.4
 idna==2.8
@@ -27,4 +28,3 @@ sqlparse==0.4.1
 urllib3==1.25.11
 vine==5.0.0
 wcwidth==0.2.5
-youtube-transcript-api==0.4.1
