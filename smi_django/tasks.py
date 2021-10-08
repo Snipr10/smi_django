@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 from pytz import UTC
 
-from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource, SiteKeywordNew
+from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource
 from core.sites.echo_msk import parsing_echo_msk
 from core.sites.expertnw import parsing_expertnw
 from core.sites.fontanka import parsing_fontanka
