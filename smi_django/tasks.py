@@ -72,16 +72,7 @@ def add_new_key():
         SiteKeyword.objects.bulk_create(new_key_list, batch_size=200, ignore_conflicts=True)
     except Exception as e:
         print(e)
-    # i = 0
-    # print("start_task_parsing_by_time")
-    # for site_key in SiteKeyword.objects.all().order_by('-last_parsing'):
-    #     delete = False
-    #     if len(SiteKeyword.objects.filter(id=site_key.id)) > 0:
-    #         for duplicate in SiteKeyword.objects.filter(~Q(id=site_key.id), site_id=site_key.site_id, keyword_id=site_key.keyword_id):
-    #             duplicate.delete()
-    #             delete = True
-    #         print(i)
-    #         i += 1
+
 
 @app.task
 def task_parsing_key():
