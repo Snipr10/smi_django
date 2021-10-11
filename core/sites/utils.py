@@ -107,7 +107,7 @@ def get_or_create_author(display_link):
         image=images.get(display_link),
         followers=0
     )
-    return author.url
+    return author
 
 
 def save_articles(display_link, articles):
@@ -122,9 +122,7 @@ def save_articles(display_link, articles):
         print(article.get('href'))
         author = get_or_create_author(display_link)
         text = article.get('text')
-        image = ""
         for photo in article['photos']:
-            image = photo
             text += "\n" + photo
         for video in article['videos']:
             text += "\n" + video
@@ -136,11 +134,11 @@ def save_articles(display_link, articles):
             cache_id=cache_id,
             owner_sphinx_id=author.profile_id,
             created=article.get('date'),
-            display_link=display_link,
+            display_link=author.url,
             owner=author.username,
             title=article.get('title'),
             link=article.get('href'),
-            image=image,
+            image=author.image,
             keyword_id=0,
             trust=0
         ))
