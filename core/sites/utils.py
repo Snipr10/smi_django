@@ -107,7 +107,7 @@ def get_or_create_author(display_link):
         image=images.get(display_link),
         followers=0
     )
-    return author
+    return author.url
 
 
 def save_articles(display_link, articles):
