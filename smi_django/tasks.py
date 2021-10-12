@@ -94,6 +94,10 @@ def task_parsing_key():
     iteration = 0
     MAX_SIZE_PARSE_BY_WORD = 10
     site_key_word = site_key_words.first()
+    print("site_key_word.last_parsing")
+
+    print(site_key_word.last_parsing)
+
     # for site_key_word in site_key_words:
     print("start")
     if True:
