@@ -28,7 +28,7 @@ def parsing_interfax(keyword, limit_date, proxy, body):
 
 def get_urls(keyword, limit_date, proxy, body, urls, page, attempts=0):
     try:
-
+        print("interfax url  " + str(SEARCH_PAGE_URL + requests.utils.quote(keyword.encode('windows-1251'))))
         res = requests.get(SEARCH_PAGE_URL + requests.utils.quote(keyword.encode('windows-1251')),
                            headers={
                                "user-agent": USER_AGENT
