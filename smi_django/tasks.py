@@ -61,7 +61,7 @@ def add_new_key():
 
     new_key_list = []
     # print("start add")
-    for site in GlobalSite.objects.filter(id__in=[17097923825390536162, 14036259156137978615], is_keyword=1):
+    for site in GlobalSite.objects.filter(is_keyword=1):
         print(site.site_id)
         i = 0
         keywords_list = list(SiteKeyword.objects.filter(site_id=site.site_id).values_list('keyword_id', flat=True))
@@ -88,7 +88,7 @@ def task_parsing_key():
                                        id__in=list(key_source.values_list('keyword_id', flat=True))
                                        )
 
-    site_key_words = SiteKeyword.objects.filter(taken=0, is_active=1,
+    site_key_words = SiteKeyword.objects.filter(site_id__in=[17097923825390536162, 14036259156137978615], taken=0, is_active=1,
                                                 keyword_id__in=list(key_words.values_list('id', flat=True))
                                                 ).order_by('last_parsing')
     iteration = 0
