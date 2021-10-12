@@ -13,7 +13,10 @@ PAGE_URL = "https://www.fontanka.ru"
 def parsing_fontanka(keyword, limit_date, proxy, body):
     is_not_stopped, body, is_time, proxy = get_urls(keyword, limit_date, proxy, body, 1)
     articles = []
+    i = 0
     for article in body:
+        print("parsing_fontanka " + str(i))
+        i += 1
         try:
             is_time, articles, proxy = get_page(articles, article, proxy)
         except Exception:

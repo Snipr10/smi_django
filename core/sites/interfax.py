@@ -14,7 +14,10 @@ PAGE_URL = "https://www.interfax.ru"
 def parsing_interfax(keyword, limit_date, proxy, body):
     is_not_stopped, body, is_time, proxy = get_urls(keyword, limit_date, proxy, [], body, 1)
     articles = []
+    i = 0
     for article in body:
+        print("parsing_interfax " + str(i))
+        i += 1
         try:
             is_time, articles, proxy = get_page(articles, article, proxy)
         except Exception:
