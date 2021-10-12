@@ -15,6 +15,7 @@ def parsing_interfax(keyword, limit_date, proxy, body):
     is_not_stopped, body, is_time, proxy = get_urls(keyword, limit_date, proxy, [], body, 1)
     articles = []
     i = 0
+    print(limit_date)
     for article in body:
         print("parsing_interfax " + str(i))
         i += 1
