@@ -93,7 +93,7 @@ def task_parsing_key():
                                                 ).order_by('last_parsing')
     iteration = 0
     MAX_SIZE_PARSE_BY_WORD = 10
-    site_key_word = site_key_words.first()
+    site_key_word = site_key_words.last()
     print("site_key_word.last_parsing")
 
     print(site_key_word.last_parsing)
