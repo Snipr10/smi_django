@@ -61,7 +61,7 @@ def add_new_key():
 
     new_key_list = []
     # print("start add")
-    for site in GlobalSite.objects.filter(is_keyword=1):
+    for site in GlobalSite.objects.filter(id__in=[17097923825390536162, 14036259156137978615], is_keyword=1):
         print(site.site_id)
         i = 0
         keywords_list = list(SiteKeyword.objects.filter(site_id=site.site_id).values_list('keyword_id', flat=True))
