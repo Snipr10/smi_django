@@ -25,7 +25,9 @@ app.conf.beat_schedule = {
     'task_parsing_key': {
         'task': 'smi_django.tasks.task_parsing_key',
         # 'schedule': crontab(minute='5, 35')
-        'schedule': 2.0,
+        # 'schedule': 2.0,
+        'schedule': crontab(minute='*/1')
+
     }
     # 'delete_bad_posts': {
     #     'task': 'smi_django.tasks.delete_bad_posts',
