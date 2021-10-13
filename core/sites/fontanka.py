@@ -14,6 +14,7 @@ def parsing_fontanka(keyword, limit_date, proxy, body):
     is_not_stopped, body, is_time, proxy = get_urls(keyword, limit_date, proxy, body, 1)
     articles = []
     i = 0
+    print("parsing_fontanka" + str(len(body)))
     for article in body:
         print("parsing_fontanka " + str(i))
         i += 1
@@ -37,7 +38,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
                                    "offset": page,
                                    "sortt": "date"
                                    },
-                           # proxies=proxy.get(list(proxy.keys())[0]),
+                           proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
     except Exception as e:
@@ -83,7 +84,7 @@ def get_page(articles, article_body, proxy, attempt=0):
         res = requests.get(url, headers={
             "user-agent": USER_AGENT
         },
-                           # proxies=proxy.get(list(proxy.keys())[0]),
+                           proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
         if res.ok:
