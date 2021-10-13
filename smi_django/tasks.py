@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 from pytz import UTC
 
-from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource
+from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource, Post
 from core.sites.echo_msk import parsing_echo_msk
 from core.sites.expertnw import parsing_expertnw
 from core.sites.fontanka import parsing_fontanka
@@ -73,6 +73,15 @@ def add_new_key():
     except Exception as e:
         print(e)
 
+
+@app.task
+def delete_bad_posts():
+    i = 0
+    for post in Post.objects.filter(display_link="https://expertnw.com"):
+        print(i)
+        i += 1
+        if "/?sphrase_id=" in post.link:
+            post.delete()
 
 @app.task
 def task_parsing_key():
