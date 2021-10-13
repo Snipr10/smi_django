@@ -50,26 +50,36 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
     if res.ok:
         soup = BeautifulSoup(res.text)
 
-        articles = soup.find_all("li", class_="CLmj FZa7")
+        articles = soup.find_all("li")
 
         if len(articles) == 0:
             return True, body, False, proxy
         for article in articles:
-            article_date = dateparser.parse(article.find("time").text)
-            if page > 100:
-                return True, body, True, proxy
-            article_title_attrs = article.find("a", class_="CLi9").attrs
-            href = article_title_attrs.get("href")
-            if "https" in href:
-                print(article_title_attrs.get("href"))
-            else:
-                body.append(
-                            {
-                                "href": article_title_attrs.get("href"),
-                                "date": article_date,
-                                "title": article_title_attrs.get("title")
-                            }
-                        )
+            try:
+                article_date = dateparser.parse(article.find("time").text)
+                if page > 100:
+                    return True, body, True, proxy
+                for a in article.find_all("a"):
+                    article_title_attrs = a.attrs
+
+                    href = article_title_attrs.get("href")
+                    # check url
+                    try:
+                        int(href.replace("/", ""))
+                        if "https" in href:
+                            print(article_title_attrs.get("href"))
+                        else:
+                            body.append(
+                                {
+                                    "href": article_title_attrs.get("href"),
+                                    "date": article_date,
+                                    "title": article_title_attrs.get("title")
+                                }
+                            )
+                    except Exception:
+                        pass
+            except Exception:
+                pass
         return get_urls(keyword, limit_date, update_proxy(proxy), body, page + 1, attempts)
     elif res.status_code == 404:
         return False, body, False, proxy
