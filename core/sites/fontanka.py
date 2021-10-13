@@ -41,7 +41,6 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
                            proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
-        print(res.text)
     except Exception as e:
         # logger.info(str(e))
         if attempts < 10:
