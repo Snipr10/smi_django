@@ -94,7 +94,7 @@ def update_time():
         site_id.last_parsing= update_time_timezone(
             timezone.localtime()
     ) - datetime.timedelta(days=360*3)
-        site_id.save()
+        site_id.save(update_fields=["last_parsing"])
 
 
 @app.task

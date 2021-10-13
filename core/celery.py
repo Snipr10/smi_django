@@ -31,7 +31,7 @@ app.conf.beat_schedule = {
     # }
     'update_time': {
         'task': 'smi_django.tasks.update_time',
-         'schedule': crontab(minute='54')
+         'schedule': crontab(minute='57')
     }
     # 'delete_bad_posts': {
     #     'task': 'smi_django.tasks.delete_bad_posts',
