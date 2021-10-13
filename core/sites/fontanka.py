@@ -27,6 +27,8 @@ def parsing_fontanka(keyword, limit_date, proxy, body):
 
 
 def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
+    start_body_len = len(body)
+
     try:
         res = requests.get(SEARCH_PAGE_URL,
                            headers={
@@ -79,6 +81,8 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
                         pass
             except Exception:
                 pass
+        if start_body_len == len(body):
+            return True, body, True, proxy
         return get_urls(keyword, limit_date, update_proxy(proxy), body, page + 1, attempts)
     elif res.status_code == 404:
         return False, body, False, proxy
@@ -107,15 +111,16 @@ def get_page(articles, article_body, proxy, attempt=0):
             soup = soup_all.find("article", {"itemscope": "itemscope"})
 
             try:
-                title = soup.find("p", {"itemprop":"http://schema.org/headline"}).text
+                title = soup.find("p", {"itemprop": "http://schema.org/headline"}).text
             except Exception:
                 title = article_body['title']
             try:
-                text += soup.find("p", {"class": "C3o-"}).text + "\n"
+                text += soup.select('div[class*="-"]')[0].find("p").text + "\n"
             except Exception:
                 pass
             try:
-                text += soup.find("div", {"class": "DFqv"}).text + "\n"
+                for p in soup.find("section", {"itemprop": "articleBody"}).find_all("p"):
+                    text += p.text + "\n"
             except Exception:
                 pass
             article_section = soup.find("section", {"itemprop": "articleBody"})
@@ -138,7 +143,7 @@ def get_page(articles, article_body, proxy, attempt=0):
                 print(url)
 
             try:
-                for iframe in article_section.find_all("div", class_="DPrf B3a7"):
+                for iframe in article_section.find_all("div"):
                     try:
                         iframe_data = iframe.find("iframe").attrs.get("src")
                         if iframe_data not in photos:
