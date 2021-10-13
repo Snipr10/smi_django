@@ -83,6 +83,20 @@ def delete_bad_posts():
         if "/?sphrase_id=" in post.link:
             post.delete()
 
+
+@app.task
+def update_time():
+    i = 0
+    for site_id in SiteKeyword.objects.filter(site_id=17097923825390536162, last_parsing__gte=update_time_timezone(
+            timezone.localtime()
+    ) - datetime.timedelta(days=360*3)):
+        print(i)
+        site_id.last_parsing= update_time_timezone(
+            timezone.localtime()
+    ) - datetime.timedelta(days=360*3)
+        site_id.save()
+
+
 @app.task
 def task_parsing_key():
     pool_source = ThreadPoolExecutor(10)
