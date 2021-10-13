@@ -58,9 +58,11 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
                     except Exception:
                         pass
                 article_title = article.find("a", class_="search-item-title")
+                article_href_all = article_title.attrs.get('href')
+
                 body.append(
                                 {
-                                    "href": article_title.attrs.get('href'),
+                                    "href": article_href_all[:article_href_all.find('?sphrase_id')],
                                     "date": article_date,
                                     "title": article_title.text
                                 }
