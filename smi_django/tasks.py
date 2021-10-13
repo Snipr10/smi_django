@@ -110,9 +110,8 @@ def task_parsing_key():
     key_words = Keyword.objects.filter(network_id=1, enabled=1,
                                        id__in=list(key_source.values_list('keyword_id', flat=True))
                                        )
-    # site_key_words = SiteKeyword.objects.filter(site_id__in=[17097923825390536162, 14036259156137978615], taken=0, is_active=1,
 
-    site_key_words = SiteKeyword.objects.filter(site_id__in=[17097923825390536162], taken=0, is_active=1,
+    site_key_words = SiteKeyword.objects.filter(site_id__in=[17097923825390536162, 14036259156137978615], taken=0, is_active=1,
                                                 keyword_id__in=list(key_words.values_list('id', flat=True))
                                                 ).order_by('last_parsing')
     iteration = 0
