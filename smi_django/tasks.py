@@ -238,7 +238,7 @@ def parsing_key(key_word, last_update, key):
         print("Exception" + str(e))
         print("Exception" + str(key_word.site_id))
 
-        key_word.taken = 0
+        # key_word.taken = 0
         key_word.is_active = 0
-        key_word.save(update_fields=["taken", "is_active"])
+        key_word.save(update_fields=["taken"])
         print(e)
