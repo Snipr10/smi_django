@@ -28,7 +28,18 @@ app.conf.beat_schedule = {
         'schedule': 2.0,
         # 'schedule': crontab(minute='*/1')
 
-    }
+    },
+    'untaken_key': {
+        'task': 'smi_django.tasks.untaken_key',
+        'schedule': crontab(minute='31')
+        # 'schedule': crontab(minute='*/12')
+    },
+    'activate_key': {
+        'task': 'smi_django.tasks.activate_key',
+        'schedule': crontab(minute='1')
+        # 'schedule': crontab(minute='*/12')
+    },
+
     # 'update_time': {
     #     'task': 'smi_django.tasks.update_time',
     #      'schedule': crontab(minute='57')

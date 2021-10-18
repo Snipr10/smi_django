@@ -98,6 +98,29 @@ def update_time():
 
 
 @app.task
+def untaken_key():
+    SiteKeyword.objects.filter(taken=1).update(taken=0)
+
+
+@app.task
+def activate_key():
+    SiteKeyword.objects.filter(is_active=0).update(is_active=1)
+
+
+@app.task
+def update_text_delete_duplicates():
+    i = 0
+    for site_id in SiteKeyword.objects.filter(site_id=17097923825390536162, last_parsing__gte=update_time_timezone(
+            timezone.localtime()
+    ) - datetime.timedelta(days=360*3)):
+        print(i)
+        site_id.last_parsing= update_time_timezone(
+            timezone.localtime()
+    ) - datetime.timedelta(days=360*3)
+        site_id.save(update_fields=["last_parsing"])
+
+
+@app.task
 def task_parsing_key():
     pool_source = ThreadPoolExecutor(10)
     futures = []
