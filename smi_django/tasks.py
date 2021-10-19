@@ -33,7 +33,7 @@ def start_task_parsing_by_time():
     for site in GlobalSite.objects.filter(taken=0, is_keyword=0, last_parsing__lte=update_time_timezone(
             timezone.localtime()
     ) - datetime.timedelta(minutes=60)):
-
+        print(site.url)
         site.taken = 1
         site.save(update_fields=["taken"])
 
@@ -104,11 +104,11 @@ def update_time():
 def untaken_key():
     SiteKeyword.objects.filter(taken=1).update(taken=0)
 
-
-@app.task
-def activate_key():
-    SiteKeyword.objects.filter(is_active=0).update(is_active=1)
-
+#
+# @app.task
+# def activate_key():
+#     SiteKeyword.objects.filter(is_active=0).update(is_active=1)
+#
 
 @app.task
 def update_text_delete_duplicates():
