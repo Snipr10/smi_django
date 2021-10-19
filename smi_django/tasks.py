@@ -10,6 +10,7 @@ from core.sites.echo_msk import parsing_echo_msk
 from core.sites.expertnw import parsing_expertnw
 from core.sites.fontanka import parsing_fontanka
 from core.sites.gorod_812 import parsing_gorod_812
+from core.sites.gov_spb.pars_gov import start_parsing
 from core.sites.interfax import parsing_interfax
 from core.sites.moika_78 import parsing_moika78
 from core.sites.novayagazeta import parsing_novayagazeta
@@ -44,6 +45,8 @@ def start_task_parsing_by_time():
                 articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
             if site.url == ZENIT_RADIO_URL:
                 articles, proxy = parsing_radio_zenit(site.last_parsing, update_proxy(None))
+            if site.url == "https://www.gov.spb.ru":
+                articles, proxy = start_parsing(site.last_parsing, update_proxy(None))
             stop_proxy(proxy)
             save_articles(site.url, articles)
             site.last_parsing = update_time_timezone(timezone.localtime())
