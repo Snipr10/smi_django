@@ -49,7 +49,7 @@ def start_parsing(limit_date, proxy):
         raise Exception("can not parse parsing_governor_disproof")
 
     all_articles.extend(articles)
-
+    print("gov parsing stop")
     return all_articles, proxy
 
 
