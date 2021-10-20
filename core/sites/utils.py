@@ -117,16 +117,18 @@ def save_articles(display_link, articles):
     # videos_content = []
     # sounds_content = []
     django.db.close_old_connections()
-
+    print("save")
     for article in articles:
+
         print(article.get('href'))
         author = get_or_create_author(display_link)
         text = article.get('text')
+
         for photo in article.get('photos', []):
             text += "\n" + photo
-        for video in article('videos', []):
+        for video in article.get('videos', []):
             text += "\n" + video
-        for sound in article('sounds', []):
+        for sound in article.get('sounds', []):
             text += "\n" + sound
         cache_id = get_sphinx_id(article.get('href'))
 
