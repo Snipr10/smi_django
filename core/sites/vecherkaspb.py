@@ -61,7 +61,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
                                 "title": article_title.text
                             }
                         )
-        return get_urls(keyword, limit_date, update_proxy(proxy), body, page + 1, attempts)
+        return get_urls(keyword, limit_date, proxy, body, page + 1, attempts)
     elif res.status_code == 404:
         return False, body, False, proxy
     return False, body, False, proxy

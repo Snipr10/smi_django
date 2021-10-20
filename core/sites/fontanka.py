@@ -40,8 +40,8 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
                                    "offset": page,
                                    "sortt": "date"
                                    },
-                           proxies=proxy.get(list(proxy.keys())[0]),
-                           timeout=DEFAULTS_TIMEOUT
+                           # proxies=proxy.get(list(proxy.keys())[0]),
+                           # timeout=DEFAULTS_TIMEOUT
                            )
     except Exception as e:
         # logger.info(str(e))
@@ -83,7 +83,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
                 pass
         if start_body_len == len(body):
             return True, body, True, proxy
-        return get_urls(keyword, limit_date, update_proxy(proxy), body, page + 1, attempts)
+        return get_urls(keyword, limit_date, proxy, body, page + 1, attempts)
     elif res.status_code == 404:
         return False, body, False, proxy
     return False, body, False, proxy
@@ -98,7 +98,7 @@ def get_page(articles, article_body, proxy, attempt=0):
         res = requests.get(url, headers={
             "user-agent": USER_AGENT
         },
-                           proxies=proxy.get(list(proxy.keys())[0]),
+                           # proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
         if res.ok:
@@ -167,7 +167,11 @@ def get_page(articles, article_body, proxy, attempt=0):
                         pass
             except Exception:
                 pass
-            articles.append({"date": article_body['date'], "title": title, "text": text.strip(),
+            try:
+                article_date = dateparser.parse(soup.find("span", {"itemprop": "datePublished"}).text)
+            except Exception:
+                article_date = article_body['date']
+            articles.append({"date": article_date, "title": title, "text": text.strip(),
                              "href": url,
                              "photos": photos,
                              "sounds": sounds,
@@ -184,4 +188,4 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    parsing_fontanka("красота", datetime.strptime("01/09/2021", "%d/%m/%Y"), None, [])
+    parsing_fontanka("красота", datetime.strptime("01/10/2021", "%d/%m/%Y"), None, [])
