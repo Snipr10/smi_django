@@ -94,12 +94,12 @@ def get_page(articles, article_body, proxy, attempt=0):
             article_section = soup.find("article", class_="article-view")
 
             try:
-                text = article_section.find("b").text
+                text = article_section.find("b").text + "<br> \n"
             except Exception:
                 text = ""
 
             for p in article_section.find_all("p"):
-                text += p.text.strip() + "\n"
+                text += p.text.strip() + "<br> \n"
 
             try:
                 photos.append(article_section.find("figure").find("img").attrs.get("src"))

@@ -97,7 +97,7 @@ def get_page(articles, article_body, proxy, attempt=0):
 
             try:
                 for p in soup.find_all("p"):
-                    text += p.text + "\n"
+                    text += p.text + "<br> \n"
             except Exception:
                 pass
             try:

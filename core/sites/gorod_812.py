@@ -95,7 +95,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             text = ""
 
             for p in article_section.find_all("p"):
-                text += p.text.strip() + "\n"
+                text += p.text.strip() + "<br> \n"
                 try:
                     for img in p.find_all("img"):
                         try:

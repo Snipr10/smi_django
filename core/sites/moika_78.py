@@ -100,7 +100,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             main_article = article.find("div", {"class": "post-content article"})
             for p in main_article.find_all("p"):
                 text += p.text
-                text += "\n"
+                text += "<br> \n"
             try:
                 for img in article.find_all("div", {"class": "image-box"}):
                     try:

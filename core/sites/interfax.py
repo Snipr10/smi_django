@@ -111,7 +111,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             article = soup.find("article", {"itemprop": "articleBody"})
             for p in article.find_all("p"):
                 text += p.text
-                text += "\n"
+                text += "<br> \n"
             try:
                 for img in article.find_all("figure", {"class": "inner"}):
                     try:

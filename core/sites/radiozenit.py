@@ -86,7 +86,7 @@ def get_page(articles, article_body, proxy, attempt=0):
                     text += f" ({p.contents[0].attrs['href']}) "
                 except Exception:
                     pass
-                text += "\n"
+                text += "<br> \n"
             try:
                 for img in article.find("div", {"class": "article__inner"}).find_all("img"):
                     try:

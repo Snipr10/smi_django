@@ -48,7 +48,7 @@ def get_page(articles, article_body, proxy, attempt=0):
 
             for text_body in p_text_body:
                 if "subscript" not in text_body.attrs.get('class', []):
-                    text += "\n" + text_body.text
+                    text += "<br> \n" + text_body.text
 
             try:
                 for img in container.find_all("img", {"class": "displayBlock"}):
