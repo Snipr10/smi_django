@@ -23,8 +23,6 @@ def parsing_governor_disproof(limit_date, proxy):
             break
         if len(body) == 0:
             break
-        if len(body) == 0:
-            break
         for article in body:
             print("parsing_governor_disproof " + str(i))
             i += 1

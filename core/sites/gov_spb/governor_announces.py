@@ -23,8 +23,6 @@ def parsing_gov_announces(limit_date, proxy):
             break
         if len(body) == 0:
             break
-        if len(body) == 0:
-            break
         for article in body:
             print("parsing_gov_announces " + str(i))
             i += 1
