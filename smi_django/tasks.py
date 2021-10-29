@@ -3,6 +3,8 @@ import datetime
 
 from django.db.models import Q
 from django.utils import timezone
+import django.db
+
 from pytz import UTC
 
 from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource, Post
@@ -50,6 +52,7 @@ def start_task_parsing_by_time():
                 articles, proxy = start_parsing(site.last_parsing, update_proxy(None))
             if site.url == DP_URL:
                 articles, proxy = parsing_dp(site.last_parsing, update_proxy(None))
+            django.db.close_old_connections()
             stop_proxy(proxy)
             save_articles(site.url, articles)
             site.last_parsing = update_time_timezone(timezone.localtime())
