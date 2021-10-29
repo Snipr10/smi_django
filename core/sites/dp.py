@@ -152,6 +152,8 @@ def get_page(articles, article_body, proxy, attempt=0):
                  "title": article_body['title'],
                  "text": text.strip(),
                  "photos": photos,
+                 "href": url,
+
                  })
 
             return False, articles, proxy
@@ -170,5 +172,5 @@ DEFAULTS_TIMEOUT = 100
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_dp(datetime.strptime("21/08/2021", "%d/%m/%Y"), update_proxy(None))
+    articles, proxy = parsing_dp(datetime.strptime("01/01/2021", "%d/%m/%Y"), update_proxy(None))
     print(1)
