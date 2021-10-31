@@ -282,7 +282,7 @@ def parsing_key(key_word, last_update, key):
 def update_smi():
     parsing_site = ParsingSite.objects.filter(last_parsing__isnull=True, is_active=True, taken=False).first()
     if parsing_site is None:
-        parsing_site = ParsingSite.objects.filter(last_parsing__isnull=False, is_active=True, taken=False).order_by("-last_parsing").first()
+        parsing_site = ParsingSite.objects.filter(last_parsing__isnull=False, is_active=True, taken=False).order_by("-last_parsing").last()
 
     try:
         parsing_site.taken = True

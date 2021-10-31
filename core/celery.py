@@ -13,27 +13,27 @@ app.config_from_object('django.conf:settings')
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    # 'start_task_parsing_by_time': {
-    #     'task': 'smi_django.tasks.start_task_parsing_by_time',
-    #     'schedule': crontab(minute='*/5')
-    # },
-    # 'add_new_key': {
-    #     'task': 'smi_django.tasks.add_new_key',
-    #     'schedule': crontab(minute='29')
-    #     # 'schedule': crontab(minute='*/12')
-    # },
-    # 'task_parsing_key': {
-    #     'task': 'smi_django.tasks.task_parsing_key',
-    #     # 'schedule': crontab(minute='5, 35')
-    #     'schedule': 2.0,
-    #     # 'schedule': crontab(minute='*/1')
-    #
-    # },
-    # 'untaken_key': {
-    #     'task': 'smi_django.tasks.untaken_key',
-    #     'schedule': crontab(minute='31')
-    #     # 'schedule': crontab(minute='*/12')
-    # },
+    'start_task_parsing_by_time': {
+        'task': 'smi_django.tasks.start_task_parsing_by_time',
+        'schedule': crontab(minute='*/5')
+    },
+    'add_new_key': {
+        'task': 'smi_django.tasks.add_new_key',
+        'schedule': crontab(minute='29')
+        # 'schedule': crontab(minute='*/12')
+    },
+    'task_parsing_key': {
+        'task': 'smi_django.tasks.task_parsing_key',
+        # 'schedule': crontab(minute='5, 35')
+        'schedule': 2.0,
+        # 'schedule': crontab(minute='*/1')
+
+    },
+    'untaken_key': {
+        'task': 'smi_django.tasks.untaken_key',
+        'schedule': crontab(minute='31')
+        # 'schedule': crontab(minute='*/12')
+    },
     'update_smi': {
         'task': 'smi_django.tasks.update_smi',
         'schedule': crontab(minute='*/1')
