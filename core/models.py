@@ -66,6 +66,7 @@ class Post(models.Model):
     trust = models.IntegerField(default=0)
     updated = models.DateTimeField(auto_now_add=True)
     found_date = models.DateField(auto_now_add=True)
+    parsing = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'prsr_parser_global_posts'
@@ -158,6 +159,15 @@ class Sources(models.Model):
     class Meta:
         db_table = 'prsr_parser_sources'
 
+
+class ParsingSite(models.Model):
+    url = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    taken = models.BooleanField(default=False)
+    last_parsing = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'prsr_parser_global_parsing_sites'
 
 
 # class Post(models.Model):

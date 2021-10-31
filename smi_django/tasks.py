@@ -7,7 +7,7 @@ import django.db
 
 from pytz import UTC
 
-from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource, Post
+from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource, Post, ParsingSite, PostContent
 from core.sites.dp import parsing_dp, PAGE_URL as DP_URL
 from core.sites.echo_msk import parsing_echo_msk
 from core.sites.expertnw import parsing_expertnw
@@ -28,6 +28,8 @@ from core.sites.radio import parsing_radio, RADIO_URL
 from core.sites.radiozenit import parsing_radio_zenit, RADIO_URL as ZENIT_RADIO_URL
 from core.sites.five_tv import parsing_5_tv
 from concurrent.futures.thread import ThreadPoolExecutor
+
+from core.utils.parsing_smi_url import parsing_smi_url
 
 
 @app.task
@@ -274,3 +276,57 @@ def parsing_key(key_word, last_update, key):
         key_word.is_active = 0
         key_word.save(update_fields=["taken"])
         print(e)
+
+
+@app.task
+def update_smi():
+    parsing_site = ParsingSite.objects.filter(last_parsing__isnull=True, is_active=True, taken=False).first()
+    if parsing_site is None:
+        parsing_site = ParsingSite.objects.filter(last_parsing__isnull=False, is_active=True, taken=False).order_by("-last_parsing").first()
+
+    try:
+        parsing_site.taken = True
+        parsing_site.save(update_fields=["taken"])
+
+        update_post = Post.objects.filter(display_link=parsing_site.url, parsing=0).first()
+        if update_post is None:
+            parsing_site.last_parsing = update_time_timezone(timezone.localtime())
+            parsing_site.taken = False
+            parsing_site.save(update_fields=["taken", "last_parsing"])
+        else:
+            update_post.parsing = 1
+            update_post.save(update_fields=["parsing"])
+
+            text = parsing_smi_url(update_post.link)
+            if text is not None:
+                try:
+                    PostContent.objects.create(
+                        content=text,
+                        cache_id=update_post.cache_id,
+                        keyword_id=10000003,
+
+                    )
+                    update_post.parsing = 2
+                    update_post.save(update_fields=["parsing"])
+                except Exception:
+                    update_post.parsing = 0
+                    update_post.save(update_fields=["parsing"])
+            else:
+                update_post.parsing = 0
+                update_post.save(update_fields=["parsing"])
+
+            parsing_site.last_parsing = update_time_timezone(timezone.localtime())
+            parsing_site.taken = False
+            parsing_site.save(update_fields=["taken", "last_parsing"])
+    except Exception:
+        try:
+            update_post.parsing = 0
+            update_post.save(update_fields=["parsing"])
+        except Exception:
+            pass
+
+        try:
+            parsing_site.taken = False
+            parsing_site.save(update_fields=["taken"])
+        except Exception:
+            pass
