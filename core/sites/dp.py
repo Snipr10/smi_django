@@ -5,22 +5,21 @@ import dateparser
 import requests
 from bs4 import BeautifulSoup
 
-from core.sites.utils import update_proxy, stop_proxy
+from core.sites.utils import stop_proxy, update_proxy, DEFAULTS_TIMEOUT
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
-FIRST_SEARCH = "https://www.dp.ru/search"
-SEARCH_PAGE_URL = "https://www.dp.ru/Search/LoadSearchPage"
+SEARCH_PAGE_URL = "https://www.dp.ru/api/v1.0/Articles/FindArticles"
 PAGE_URL = "https://www.dp.ru"
 
 
 def parsing_dp(limit_date, proxy):
     # first_request
-    is_parsing_url, body, next_json, proxy = parsing_first_search(limit_date, proxy, attempts=0)
     articles = []
-    page = 1
-
-    while page < 1000 and is_parsing_url and next_json is not None:
-        is_parsing_url, body, next_json, proxy = get_urls(limit_date, proxy, body, next_json)
+    page = 0
+    body = []
+    is_parsing_url = True
+    while page < 1000 and is_parsing_url:
+        is_parsing_url, body, proxy = get_urls(limit_date, proxy, body, page)
         page += 1
         print("parsing_dp page" + str(page))
 
@@ -36,52 +35,21 @@ def parsing_dp(limit_date, proxy):
     return articles, proxy
 
 
-def parsing_first_search(limit_date, proxy, attempts=0):
-    body = []
+def get_urls(limit_date, proxy, body, page, attempts=0):
     try:
-        res = requests.get(FIRST_SEARCH,
-                           headers={
-                               "user-agent": USER_AGENT
-                           },
-
-                           proxies=proxy.get(list(proxy.keys())[0]),
-                           timeout=DEFAULTS_TIMEOUT
-                           )
-        if not res.ok:
-            raise Exception(res.text)
-        soup = BeautifulSoup(res.text)
-        next_search_div = soup.select('div[ng-loading*=""]')
-        next_json_data = next_search_div[0].attrs['ng-loading']
-        next_json = json.loads(
-            next_json_data.replace("'", '"').replace("{ ", '{"').replace(", ", ', "').replace(": ", '": '))
-        for site in soup.find_all("a", {"class": "b-inline-article__preview"}):
-            href = site.attrs['href']
-            href_split = href.split("/")
-            site_date = datetime(int(href_split[2]), int(href_split[3]), int(href_split[4]))
-
-            if site_date.date() >= limit_date.date():
-                body.append({"title": site.text.strip(), "href": href})
-            else:
-                return False, body, next_json, proxy
-        return True, body, next_json, proxy
-    except Exception as e:
-        stop_proxy(proxy)
-        # logger.info(str(e))
-        if attempts < 10:
-            return parsing_first_search(limit_date, update_proxy(proxy), attempts + 1)
-        return False, [], None, proxy
-
-
-def get_urls(limit_date, proxy, body, next_json, attempts=0):
-    try:
+        # ?SearchString=&skip=0&take=10&DateFrom=&DateTo=&IsInIssue=false&SortType=2&SortOrder=1"
         res = requests.get(SEARCH_PAGE_URL,
                            headers={
                                "user-agent": USER_AGENT
                            },
-                           params={"query": "",
-                                   "page": next_json['page'],
-                                   "lastId": next_json['lastId'],
-                                   "lastDate": next_json['lastDate'],
+                           params={"SearchString": "",
+                                   "skip": 50 * page,
+                                   "take": 50,
+                                   "DateFrom": "",
+                                   "DateTo": "",
+                                   "IsInIssue": "false",
+                                   "SortType": 2,
+                                   "SortOrder": 1
                                    },
                            proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
@@ -90,30 +58,31 @@ def get_urls(limit_date, proxy, body, next_json, attempts=0):
         stop_proxy(proxy)
         # logger.info(str(e))
         if attempts < 10:
-            return get_urls(limit_date, update_proxy(proxy), body, next_json, attempts + 1)
+            return get_urls(limit_date, update_proxy(proxy), body, page, attempts + 1)
         return False, body, proxy
     if res.ok:
         json_res = json.loads(res.text)
 
-        articles = BeautifulSoup(
-            json_res["strToCompile"]).find_all("a", {"class": "b-inline-article__preview"})
+        articles = json_res['List']
 
         if len(articles) == 0:
-            return False, body, json_res, proxy
+            return False, body, proxy
         for site in articles:
-            href = site.attrs['href']
-            href_split = href.split("/")
-            site_date = datetime(int(href_split[2]), int(href_split[3]), int(href_split[4]))
+            site_date = dateparser.parse(site['PublicationDate'])
 
             if site_date.date() >= limit_date.date():
-                body.append({"title": site.text.strip(), "href": href})
+                body.append({
+                    "title": site['Headline'],
+                    "href": PAGE_URL +"/" + site['ShortUrl'],
+                    "date": site_date
+                })
             else:
-                return False, body, next_json, proxy
-        return True, body, json_res, proxy
+                return False, body, proxy
+        return True, body, proxy
 
     elif res.status_code == 404:
         return False, body, None, proxy
-    return True, body, None, proxy
+    return True, body,  proxy
 
 
 def get_page(articles, article_body, proxy, attempt=0):
@@ -121,7 +90,7 @@ def get_page(articles, article_body, proxy, attempt=0):
     sounds = []
     videos = []
     try:
-        url = PAGE_URL + article_body['href']
+        url = article_body['href']
         res = requests.get(url, headers={
             "user-agent": USER_AGENT
         },
@@ -132,28 +101,26 @@ def get_page(articles, article_body, proxy, attempt=0):
             soup_all = BeautifulSoup(res.text)
             text = ""
 
-            soup = soup_all.find("div", {"class": "b-article-grid-layout-left-column__inner b-article__content"})
+            soup = soup_all.find("div", {"class": "d-flex flex-row"})
 
             try:
-                for p in soup.find_all("p"):
-                    text += p.text + "\n"
+                for p in soup.find_all("div", {"class":"paragraph paragraph-text"}):
+                    text += p.text + "\n <br>"
             except Exception:
                 pass
             try:
                 for img in soup.find_all("img"):
                     if "data:image/png;base64" not in img.attrs.get("src", ""):
-                        photos.append("https:" + img.attrs.get("src", ""))
+                        photos.append(img.attrs.get("src", ""))
             except Exception:
                 pass
-            article_date = dateparser.parse(soup_all.find("span", {"class": "b-article-header-signature__date"}).text.strip())
 
             articles.append(
-                {"date": article_date,
+                {"date": article_body['date'],
                  "title": article_body['title'],
                  "text": text.strip(),
                  "photos": photos,
                  "href": url,
-
                  })
 
             return False, articles, proxy
@@ -164,11 +131,6 @@ def get_page(articles, article_body, proxy, attempt=0):
             return False, articles, proxy
         return get_page(articles, article_body, update_proxy(proxy), attempt + 1)
 
-
-
-
-
-DEFAULTS_TIMEOUT = 100
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
