@@ -34,7 +34,7 @@ def parsing_smi_url(url):
                         pass
             text = re.sub("\n\n+", "\r\n <br> ", text)
             if article.meta_description.strip() not in text:
-                text = article.meta_description.strip() + "\n" + text
+                text = article.meta_description.strip() + "\r\n <br> " + text
         except Exception:
             stop_proxy(proxy, error=0, banned=0)
     except Exception:
