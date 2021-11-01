@@ -330,3 +330,20 @@ def update_smi():
             parsing_site.save(update_fields=["taken"])
         except Exception:
             pass
+
+
+@app.task
+def update_dp():
+    i = 1
+    for post in Post.objects.filter(display_link="https://www.dp.ru"):
+        print("update_dp " + str(i))
+        i += 1
+        try:
+            content_obj = PostContent.objects.get(cache_id=post.cache_id)
+            content = content_obj.content
+            content = content.replace("\n", " <br> \n")
+            content_obj.content = content
+            content_obj.save(update_fields=["content"])
+        except Exception:
+            pass
+    print("update_dp OK")
