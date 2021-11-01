@@ -7,7 +7,8 @@ import django.db
 
 from pytz import UTC
 
-from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource, Post, ParsingSite, PostContent
+from core.models import GlobalSite, SiteKeyword, Keyword, Sources, KeywordSource, Post, ParsingSite, PostContent, \
+    PostContentGlobal
 from core.sites.dp import parsing_dp, PAGE_URL as DP_URL
 from core.sites.echo_msk import parsing_echo_msk
 from core.sites.expertnw import parsing_expertnw
@@ -339,19 +340,11 @@ def update_dp():
         print("update_dp " + str(i))
         i += 1
         try:
-            print(1)
-            print(post.cache_id)
-            content_obj = PostContent.objects.filter(cache_id=post.cache_id).first()
-            print(content_obj.cache_id)
-            print(2)
+            content_obj = PostContentGlobal.objects.get(cache_id=post.cache_id)
             content = content_obj.content
-            print(3)
             content = content.replace("\n", " <br> \n")
-            print(4)
             content_obj.content = content
-            print(5)
             content_obj.save(update_fields=["content"])
-            print(6)
         except Exception as e:
             print("update_dp " + str(e))
 
