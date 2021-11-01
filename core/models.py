@@ -97,7 +97,6 @@ class PostContent(models.Model):
 class PostContentGlobal(models.Model):
     cache_id = models.IntegerField(primary_key=True)
     content = models.CharField(max_length=4096, null=True, blank=True)
-    keyword_id = models.IntegerField(default=10000002)
 
     class Meta:
         db_table = 'prsr_parser_global_post_content'
