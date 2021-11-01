@@ -40,13 +40,13 @@ app.conf.beat_schedule = {
         # 'schedule': crontab(minute='*/12')
     },
 
-
-
-    'update_dp': {
-        'task': 'smi_django.tasks.update_dp',
-        'schedule': crontab(minute='30')
-        # 'schedule': crontab(minute='*/12')
-    },
+    #
+    #
+    # 'update_dp': {
+    #     'task': 'smi_django.tasks.update_dp',
+    #     'schedule': crontab(minute='30')
+    #     # 'schedule': crontab(minute='*/12')
+    # },
 
     # 'update_time': {
     #     'task': 'smi_django.tasks.update_time',
