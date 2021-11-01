@@ -339,11 +339,17 @@ def update_dp():
         print("update_dp " + str(i))
         i += 1
         try:
-            content_obj = PostContent.objects.get(cache_id=post.cache_id)
+            print(1)
+            content_obj = PostContent.objects.filter(cache_id=post.cache_id).first()
+            print(2)
             content = content_obj.content
+            print(3)
             content = content.replace("\n", " <br> \n")
+            print(4)
             content_obj.content = content
+            print(5)
             content_obj.save(update_fields=["content"])
+            print(6)
         except Exception as e:
             print("update_dp " + str(e))
 
