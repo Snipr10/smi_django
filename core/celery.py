@@ -42,11 +42,11 @@ app.conf.beat_schedule = {
 
 
 
-    # 'activate_key': {
-    #     'task': 'smi_django.tasks.activate_key',
-    #     'schedule': crontab(minute='1')
-    #     # 'schedule': crontab(minute='*/12')
-    # },
+    'update_dp': {
+        'task': 'smi_django.tasks.update_dp',
+        'schedule': crontab(minute='12')
+        # 'schedule': crontab(minute='*/12')
+    },
 
     # 'update_time': {
     #     'task': 'smi_django.tasks.update_time',
