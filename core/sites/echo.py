@@ -91,7 +91,7 @@ def get_page(articles, article_body, limit_date, proxy, attempt=0):
                     article_date = article_body["date"]
                 title = soup.find("h1", {"itemprop": "headline"}).text.strip()
                 for body_text in soup.find("div", {"itemprop": "articleBody"}).find_all("p"):
-                    text += body_text.text.strip()
+                    text += body_text.text.strip() + "\r\n <br> "
             else:
                 try:
                     try:

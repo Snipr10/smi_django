@@ -32,7 +32,7 @@ def parsing_smi_url(url):
                             text = text.replace(title, "", 1)
                     except Exception:
                         pass
-            text = re.sub("\n\n+", "\n\n", text)
+            text = re.sub("\n\n+", "\r\n <br> ", text)
             if article.meta_description.strip() not in text:
                 text = article.meta_description.strip() + "\n" + text
         except Exception:

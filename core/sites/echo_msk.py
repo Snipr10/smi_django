@@ -50,7 +50,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             if "/news/" in article_body['href']:
                 title = soup.find("h1", {"itemprop": "headline"}).text.strip()
                 for body_text in soup.find("div", {"itemprop": "articleBody"}).find_all("p"):
-                    text += body_text.text.strip()
+                    text += body_text.text.strip() + "\r\n <br> "
             else:
                 try:
                     try:

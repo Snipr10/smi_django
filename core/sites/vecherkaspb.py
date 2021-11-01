@@ -85,7 +85,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             article_section = soup.find("div", class_="entry-content")
             text = ""
             for p in article_section.find_all("p"):
-                text += p.text + "<br> \n"
+                text += p.text + "\r\n <br> "
 
             try:
                 photos.append(soup.find("div", class_="entry-img").find("img").attrs.get("src"))

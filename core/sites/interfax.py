@@ -110,8 +110,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             soup = BeautifulSoup(res.content.decode("windows-1251"))
             article = soup.find("article", {"itemprop": "articleBody"})
             for p in article.find_all("p"):
-                text += p.text
-                text += "<br> \n"
+                text += p.text + "\r\n <br> "
             try:
                 for img in article.find_all("figure", {"class": "inner"}):
                     try:

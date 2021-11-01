@@ -100,12 +100,12 @@ def get_page(articles, article_body, proxy, attempt=0):
             article_section = soup.find("div", class_="section-main-box").find("div", class_="plain-text")
 
             try:
-                text = article_section.find("div", class_="previews-text").text.replace(" ", "").strip()
+                text = article_section.find("div", class_="previews-text").text.replace(" ", "").strip() + "\r\n <br> "
             except Exception:
                 text = ""
 
             for p in article_section.find_all("p"):
-                text += p.text.replace(" ", "").strip()
+                text += p.text.replace(" ", "").strip() + "\r\n <br> "
 
             for image_block in article_section.find_all("div", class_="img-block"):
                 try:

@@ -342,7 +342,7 @@ def update_dp():
         try:
             content_obj = PostContentGlobal.objects.get(cache_id=post.cache_id)
             content = content_obj.content
-            content = content.replace("\n", " <br> \n")
+            content = content.replace(" <br> \n", "\r\n <br> ")
             content_obj.content = content
             content_obj.save(update_fields=["content"])
         except Exception as e:

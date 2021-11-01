@@ -31,7 +31,7 @@ app.conf.beat_schedule = {
     },
     'untaken_key': {
         'task': 'smi_django.tasks.untaken_key',
-        'schedule': crontab(minute='31')
+        'schedule': crontab(minute='5')
         # 'schedule': crontab(minute='*/12')
     },
     'update_smi': {

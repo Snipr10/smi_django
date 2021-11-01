@@ -115,12 +115,12 @@ def get_page(articles, article_body, proxy, attempt=0):
             except Exception:
                 title = article_body['title']
             try:
-                text += soup.select('div[class*="-"]')[0].find("p").text + "<br> \n"
+                text += soup.select('div[class*="-"]')[0].find("p").text + "\r\n <br> "
             except Exception:
                 pass
             try:
                 for p in soup.find("section", {"itemprop": "articleBody"}).find_all("p"):
-                    text += p.text + "<br> \n"
+                    text += p.text + "\r\n <br> "
             except Exception:
                 pass
             article_section = soup.find("section", {"itemprop": "articleBody"})

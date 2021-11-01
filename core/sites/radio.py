@@ -80,7 +80,7 @@ def get_page(articles, url, limit_date, proxy, attempt=0):
                             try:
                                 for content in justify.contents:
                                     if isinstance(content, NavigableString):
-                                        text += str(content).encode('ISO-8859-1').decode("windows-1251") + "<br> \n"
+                                        text += str(content).encode('ISO-8859-1').decode("windows-1251") + "\r\n <br> "
                             except Exception:
                                 pass
                         articles.append({"date": date, "title": title, "text": text, "href": RADIO_URL + url,

@@ -44,7 +44,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             text_body = soup.find("p", {"align": "justify"})
 
             if text_body is not None:
-                text += "<br> \n" + text_body.text
+                text += "\r\n <br> " + text_body.text
 
             try:
                 for img in soup.find("div", {"class": "brand-episode__body"}).find_all("img"):

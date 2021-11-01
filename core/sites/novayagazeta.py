@@ -99,7 +99,7 @@ def get_page(articles, article_body, proxy, attempt=0):
                 text = ""
 
             for p in article_section.find_all("p"):
-                text += p.text.strip() + "<br> \n"
+                text += p.text.strip() + "\r\n <br> "
 
             try:
                 photos.append(article_section.find("figure").find("img").attrs.get("src"))

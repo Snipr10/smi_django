@@ -70,8 +70,7 @@ def get_page(articles, article_body, limit_date, proxy, attempt=0):
             title = soup.find("h1", {"class": "title pg-title"}).text.strip()
             body_texts = soup.find("div", {"class": "body-container"}).find_all("p")
             for body_text in body_texts:
-                text += body_text.text + "<br> \n"
-            text = text
+                text += body_text.text + "\r\n <br> "
             for cover_media in soup.find("div", {"class": "cover-media"}):
                 try:
                     photos.append(cover_media.find("img").attrs['src'])

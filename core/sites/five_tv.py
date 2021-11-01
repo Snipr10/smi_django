@@ -43,12 +43,12 @@ def get_page(articles, article_body, proxy, attempt=0):
             soup = BeautifulSoup(res.text)
             container = _get_class_container(soup)
             title = container.find("h1", {"class": "fsHeader1Alt"}).text
-            text = container.find("p", {"class": "fsHeaderAlt"}).text
+            text = container.find("p", {"class": "fsHeaderAlt"}).text + "\r\n <br> "
             p_text_body = container.find("div", {"class": "marginRightCol fsBig"}).find_all("p")
 
             for text_body in p_text_body:
                 if "subscript" not in text_body.attrs.get('class', []):
-                    text += "<br> \n" + text_body.text
+                    text += text_body.text + "\r\n <br> "
 
             try:
                 for img in container.find_all("img", {"class": "displayBlock"}):

@@ -105,7 +105,7 @@ def get_page(articles, article_body, proxy, attempt=0):
 
             try:
                 for p in soup.find_all("div", {"class": "paragraph paragraph-text"}):
-                    text += p.text + "\n <br> "
+                    text += p.text + "\r\n <br> "
             except Exception:
                 pass
             try:
