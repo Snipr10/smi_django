@@ -344,6 +344,8 @@ def update_dp():
             content = content.replace("\n", " <br> \n")
             content_obj.content = content
             content_obj.save(update_fields=["content"])
-        except Exception:
+        except Exception as e:
+            print("update_dp " + str(e))
+
             pass
     print("update_dp OK")
