@@ -104,8 +104,8 @@ def get_page(articles, article_body, proxy, attempt=0):
             soup = soup_all.find("div", {"class": "d-flex flex-row"})
 
             try:
-                for p in soup.find_all("div", {"class":"paragraph paragraph-text"}):
-                    text += p.text + "\n <br>"
+                for p in soup.find_all("div", {"class": "paragraph paragraph-text"}):
+                    text += p.text + "\n <br> "
             except Exception:
                 pass
             try:
