@@ -340,6 +340,7 @@ def update_dp():
         i += 1
         try:
             print(1)
+            print(post.cache_id)
             content_obj = PostContent.objects.filter(cache_id=post.cache_id).first()
             print(content_obj.cache_id)
             print(2)
