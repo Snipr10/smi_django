@@ -159,7 +159,7 @@ def save_articles(display_link, articles):
     print("save PostContent")
     models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size, ignore_conflicts=True)
     print("save Post")
-    models.Post.objects.bulk_create(posts, batch_size=batch_size, ignore_conflicts=True)
+    models.Post.objects.bulk_create(posts, batch_size=50, ignore_conflicts=True)
 
 
 def get_late_date(display_link):
