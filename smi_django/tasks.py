@@ -299,7 +299,7 @@ def update_smi():
             update_post.save(update_fields=["parsing"])
 
             text = parsing_smi_url(update_post.link)
-            if text is not None:
+            if text is not None and text.strip() != "":
                 try:
                     PostContent.objects.create(
                         content=text,
