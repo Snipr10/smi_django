@@ -22,13 +22,13 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute='29')
         # 'schedule': crontab(minute='*/12')
     },
-    # 'task_parsing_key': {
-    #     'task': 'smi_django.tasks.task_parsing_key',
-    #     # 'schedule': crontab(minute='5, 35')
-    #     'schedule': 2.0,
-    #     # 'schedule': crontab(minute='*/1')
-    #
-    # },
+    'task_parsing_key': {
+        'task': 'smi_django.tasks.task_parsing_key',
+        # 'schedule': crontab(minute='5, 35')
+        'schedule': 2.0,
+        # 'schedule': crontab(minute='*/1')
+
+    },
     'untaken_key': {
         'task': 'smi_django.tasks.untaken_key',
         'schedule': crontab(minute='5')
