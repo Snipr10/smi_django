@@ -118,7 +118,10 @@ def save_articles(display_link, articles):
     # sounds_content = []
     django.db.close_old_connections()
     print("save")
+    i = 0
     for article in articles:
+        print("save: " + str(i))
+        i += 1
 
         print(article.get('href'))
         author = get_or_create_author(display_link)
@@ -144,7 +147,8 @@ def save_articles(display_link, articles):
             keyword_id=0,
             trust=0
         ))
-
+        print(str(cache_id) + "\n")
+        print(text)
         posts_content.append(models.PostContent(
             content=text,
             cache_id=cache_id,
