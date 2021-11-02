@@ -37,7 +37,7 @@ app.conf.beat_schedule = {
     'update_smi': {
         'task': 'smi_django.tasks.update_smi',
         # 'schedule': crontab(minute='*/1')
-        'schedule': 10.0,
+        'schedule': 2.0,
 
         # 'schedule': crontab(minute='*/12')
     },
