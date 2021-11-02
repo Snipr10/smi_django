@@ -157,7 +157,13 @@ def save_articles(display_link, articles):
         ))
     print("len : " + str(len(posts)))
     print("save PostContent")
-    models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size, ignore_conflicts=True)
+    try:
+        models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size)
+    except Exception as e:
+        print("save PostContent " +str(e))
+
+        models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size, ignore_conflicts=True)
+
     print("save Post")
     models.Post.objects.bulk_create(posts, batch_size=50, ignore_conflicts=True)
 

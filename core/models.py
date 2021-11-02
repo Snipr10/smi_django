@@ -87,7 +87,7 @@ class GlobalSite(models.Model):
 
 class PostContent(models.Model):
     cache_id = models.IntegerField(primary_key=True)
-    content = models.CharField(max_length=10000002, null=True, blank=True)
+    content = models.CharField(max_length=10000002)
     keyword_id = models.IntegerField(default=10000002)
 
     class Meta:
