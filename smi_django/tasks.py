@@ -289,7 +289,7 @@ def update_smi():
         parsing_site.taken = True
         parsing_site.save(update_fields=["taken"])
 
-        update_post = Post.objects.filter(display_link=parsing_site.url, parsing=0).last()
+        update_post = Post.objects.filter(display_link=parsing_site.url, parsing=0).order_by("created").last()
         if update_post is None:
             parsing_site.last_parsing = update_time_timezone(timezone.localtime()) + datetime.timedelta(minutes=3*60)
             parsing_site.taken = False
