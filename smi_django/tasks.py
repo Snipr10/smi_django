@@ -292,6 +292,8 @@ def update_smi_new():
     if parsing_sites is None:
         parsing_sites = ParsingSite.objects.filter(last_parsing__isnull=False, is_active=True, taken=False).order_by(
             "last_parsing")[:MAX_UPDATE_SITE]
+    print("start parsing_site")
+
     for parsing_site in parsing_sites:
         parsing_site.taken = True
     ParsingSite.objects.bulk_update(parsing_sites, fields=['taken'])
@@ -303,7 +305,7 @@ def update_smi_new():
 
     for future in concurrent.futures.as_completed(futures, timeout=300):
         print(future.result())
-
+    print("stop update_smi_new")
 
 def update_smi_text(parsing_site):
     try:
