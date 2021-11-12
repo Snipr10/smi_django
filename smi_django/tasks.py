@@ -282,6 +282,7 @@ def parsing_key(key_word, last_update, key):
 
 @app.task
 def update_smi_new():
+    print("start update_smi_new")
     pool_source = ThreadPoolExecutor(5)
     futures = []
 
@@ -296,6 +297,8 @@ def update_smi_new():
     ParsingSite.objects.bulk_update(parsing_sites, fields=['taken'])
 
     for parsing_site in parsing_sites:
+        print("start parse" + str(parsing_site.url))
+
         futures.append(pool_source.submit(update_smi_text, parsing_site))
 
     for future in concurrent.futures.as_completed(futures, timeout=300):
@@ -304,8 +307,9 @@ def update_smi_new():
 
 def update_smi_text(parsing_site):
     try:
+        i = 0
         MAX_UPDATE_POST = 50
-
+        print("start update_smi_text")
         update_posts = Post.objects.filter(display_link=parsing_site.url, parsing=0).order_by("-created")[
                        :MAX_UPDATE_POST]
         if len(update_posts) == 0:
@@ -322,6 +326,7 @@ def update_smi_text(parsing_site):
                 text = parsing_smi_url(update_post.link)
                 if text is not None and text.strip() != "":
                     try:
+                        i += 1
                         posts_content.append(
                             PostContent(
                                 content=text,
@@ -341,6 +346,7 @@ def update_smi_text(parsing_site):
                 for update_post in update_posts:
                     update_post.parsing = 0
                 Post.objects.bulk_update(update_posts, fields=['parsing'])
+        print(i)
         parsing_site.last_parsing = update_time_timezone(timezone.localtime())
         parsing_site.taken = False
         parsing_site.save(update_fields=["taken", "last_parsing"])
