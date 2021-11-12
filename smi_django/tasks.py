@@ -289,7 +289,7 @@ def update_smi_new():
     MAX_UPDATE_SITE = 10
 
     parsing_sites = ParsingSite.objects.filter(last_parsing__isnull=True, is_active=True, taken=False)[:MAX_UPDATE_SITE]
-    if parsing_sites:
+    if not parsing_sites:
         parsing_sites = ParsingSite.objects.filter(last_parsing__isnull=False, is_active=True, taken=False).order_by(
             "last_parsing")[:MAX_UPDATE_SITE]
     print("start parsing_site")
