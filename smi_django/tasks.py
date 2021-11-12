@@ -293,8 +293,11 @@ def update_smi_new():
         parsing_sites = ParsingSite.objects.filter(last_parsing__isnull=False, is_active=True, taken=False).order_by(
             "last_parsing")[:MAX_UPDATE_SITE]
     print("start parsing_site")
-
+    print("len parsing_sites" + len(parsing_sites))
+    i= 0
     for parsing_site in parsing_sites:
+        print(i)
+        i += 1
         parsing_site.taken = True
     ParsingSite.objects.bulk_update(parsing_sites, fields=['taken'])
 
