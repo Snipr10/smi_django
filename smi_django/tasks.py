@@ -23,7 +23,7 @@ from core.sites.svoboda_new import parsing_svoboda_new
 from core.sites.vecherkaspb import parsing_vecherkaspb
 from core.celery import app
 
-from core.sites.utils import get_late_date, update_proxy, stop_proxy, save_articles, update_time_timezone
+from core.sites.utils import get_late_date, update_proxy, stop_proxy, save_articles, update_time_timezone, batch_size
 from core.sites.echo import parsing_radio_echo, RADIO_URL as ECHO_RADIO_URL
 from core.sites.radio import parsing_radio, RADIO_URL
 from core.sites.radiozenit import parsing_radio_zenit, RADIO_URL as ZENIT_RADIO_URL
@@ -70,7 +70,6 @@ def start_task_parsing_by_time():
 
 @app.task
 def add_new_key():
-
     new_key_list = []
     # print("start add")
     for site in GlobalSite.objects.filter(is_keyword=1):
@@ -101,17 +100,18 @@ def update_time():
     i = 0
     for site_id in SiteKeyword.objects.filter(site_id=17097923825390536162, last_parsing__gte=update_time_timezone(
             timezone.localtime()
-    ) - datetime.timedelta(days=360*3)):
+    ) - datetime.timedelta(days=360 * 3)):
         print(i)
-        site_id.last_parsing= update_time_timezone(
+        site_id.last_parsing = update_time_timezone(
             timezone.localtime()
-    ) - datetime.timedelta(days=360*3)
+        ) - datetime.timedelta(days=360 * 3)
         site_id.save(update_fields=["last_parsing"])
 
 
 @app.task
 def untaken_key():
     SiteKeyword.objects.filter(taken=1).update(taken=0)
+
 
 #
 # @app.task
@@ -124,11 +124,11 @@ def update_text_delete_duplicates():
     i = 0
     for site_id in SiteKeyword.objects.filter(site_id=17097923825390536162, last_parsing__gte=update_time_timezone(
             timezone.localtime()
-    ) - datetime.timedelta(days=360*3)):
+    ) - datetime.timedelta(days=360 * 3)):
         print(i)
-        site_id.last_parsing= update_time_timezone(
+        site_id.last_parsing = update_time_timezone(
             timezone.localtime()
-    ) - datetime.timedelta(days=360*3)
+        ) - datetime.timedelta(days=360 * 3)
         site_id.save(update_fields=["last_parsing"])
 
 
@@ -169,7 +169,8 @@ def task_parsing_key():
             print("start2")
 
             key_word = key_words.get(id=site_key_word.keyword_id)
-            select_source = select_sources.get(id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
+            select_source = select_sources.get(
+                id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
             last_update = site_key_word.last_parsing
             if last_update < datetime.datetime(2001, 1, 1, 0, 0, tzinfo=UTC):
                 # depth = key_word.depth
@@ -263,7 +264,7 @@ def parsing_key(key_word, last_update, key):
             raise Exception("site_id not founded")
         stop_proxy(proxy)
 
-        #TODO fix
+        # TODO fix
         print("save")
         save_articles(key_word.site_id, articles)
         key_word.taken = 0
@@ -280,10 +281,80 @@ def parsing_key(key_word, last_update, key):
 
 
 @app.task
+def update_smi_new():
+    pool_source = ThreadPoolExecutor(5)
+    futures = []
+
+    MAX_UPDATE_SITE = 10
+
+    parsing_sites = ParsingSite.objects.filter(last_parsing__isnull=True, is_active=True, taken=False)[:MAX_UPDATE_SITE]
+    if parsing_sites is None:
+        parsing_sites = ParsingSite.objects.filter(last_parsing__isnull=False, is_active=True, taken=False).order_by(
+            "last_parsing")[:MAX_UPDATE_SITE]
+    for parsing_site in parsing_sites:
+        parsing_site.taken = True
+    ParsingSite.objects.bulk_update(parsing_sites, fields=['taken'])
+
+    for parsing_site in parsing_sites:
+        futures.append(pool_source.submit(update_smi_text, parsing_site))
+
+    for future in concurrent.futures.as_completed(futures, timeout=300):
+        print(future.result())
+
+
+def update_smi_text(parsing_site):
+    try:
+        MAX_UPDATE_POST = 50
+
+        update_posts = Post.objects.filter(display_link=parsing_site.url, parsing=0).order_by("-created")[
+                       :MAX_UPDATE_POST]
+        if len(update_posts) == 0:
+            parsing_site.last_parsing = update_time_timezone(timezone.localtime()) + datetime.timedelta(minutes=3 * 60)
+            parsing_site.taken = False
+            parsing_site.save(update_fields=["taken", "last_parsing"])
+        else:
+            for update_post in update_posts:
+                update_post.parsing = 1
+            Post.objects.bulk_update(update_posts, fields=['parsing'])
+
+            posts_content = []
+            for update_post in update_posts:
+                text = parsing_smi_url(update_post.link)
+                if text is not None and text.strip() != "":
+                    try:
+                        posts_content.append(
+                            PostContent(
+                                content=text,
+                                cache_id=update_post.cache_id,
+                                keyword_id=10000003,
+                            )
+                        )
+                        update_post.parsing = 2
+                    except Exception:
+                        update_post.parsing = 0
+                else:
+                    update_post.parsing = 0
+            try:
+                PostContent.objects.bulk_create(posts_content, batch_size=batch_size)
+                Post.objects.bulk_update(update_posts, fields=['parsing'])
+            except Exception:
+                for update_post in update_posts:
+                    update_post.parsing = 0
+                Post.objects.bulk_update(update_posts, fields=['parsing'])
+        parsing_site.last_parsing = update_time_timezone(timezone.localtime())
+        parsing_site.taken = False
+        parsing_site.save(update_fields=["taken", "last_parsing"])
+    except Exception:
+        parsing_site.taken = False
+        parsing_site.save(update_fields=["taken"])
+
+
+@app.task
 def update_smi():
     parsing_site = ParsingSite.objects.filter(last_parsing__isnull=True, is_active=True, taken=False).first()
     if parsing_site is None:
-        parsing_site = ParsingSite.objects.filter(last_parsing__isnull=False, is_active=True, taken=False).order_by("-last_parsing").last()
+        parsing_site = ParsingSite.objects.filter(last_parsing__isnull=False, is_active=True, taken=False).order_by(
+            "-last_parsing").last()
 
     try:
         parsing_site.taken = True
@@ -291,7 +362,7 @@ def update_smi():
 
         update_post = Post.objects.filter(display_link=parsing_site.url, parsing=0).order_by("created").last()
         if update_post is None:
-            parsing_site.last_parsing = update_time_timezone(timezone.localtime()) + datetime.timedelta(minutes=3*60)
+            parsing_site.last_parsing = update_time_timezone(timezone.localtime()) + datetime.timedelta(minutes=3 * 60)
             parsing_site.taken = False
             parsing_site.save(update_fields=["taken", "last_parsing"])
         else:
