@@ -345,17 +345,18 @@ def update_smi_text(parsing_site):
                 else:
                     update_post.parsing = 0
             try:
-                PostContent.objects.bulk_create(posts_content, batch_size=batch_size)
+                PostContent.objects.bulk_create(posts_content, batch_size=batch_size, ignore_conflicts=True)
                 Post.objects.bulk_update(update_posts, fields=['parsing'])
-            except Exception:
+            except Exception as e:
+                print("bulk_create and bulk_update" +str(e))
                 for update_post in update_posts:
                     update_post.parsing = 0
                 Post.objects.bulk_update(update_posts, fields=['parsing'])
-        print(i)
         parsing_site.last_parsing = update_time_timezone(timezone.localtime())
         parsing_site.taken = False
         parsing_site.save(update_fields=["taken", "last_parsing"])
-    except Exception:
+    except Exception as e:
+        print("parsing_site" + str(e))
         parsing_site.taken = False
         parsing_site.save(update_fields=["taken"])
 
