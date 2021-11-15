@@ -18,8 +18,8 @@ DEFAULTS_TIMEOUT = 100
 def update_proxy(proxy):
     try:
         stop_proxy(list(proxy.keys())[0], error=1)
-    except Exception:
-        pass
+    except Exception as e:
+        print("stop proxy")
     return get_proxy()
 
 
@@ -215,7 +215,7 @@ def get_proxy():
                 return {used_proxy: proxies}
         return {None: None}
     except Exception as e:
-        print(e)
+        print("proxy" + str(e))
         return get_proxy()
 
 
