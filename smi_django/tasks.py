@@ -286,7 +286,7 @@ def update_smi_new():
     pool_source = ThreadPoolExecutor(5)
     futures = []
 
-    MAX_UPDATE_SITE = 2
+    MAX_UPDATE_SITE = 10
 
     parsing_sites = ParsingSite.objects.filter(last_parsing__isnull=True, is_active=True, taken=False)[:MAX_UPDATE_SITE]
     if not parsing_sites:
@@ -310,10 +310,11 @@ def update_smi_new():
         print(future.result())
     print("stop update_smi_new")
 
+
 def update_smi_text(parsing_site):
     try:
         i = 0
-        MAX_UPDATE_POST = 5
+        MAX_UPDATE_POST = 50
         print("start update_smi_text")
         update_posts = Post.objects.filter(display_link=parsing_site.url, parsing=0).order_by("-created")[
                        :MAX_UPDATE_POST]
