@@ -42,7 +42,7 @@ def start_task_parsing_by_time():
         print(site.url)
         site.taken = 1
         site.save(update_fields=["taken"])
-
+        django.db.close_old_connections()
         try:
             print(site.url)
             print(RADIO_URL)
@@ -55,7 +55,6 @@ def start_task_parsing_by_time():
                 articles, proxy = start_parsing(site.last_parsing, update_proxy(None))
             if site.url == DP_URL:
                 articles, proxy = parsing_dp(site.last_parsing, update_proxy(None))
-            django.db.close_old_connections()
             stop_proxy(proxy)
             save_articles(site.url, articles)
             site.last_parsing = update_time_timezone(timezone.localtime())
@@ -189,6 +188,7 @@ def task_parsing_key():
 
                 try:
                     print("parsing_key")
+                    django.db.close_old_connections()
 
                     parsing_key(site_key_word, last_update, key_word.keyword)
                     # futures.append(
@@ -439,3 +439,8 @@ def update_dp():
 
             pass
     print("update_dp OK")
+
+
+def reset_database_connection():
+    from django import db
+    db.close_connection()

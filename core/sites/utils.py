@@ -20,7 +20,9 @@ def update_proxy(proxy):
         stop_proxy(list(proxy.keys())[0], error=1)
     except Exception as e:
         print("stop proxy")
-    return get_proxy()
+    proxy = get_proxy()
+    django.db.close_old_connections()
+    return proxy
 
 
 def get_md5_text(text):
@@ -229,9 +231,10 @@ def stop_proxy(proxy, error=0, banned=0):
         proxy.banned = banned
         proxy.last_used = update_time_timezone(timezone.localtime())
         proxy.save()
+        django.db.close_old_connections()
+
     except Exception as e:
         print("stop_proxy" + str(e))
-
 
 def get_proxies(proxy):
     proxy_info = models.AllProxy.objects.filter(id=proxy.id).first()
