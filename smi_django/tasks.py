@@ -318,6 +318,11 @@ def update_smi_text(parsing_site):
         print("start update_smi_text")
         update_posts = Post.objects.filter(display_link=parsing_site.url, parsing=0).order_by("-created")[
                        :MAX_UPDATE_POST]
+
+        print("queryset")
+        print(update_posts.query)
+        print("queryset ok")
+
         if len(update_posts) == 0:
             parsing_site.last_parsing = update_time_timezone(timezone.localtime()) + datetime.timedelta(minutes=3 * 60)
             parsing_site.taken = False
