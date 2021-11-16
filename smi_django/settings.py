@@ -81,17 +81,36 @@ WSGI_APPLICATION = 'smi_django.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+# DATABASES = {
+#     'default': {
+#         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'parsertest',
+#         'USER': 'parsertest',
+#         'PASSWORD': '0UaN3HNTMRfBFdyU',
+#         # 'USER': 'admin',
+#         # 'PASSWORD': 'admin',
+#         #  'HOST': '192.168.0.168',
+#         'HOST': '192.168.5.46',
+#
+#         'PORT': '3306',
+#         #       'OPTIONS': {
+#         #         "init_command": "SET GLOBAL max_connections = 100000", #<-- The fix
+#         #      }
+#
+#     }
+# }
 DATABASES = {
     'default': {
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'parsertest',
-        'USER': 'parsertest',
-        'PASSWORD': '0UaN3HNTMRfBFdyU',
+        'NAME': 'parser',
+        'USER': 'parser',
+        'PASSWORD': '9ExtUS8uRyF9FSDf',
         # 'USER': 'admin',
         # 'PASSWORD': 'admin',
         #  'HOST': '192.168.0.168',
-        'HOST': '192.168.5.46',
+        'HOST': '192.168.5.11',
 
         'PORT': '3306',
         #       'OPTIONS': {
@@ -100,6 +119,8 @@ DATABASES = {
 
     }
 }
+
+
 
 
 
