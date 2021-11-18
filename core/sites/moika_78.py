@@ -98,8 +98,13 @@ def get_page(articles, article_body, proxy, attempt=0):
             soup = BeautifulSoup(res.text)
             article = soup.find("section", {"class": "single-body"})
             main_article = article.find("div", {"class": "post-content article"})
-            for p in main_article.find_all("p"):
-                text += p.text + "\r\n <br> "
+            for p in main_article.contents:
+                try:
+                    p_text = p.text.strip()
+                    if p_text:
+                        text += p.text + "\r\n <br> "
+                except Exception:
+                    pass
             try:
                 for img in article.find_all("div", {"class": "image-box"}):
                     try:
