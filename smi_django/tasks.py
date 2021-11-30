@@ -310,7 +310,7 @@ def rabbit_mq():
                                     content=text,
                                     cache_id=get_sphinx_id(body.decode("utf-8")),
                                     keyword_id=10000003)
-                            # ch.basic_ack(delivery_tag=method.delivery_tag)
+                            ch.basic_ack(delivery_tag=method.delivery_tag)
                         except Exception as e:
                             print("save " + str(e))
                             pass
