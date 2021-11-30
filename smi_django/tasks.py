@@ -287,7 +287,10 @@ def parsing_key(key_word, last_update, key):
 
 @app.task
 def rabbit_mq():
+    print("rabbit_mq")
+
     if len(START_RMQ) == 0:
+        print("rabbit_mq1")
         try:
             parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
             connection = pika.BlockingConnection(parameters=parameters)
@@ -302,7 +305,8 @@ def rabbit_mq():
             print(' [*] Waiting for messages. To exit press CTRL+C')
             channel.start_consuming()
             START_RMQ.append(True)
-        except Exception:
+        except Exception as e:
+            print(e)
             time.sleep(10)
             START_RMQ.clear()
 
