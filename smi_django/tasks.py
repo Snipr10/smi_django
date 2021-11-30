@@ -298,8 +298,8 @@ def rabbit_mq():
             channel = connection.channel()
 
             def callback(ch, method, properties, body):
-                print(body)
-                text = parsing_smi_url(body)
+                print(body.decode("utf-8") )
+                text = parsing_smi_url(body.decode("utf-8") )
 
                 if text is not None and text.strip() != "":
                     try:
