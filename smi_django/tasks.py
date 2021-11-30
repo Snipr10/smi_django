@@ -26,7 +26,8 @@ from core.sites.svoboda_new import parsing_svoboda_new
 from core.sites.vecherkaspb import parsing_vecherkaspb
 from core.celery import app
 
-from core.sites.utils import get_late_date, update_proxy, stop_proxy, save_articles, update_time_timezone, batch_size
+from core.sites.utils import get_late_date, update_proxy, stop_proxy, save_articles, update_time_timezone, batch_size, \
+    get_sphinx_id
 from core.sites.echo import parsing_radio_echo, RADIO_URL as ECHO_RADIO_URL
 from core.sites.radio import parsing_radio, RADIO_URL
 from core.sites.radiozenit import parsing_radio_zenit, RADIO_URL as ZENIT_RADIO_URL
@@ -297,12 +298,20 @@ def rabbit_mq():
             channel = connection.channel()
 
             def callback(ch, method, properties, body):
-                print(" [x] Received %r" % body)
-                # ch.basic_ack(delivery_tag=method.delivery_tag)
+                print(body)
+                text = parsing_smi_url(body)
 
+                if text is not None and text.strip() != "":
+                    try:
+                        PostContent.objects.create(
+                                content=text,
+                                cache_id=get_sphinx_id(body),
+                                keyword_id=10000003)
+                        # ch.basic_ack(delivery_tag=method.delivery_tag)
+                    except Exception:
+                        pass
             channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
 
-            print(' [*] Waiting for messages. To exit press CTRL+C')
             channel.start_consuming()
             START_RMQ.append(True)
         except Exception as e:
