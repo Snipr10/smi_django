@@ -310,6 +310,7 @@ def rabbit_mq():
                         # ch.basic_ack(delivery_tag=method.delivery_tag)
                     except Exception:
                         pass
+
             channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
 
             channel.start_consuming()
