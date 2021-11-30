@@ -165,8 +165,8 @@ STATIC_URL = '/static/'
 
 # BROKER_URL = 'redis://redis:6379/4'
 
-BROKER_URL = 'redis://127.0.0.1:6379/4'
-# BROKER_URL = 'redis://redis:6379/4'
+# BROKER_URL = 'redis://127.0.0.1:6379/4'
+BROKER_URL = 'redis://redis:6379/4'
 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
