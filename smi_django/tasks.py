@@ -301,11 +301,13 @@ def rabbit_mq():
                 print(body.decode("utf-8") )
                 text = parsing_smi_url(body.decode("utf-8") )
                 print(text)
+                print(body.decode("utf-8") )
+
                 if text is not None and text.strip() != "":
                     try:
                         PostContent.objects.create(
                                 content=text,
-                                cache_id=get_sphinx_id(body),
+                                cache_id=get_sphinx_id(body.decode("utf-8")),
                                 keyword_id=10000003)
                         # ch.basic_ack(delivery_tag=method.delivery_tag)
                     except Exception as e:
