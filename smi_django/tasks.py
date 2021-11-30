@@ -1,5 +1,8 @@
 import concurrent
 import datetime
+import time
+
+import pika
 
 from django.db.models import Q
 from django.utils import timezone
@@ -31,6 +34,8 @@ from core.sites.five_tv import parsing_5_tv
 from concurrent.futures.thread import ThreadPoolExecutor
 
 from core.utils.parsing_smi_url import parsing_smi_url
+from smi_django.settings import START_RMQ
+
 
 
 @app.task
@@ -278,6 +283,30 @@ def parsing_key(key_word, last_update, key):
         key_word.is_active = 0
         key_word.save(update_fields=["taken"])
         print(e)
+
+
+@app.task
+def rabbit_mq():
+    if len(START_RMQ) == 0:
+        try:
+            parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
+            connection = pika.BlockingConnection(parameters=parameters)
+            channel = connection.channel()
+
+            def callback(ch, method, properties, body):
+                print(" [x] Received %r" % body)
+                # ch.basic_ack(delivery_tag=method.delivery_tag)
+
+            channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
+
+            print(' [*] Waiting for messages. To exit press CTRL+C')
+            channel.start_consuming()
+            START_RMQ.append(True)
+        except Exception:
+            time.sleep(10)
+            START_RMQ.clear()
+
+
 
 
 @app.task

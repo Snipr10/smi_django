@@ -39,3 +39,4 @@ future~=0.18.2
 docutils~=0.15
 openpyxl~=3.0.9
 newspaper3k==0.2.8
+pika==1.2.0

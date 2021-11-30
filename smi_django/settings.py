@@ -26,6 +26,7 @@ SECRET_KEY = 'ami0fozb3+7lm(k5%l1b@13ffb-4o)*16_27k_xtnh0jqn1qym'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+START_RMQ = []
 
 
 # Application definition
