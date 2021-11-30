@@ -16,7 +16,7 @@ app.conf.beat_schedule = {
 
     'rabbit_mq': {
         'task': 'smi_django.tasks.rabbit_mq',
-        'schedule': crontab(minute='1')
+        'schedule': crontab(minute='*/1')
     },
 
     # 'start_task_parsing_by_time': {
