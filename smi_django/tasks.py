@@ -300,7 +300,7 @@ def rabbit_mq():
             def callback(ch, method, properties, body):
                 print(body.decode("utf-8") )
                 text = parsing_smi_url(body.decode("utf-8") )
-
+                print(text)
                 if text is not None and text.strip() != "":
                     try:
                         PostContent.objects.create(
