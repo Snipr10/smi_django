@@ -308,7 +308,8 @@ def rabbit_mq():
                                 cache_id=get_sphinx_id(body),
                                 keyword_id=10000003)
                         # ch.basic_ack(delivery_tag=method.delivery_tag)
-                    except Exception:
+                    except Exception as e:
+                        print("save " + str(e))
                         pass
 
             channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
