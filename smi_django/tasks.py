@@ -298,13 +298,13 @@ def create_rmq(i):
         def callback(ch, method, properties, body):
 
             try:
-                print(body.decode("utf-8"))
-                try:
-                    ch.basic_ack(delivery_tag=method.delivery_tag)
-                except Exception as e:
-                    print(e)
-                    ch.close()
-                    START_RMQ.pop()
+                # print(body.decode("utf-8"))
+                # try:
+                #     ch.basic_ack(delivery_tag=method.delivery_tag)
+                # except Exception as e:
+                #     print(e)
+                #     ch.close()
+                #     START_RMQ.pop()
 
                 text = parsing_smi_url(body.decode("utf-8"))
 
@@ -320,8 +320,8 @@ def create_rmq(i):
 
             except Exception as e:
                     print(e)
-
-        channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
+        channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback)
+        # channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
         channel.start_consuming()
     except Exception as e:
         print(e)
