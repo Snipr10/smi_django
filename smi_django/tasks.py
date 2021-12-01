@@ -306,6 +306,8 @@ def rabbit_mq():
 
                     if text is not None and text.strip() != "":
                         try:
+                            django.db.close_old_connections()
+
                             PostContent.objects.create(
                                     content=text,
                                     cache_id=get_sphinx_id(body.decode("utf-8")),
