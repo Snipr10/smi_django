@@ -16,7 +16,7 @@ def parsing_smi_url(url, attempts =0):
             # config.proxies = PROXIES
             #
             # article = Article(url, config=config)
-            article = Article()
+            article = Article(url)
             article.download()
             article.parse()
             title = article.title
