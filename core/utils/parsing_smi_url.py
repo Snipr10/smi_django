@@ -10,12 +10,13 @@ def parsing_smi_url(url, attempts =0):
         proxy = update_proxy(None)
         text = ""
         try:
-            PROXIES = proxy.get(list(proxy.keys())[0])
-
-            config = Configuration()
-            config.proxies = PROXIES
-
-            article = Article(url, config=config)
+            # PROXIES = proxy.get(list(proxy.keys())[0])
+            #
+            # config = Configuration()
+            # config.proxies = PROXIES
+            #
+            # article = Article(url, config=config)
+            article = Article()
             article.download()
             article.parse()
             title = article.title
