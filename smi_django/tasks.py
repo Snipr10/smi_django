@@ -295,7 +295,7 @@ def create_rmq(i):
         channel = connection.channel(channel_number=i)
 
         def callback(ch, method, properties, body):
-            print("len " + i)
+            print("len " + str(i))
 
             try:
                 print(body.decode("utf-8"))
