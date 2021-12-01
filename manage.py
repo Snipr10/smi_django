@@ -3,6 +3,8 @@
 import os
 import sys
 
+from core.models import PostContent
+
 
 def main():
     """Run administrative tasks."""
@@ -15,8 +17,13 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    execute_from_command_line(sys.argv)
 
+    execute_from_command_line(sys.argv)
+    print(1)
 
 if __name__ == '__main__':
+    s = PostContent.objects.create(
+        content="text",
+        cache_id=1,
+        keyword_id=10000003)
     main()
