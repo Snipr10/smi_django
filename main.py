@@ -18,6 +18,7 @@ def create_rmq(i):
         parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
         connection = pika.BlockingConnection(parameters=parameters)
         channel = connection.channel(channel_number=i)
+        print("channel " + str(i))
 
         def callback(ch, method, properties, body):
 
