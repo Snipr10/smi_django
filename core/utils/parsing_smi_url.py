@@ -5,7 +5,7 @@ from newspaper.configuration import Configuration
 from core.sites.utils import update_proxy, stop_proxy
 
 
-def parsing_smi_url(url):
+def parsing_smi_url(url, attempts =0):
     try:
         proxy = update_proxy(None)
         text = ""
@@ -41,5 +41,8 @@ def parsing_smi_url(url):
     except Exception as e:
         print(e)
         text = ""
+    if text == "" and attempts < 10:
+        attempts += 1
+        text = parsing_smi_url(url, attempts=attempts)
     return text
 

@@ -299,19 +299,18 @@ def rabbit_mq():
 
             def callback(ch, method, properties, body):
                 try:
-                    print(body.decode("utf-8") )
-                    text = parsing_smi_url(body.decode("utf-8") )
+                    print(body.decode("utf-8"))
+                    try:
+                        ch.basic_ack(delivery_tag=method.delivery_tag)
+                    except Exception as e:
+                        print("basic_ack " + str(e))
+                        ch.close()
+                        START_RMQ.pop()
+                    text = parsing_smi_url(body.decode("utf-8"))
                     print(text)
-                    print(body.decode("utf-8") )
+                    print(body.decode("utf-8"))
 
                     if text is not None and text.strip() != "":
-
-                        try:
-                            ch.basic_ack(delivery_tag=method.delivery_tag)
-                        except Exception as e:
-                            print("basic_ack " + str(e))
-                            ch.close()
-                            START_RMQ.pop()
 
                             # try:
                             #     parameters = pika.URLParameters(
