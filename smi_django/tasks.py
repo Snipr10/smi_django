@@ -307,15 +307,13 @@ def rabbit_mq():
                     if text is not None and text.strip() != "":
                         try:
                             try:
-                                django.db.close_old_connections()
-
+                                ch.basic_ack(delivery_tag=method.delivery_tag)
                                 PostContent.objects.create(
                                         content=text,
                                         cache_id=get_sphinx_id(body.decode("utf-8")),
                                         keyword_id=10000003)
                             except Exception as e:
                                 print("can not save" + str(e))
-                            ch.basic_ack(delivery_tag=method.delivery_tag)
                         except Exception as e:
                             print("save " + str(e))
                             raise Exception
