@@ -286,66 +286,52 @@ def parsing_key(key_word, last_update, key):
         print(e)
 
 
-@app.task
-def rabbit_mq():
+def create_rmq(i):
     print("rabbit_mq")
 
-    if len(START_RMQ) < 50:
-        print(START_RMQ)
-        print("rabbit_mq1")
-        try:
-            parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
-            connection = pika.BlockingConnection(parameters=parameters)
-            channel = connection.channel(channel_number=len(START_RMQ))
+    try:
+        parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
+        connection = pika.BlockingConnection(parameters=parameters)
+        channel = connection.channel(channel_number=len(i))
 
-            def callback(ch, method, properties, body):
-                print("len "+ str(len(START_RMQ)))
+        def callback(ch, method, properties, body):
+            print("len " + i)
 
+            try:
+                print(body.decode("utf-8"))
                 try:
-                    print(body.decode("utf-8"))
-                    try:
-                        ch.basic_ack(delivery_tag=method.delivery_tag)
-                    except Exception as e:
-                        print(e)
-                        # print("basic_ack " + str(e))
-                        ch.close()
-                        START_RMQ.pop()
-                    text = parsing_smi_url(body.decode("utf-8"))
-                    # print(text)
-                    # print(body.decode("utf-8"))
-
-                    if text is not None and text.strip() != "":
-
-                            # try:
-                            #     parameters = pika.URLParameters(
-                            #         "amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
-                            #     connection = pika.BlockingConnection(parameters=parameters)
-                            #     ch = connection.channel(channel_number=len(START_RMQ))
-                            #     ch.basic_ack(delivery_tag=method.delivery_tag)
-                            #     ch.close()
-                            #     START_RMQ.pop()
-                            #
-                            # except Exception as e:
-                            #     print("new channel " + str(e))
-
-                        try:
-                                s = PostContent.objects.create(
-                                        content=text,
-                                        cache_id=get_sphinx_id(body.decode("utf-8")),
-                                        keyword_id=10000003)
-                                print(get_sphinx_id(body.decode("utf-8")))
-                        except Exception as e:
-                            print("save " + str(e))
-
+                    ch.basic_ack(delivery_tag=method.delivery_tag)
                 except Exception as e:
                     print(e)
-            START_RMQ.append(True)
-            channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
-            channel.start_consuming()
-        except Exception as e:
-            print(e)
-            time.sleep(10)
-            START_RMQ.pop()
+                    ch.close()
+                    START_RMQ.pop()
+
+                text = parsing_smi_url(body.decode("utf-8"))
+
+                if text is not None and text.strip() != "":
+                    try:
+                        s = PostContent.objects.create(
+                                content=text,
+                                cache_id=get_sphinx_id(body.decode("utf-8")),
+                                keyword_id=10000003)
+                        print(get_sphinx_id(body.decode("utf-8")))
+                    except Exception as e:
+                            print("save " + str(e))
+
+            except Exception as e:
+                    print(e)
+
+        channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
+        channel.start_consuming()
+    except Exception as e:
+        print(e)
+        time.sleep(10)
+
+
+@app.task
+def rabbit_mq():
+    for i in range(50):
+        create_rmq(i)
 
 
 @app.task
