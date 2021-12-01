@@ -21,4 +21,3 @@ if __name__ == '__main__':
         content="text",
         cache_id=1,
         keyword_id=10000003)
-    main()
