@@ -299,19 +299,19 @@ def rabbit_mq():
             channel = connection.channel(channel_number=len(START_RMQ))
 
             def callback(ch, method, properties, body):
-                print( "len "+ str(len(START_RMQ)))
+                print("len "+ str(len(START_RMQ)))
 
                 try:
                     print(body.decode("utf-8"))
                     try:
                         ch.basic_ack(delivery_tag=method.delivery_tag)
                     except Exception as e:
-                        print("basic_ack " + str(e))
+                        # print("basic_ack " + str(e))
                         ch.close()
                         START_RMQ.pop()
                     text = parsing_smi_url(body.decode("utf-8"))
-                    print(text)
-                    print(body.decode("utf-8"))
+                    # print(text)
+                    # print(body.decode("utf-8"))
 
                     if text is not None and text.strip() != "":
 
