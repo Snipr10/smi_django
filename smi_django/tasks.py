@@ -326,10 +326,11 @@ def rabbit_mq():
                             #     print("new channel " + str(e))
 
                         try:
-                                PostContent.objects.create(
+                                s = PostContent.objects.create(
                                         content=text,
                                         cache_id=get_sphinx_id(body.decode("utf-8")),
                                         keyword_id=10000003)
+                                print(get_sphinx_id(body.decode("utf-8")))
                         except Exception as e:
                             print("save " + str(e))
 
