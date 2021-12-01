@@ -305,13 +305,7 @@ def rabbit_mq():
                     print(body.decode("utf-8") )
 
                     if text is not None and text.strip() != "":
-                        try:
-                                PostContent.objects.create(
-                                        content=text,
-                                        cache_id=get_sphinx_id(body.decode("utf-8")),
-                                        keyword_id=10000003)
-                        except Exception as e:
-                            print("save " + str(e))
+
                         try:
                             ch.basic_ack(delivery_tag=method.delivery_tag)
                         except Exception as e:
@@ -327,6 +321,15 @@ def rabbit_mq():
 
                             except Exception as e:
                                 print("new channel " + str(e))
+
+                        try:
+                                PostContent.objects.create(
+                                        content=text,
+                                        cache_id=get_sphinx_id(body.decode("utf-8")),
+                                        keyword_id=10000003)
+                        except Exception as e:
+                            print("save " + str(e))
+
                 except Exception:
                     raise Exception
 
