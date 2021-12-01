@@ -299,6 +299,8 @@ def rabbit_mq():
             channel = connection.channel(channel_number=len(START_RMQ))
 
             def callback(ch, method, properties, body):
+                print( "len "+ str(len(START_RMQ)))
+
                 try:
                     print(body.decode("utf-8"))
                     try:
@@ -336,11 +338,9 @@ def rabbit_mq():
 
                 except Exception:
                     raise Exception
-
-            channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
-
-            channel.start_consuming()
             START_RMQ.append(True)
+            channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
+            channel.start_consuming()
         except Exception as e:
             print(e)
             time.sleep(10)
