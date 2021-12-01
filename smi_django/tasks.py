@@ -318,9 +318,10 @@ def rabbit_mq():
                             ch.basic_ack(delivery_tag=method.delivery_tag)
                         except Exception as e:
                             print("save " + str(e))
-                            pass
+                            raise Exception
                 except Exception:
-                    pass
+                    raise Exception
+
             channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
 
             channel.start_consuming()
@@ -329,8 +330,7 @@ def rabbit_mq():
             print(e)
             time.sleep(10)
             START_RMQ.pop()
-
-
+            raise Exception
 
 
 @app.task
