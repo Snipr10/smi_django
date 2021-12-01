@@ -288,6 +288,7 @@ def parsing_key(key_word, last_update, key):
 
 def create_rmq(i):
     print("rabbit_mq")
+    print("len " + str(i))
 
     try:
         parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
@@ -295,7 +296,6 @@ def create_rmq(i):
         channel = connection.channel(channel_number=i)
 
         def callback(ch, method, properties, body):
-            print("len " + str(i))
 
             try:
                 print(body.decode("utf-8"))
