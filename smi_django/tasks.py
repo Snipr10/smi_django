@@ -286,46 +286,7 @@ def parsing_key(key_word, last_update, key):
         print(e)
 
 
-def create_rmq(i):
-    print("rabbit_mq")
-    print("len " + str(i))
 
-    try:
-        parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
-        connection = pika.BlockingConnection(parameters=parameters)
-        channel = connection.channel(channel_number=i)
-
-        def callback(ch, method, properties, body):
-
-            try:
-                # print(body.decode("utf-8"))
-                # try:
-                #     ch.basic_ack(delivery_tag=method.delivery_tag)
-                # except Exception as e:
-                #     print(e)
-                #     ch.close()
-                #     START_RMQ.pop()
-
-                text = parsing_smi_url(body.decode("utf-8"))
-
-                if text is not None and text.strip() != "":
-                    try:
-                        s = PostContent.objects.create(
-                                content=text,
-                                cache_id=get_sphinx_id(body.decode("utf-8")),
-                                keyword_id=10000003)
-                        print(get_sphinx_id(body.decode("utf-8")))
-                    except Exception as e:
-                            print("save " + str(e))
-
-            except Exception as e:
-                    print(e)
-        channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback)
-        # channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
-        channel.start_consuming()
-    except Exception as e:
-        print(e)
-        time.sleep(10)
 
 
 @app.task
