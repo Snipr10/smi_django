@@ -31,7 +31,7 @@ def create_rmq(i):
                 #     START_RMQ.pop()
 
                 text = parsing_smi_url(body.decode("utf-8"))
-
+                print(text)
                 if text is not None and text.strip() != "":
                     try:
                         s = PostContent.objects.create(
