@@ -290,7 +290,7 @@ def parsing_key(key_word, last_update, key):
 def rabbit_mq():
     print("rabbit_mq")
 
-    if len(START_RMQ) < 1:
+    if len(START_RMQ) < 10:
         print("rabbit_mq1")
         try:
             parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
