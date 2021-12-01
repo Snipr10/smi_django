@@ -323,6 +323,8 @@ def rabbit_mq():
                                 ch = connection.channel(channel_number=len(START_RMQ))
                                 ch.basic_ack(delivery_tag=method.delivery_tag)
                                 ch.close()
+                                START_RMQ.pop()
+
                             except Exception as e:
                                 print("new channel " + str(e))
                 except Exception:
