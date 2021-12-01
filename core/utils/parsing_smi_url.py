@@ -7,7 +7,8 @@ from core.sites.utils import update_proxy, stop_proxy
 
 def parsing_smi_url(url, attempts =0):
     try:
-        proxy = update_proxy(None)
+
+        # proxy = update_proxy(None)
         text = ""
         try:
             # PROXIES = proxy.get(list(proxy.keys())[0])
@@ -38,7 +39,7 @@ def parsing_smi_url(url, attempts =0):
                 text = article.meta_description.strip() + "\r\n <br> " + text
         except Exception as e:
             print(e)
-            stop_proxy(proxy, error=0, banned=0)
+            # stop_proxy(proxy, error=0, banned=0)
     except Exception as e:
         print(e)
         text = ""
