@@ -306,17 +306,26 @@ def rabbit_mq():
 
                     if text is not None and text.strip() != "":
                         try:
-                            try:
-                                ch.basic_ack(delivery_tag=method.delivery_tag)
                                 PostContent.objects.create(
                                         content=text,
                                         cache_id=get_sphinx_id(body.decode("utf-8")),
                                         keyword_id=10000003)
-                            except Exception as e:
-                                print("can not save" + str(e))
                         except Exception as e:
                             print("save " + str(e))
-                            raise Exception
+                        try:
+                            ch.basic_ack(delivery_tag=method.delivery_tag)
+                        except Exception as e:
+                            print("basic_ack " + str(e))
+                            try:
+                                parameters = pika.URLParameters(
+                                    "amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
+                                connection = pika.BlockingConnection(parameters=parameters)
+                                ch = connection.channel(channel_number=len(START_RMQ))
+                                ch.basic_ack(delivery_tag=method.delivery_tag)
+                                ch.close()
+
+                            except Exception as e:
+                                print("new channel " + str(e))
                 except Exception:
                     raise Exception
 
