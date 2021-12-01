@@ -310,17 +310,20 @@ def rabbit_mq():
                             ch.basic_ack(delivery_tag=method.delivery_tag)
                         except Exception as e:
                             print("basic_ack " + str(e))
-                            try:
-                                parameters = pika.URLParameters(
-                                    "amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
-                                connection = pika.BlockingConnection(parameters=parameters)
-                                ch = connection.channel(channel_number=len(START_RMQ))
-                                ch.basic_ack(delivery_tag=method.delivery_tag)
-                                ch.close()
-                                START_RMQ.pop()
+                            ch.close()
+                            START_RMQ.pop()
 
-                            except Exception as e:
-                                print("new channel " + str(e))
+                            # try:
+                            #     parameters = pika.URLParameters(
+                            #         "amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
+                            #     connection = pika.BlockingConnection(parameters=parameters)
+                            #     ch = connection.channel(channel_number=len(START_RMQ))
+                            #     ch.basic_ack(delivery_tag=method.delivery_tag)
+                            #     ch.close()
+                            #     START_RMQ.pop()
+                            #
+                            # except Exception as e:
+                            #     print("new channel " + str(e))
 
                         try:
                                 PostContent.objects.create(
