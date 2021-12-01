@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 import pika
 
@@ -21,16 +22,7 @@ def create_rmq(i):
         print("channel " + str(i))
 
         def callback(ch, method, properties, body):
-
             try:
-                # print(body.decode("utf-8"))
-                # try:
-                #     ch.basic_ack(delivery_tag=method.delivery_tag)
-                # except Exception as e:
-                #     print(e)
-                #     ch.close()
-                #     START_RMQ.pop()
-
                 text = parsing_smi_url(body.decode("utf-8"))
                 print(text)
                 if text is not None and text.strip() != "":
@@ -50,7 +42,11 @@ def create_rmq(i):
         channel.start_consuming()
     except Exception as e:
         print(e)
-        time.sleep(10)
+        time.sleep(1)
+
+def prin(i):
+    print(i)
+    time.sleep(10)
 
 
 if __name__ == '__main__':
@@ -64,6 +60,7 @@ if __name__ == '__main__':
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-
+    pool_source = ThreadPoolExecutor(50)
     for i in range(50):
-        create_rmq(i)
+        pool_source.submit(create_rmq, i)
+    pool_source.shutdown()
