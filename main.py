@@ -27,19 +27,19 @@ def create_rmq(i):
                 text = parsing_smi_url(body.decode("utf-8"))
                 if text is not None and text.strip() != "":
                     try:
-                        s = PostContent(
+                        s = PostContent.objects.create(
                                 content=text,
                                 cache_id=get_sphinx_id(body.decode("utf-8")),
                                 keyword_id=10000003)
-                        contents.append(s)
-                        print("contents " + str(len(contents)))
+                        # contents.append(s)
+                        # print("contents " + str(len(contents)))
                         print(ch.channel_number)
 
-                        if len(contents) > 1000:
-                            new_list = contents.copy()
-                            contents.clear()
-                            print("list>1000")
-                            PostContent.objects.bulk_create(new_list, batch_size=200, ignore_conflicts=True)
+                        # if len(contents) > 1000:
+                        #     new_list = contents.copy()
+                        #     contents.clear()
+                        #     print("list>1000")
+                        #     PostContent.objects.bulk_create(new_list, batch_size=200, ignore_conflicts=True)
                         print(get_sphinx_id(body.decode("utf-8")))
                     except Exception as e:
                             print("save " + str(e))
