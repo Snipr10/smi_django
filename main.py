@@ -60,7 +60,7 @@ if __name__ == '__main__':
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    pool_source = ThreadPoolExecutor(50)
-    for i in range(50):
+    pool_source = ThreadPoolExecutor(500)
+    for i in range(500):
         pool_source.submit(create_rmq, i)
     pool_source.shutdown()
