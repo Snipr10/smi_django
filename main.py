@@ -60,6 +60,7 @@ def prin(i):
 
 if __name__ == '__main__':
     from threading import Thread
+    from multiprocessing import Process
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smi_django.settings')
     try:
@@ -72,7 +73,7 @@ if __name__ == '__main__':
         ) from exc
     treads = []
     for i in range(10):
-        treads.append(Thread(target=create_rmq, args=(i*12123,)))
+        treads.append(Process(target=create_rmq, args=(i*12123,)))
     for t in treads:
         t.start()
     for t in treads:
