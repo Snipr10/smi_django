@@ -23,7 +23,6 @@ def create_rmq(i):
 
         def callback(ch, method, properties, body):
             try:
-                print(ch.channel_number)
 
                 text = parsing_smi_url(body.decode("utf-8"))
                 if text is not None and text.strip() != "":
@@ -34,6 +33,7 @@ def create_rmq(i):
                                 keyword_id=10000003)
                         contents.append(s)
                         print("contents " + str(len(contents)))
+                        print(ch.channel_number)
 
                         if len(contents) > 1000:
                             new_list = contents.copy()
