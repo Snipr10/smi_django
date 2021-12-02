@@ -45,7 +45,7 @@ def parsing_smi_url(url, attempts =0):
     if proxy is not None:
         stop_proxy(proxy, error=0, banned=0)
 
-    if text == "" and attempts < 10:
+    if text == "" and attempts < 5:
         attempts += 1
         text = parsing_smi_url(url, attempts=attempts)
     return text
