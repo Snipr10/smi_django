@@ -72,7 +72,7 @@ if __name__ == '__main__':
         ) from exc
     treads = []
     for i in range(250):
-        treads.append(Thread(target=create_rmq, args=(i,)))
+        treads.append(Thread(target=create_rmq, args=(i*100,)))
     for t in treads:
         t.start()
     for t in treads:
