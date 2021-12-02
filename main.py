@@ -50,6 +50,7 @@ def prin(i):
 
 
 if __name__ == '__main__':
+    from threading import Thread
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smi_django.settings')
     try:
@@ -60,7 +61,10 @@ if __name__ == '__main__':
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    pool_source = ThreadPoolExecutor(500)
-    for i in range(500):
-        pool_source.submit(create_rmq, i)
-    pool_source.shutdown()
+    treads = []
+    for i in range(150):
+        treads.append(Thread(target=create_rmq, args=(i,)))
+    for t in treads:
+        t.start()
+    for t in treads:
+        t.join()
