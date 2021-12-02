@@ -23,6 +23,8 @@ def create_rmq(i):
 
         def callback(ch, method, properties, body):
             try:
+                print(ch.channel_number)
+
                 text = parsing_smi_url(body.decode("utf-8"))
                 if text is not None and text.strip() != "":
                     try:
@@ -31,8 +33,9 @@ def create_rmq(i):
                                 cache_id=get_sphinx_id(body.decode("utf-8")),
                                 keyword_id=10000003)
                         contents.append(s)
-                        if len(contents) > 1000:
+                        print("contents " + str(len(contents)))
 
+                        if len(contents) > 1000:
                             new_list = contents.copy()
                             contents.clear()
                             print("list>1000")
