@@ -10,7 +10,7 @@ from core.models import PostContent
 from core.sites.utils import get_sphinx_id
 from core.utils.parsing_smi_url import parsing_smi_url
 
-
+contents = []
 def create_rmq(i):
     print("rabbit_mq")
     print("len " + str(i))
@@ -24,13 +24,19 @@ def create_rmq(i):
         def callback(ch, method, properties, body):
             try:
                 text = parsing_smi_url(body.decode("utf-8"))
-                print(text)
                 if text is not None and text.strip() != "":
                     try:
-                        s = PostContent.objects.create(
+                        s = PostContent(
                                 content=text,
                                 cache_id=get_sphinx_id(body.decode("utf-8")),
                                 keyword_id=10000003)
+                        contents.append(s)
+                        if len(contents) > 1000:
+
+                            new_list = contents.copy()
+                            contents.clear()
+                            print("list>1000")
+                            PostContent.objects.bulk_create(new_list, batch_size=200, ignore_conflicts=True)
                         print(get_sphinx_id(body.decode("utf-8")))
                     except Exception as e:
                             print("save " + str(e))
