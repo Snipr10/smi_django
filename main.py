@@ -72,8 +72,8 @@ if __name__ == '__main__':
             "forget to activate a virtual environment?"
         ) from exc
     treads = []
-    for i in range(10):
-        treads.append(Process(target=create_rmq, args=(i*12123,)))
+    for i in range(100):
+        treads.append(Process(target=create_rmq, args=(i*99,)))
     for t in treads:
         t.start()
     for t in treads:
