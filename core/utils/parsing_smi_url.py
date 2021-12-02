@@ -7,17 +7,17 @@ from core.sites.utils import update_proxy, stop_proxy
 
 def parsing_smi_url(url, attempts =0):
     try:
-
-        # proxy = update_proxy(None)
+        proxy = None
         text = ""
         try:
-            # PROXIES = proxy.get(list(proxy.keys())[0])
-            #
-            # config = Configuration()
-            # config.proxies = PROXIES
-            #
-            # article = Article(url, config=config)
-            article = Article(url)
+            if attempts > 1:
+                proxy = update_proxy(None)
+                PROXIES = proxy.get(list(proxy.keys())[0])
+                config = Configuration()
+                config.proxies = PROXIES
+                article = Article(url, config=config)
+            else:
+                article = Article(url)
             article.download()
             article.parse()
             title = article.title
@@ -39,10 +39,12 @@ def parsing_smi_url(url, attempts =0):
                 text = article.meta_description.strip() + "\r\n <br> " + text
         except Exception as e:
             print(e)
-            # stop_proxy(proxy, error=0, banned=0)
     except Exception as e:
         print(e)
         text = ""
+    if proxy is not None:
+        stop_proxy(proxy, error=0, banned=0)
+
     if text == "" and attempts < 10:
         attempts += 1
         text = parsing_smi_url(url, attempts=attempts)
