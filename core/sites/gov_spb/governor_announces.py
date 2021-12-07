@@ -60,12 +60,13 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
             return False, body, proxy
         for article in articles:
             article_href = article.find("a")
-            body.append(
-                {
-                    "href": article_href.attrs.get("href"),
-                    "title": article_href.text.strip(),
-                }
-            )
+            if article_href.attrs.get("href"):
+                body.append(
+                    {
+                        "href": article_href.attrs.get("href"),
+                        "title": article_href.text.strip(),
+                    }
+                )
 
     elif res.status_code == 404:
         return True, body, proxy
