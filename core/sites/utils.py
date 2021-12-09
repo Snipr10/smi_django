@@ -126,7 +126,7 @@ def save_articles(display_link, articles):
 
     parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
     connection = pika.BlockingConnection(parameters=parameters)
-    channel = connection.channel(channel_number=123)
+    channel = connection.channel()
 
     for article in articles:
 
