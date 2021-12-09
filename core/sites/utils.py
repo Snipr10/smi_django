@@ -1,9 +1,11 @@
+import json
 import time
 import random
 import hashlib
 import django.db
 import datetime
 
+import pika
 from django.db.models import Q
 from django.utils import timezone
 import datetime
@@ -121,7 +123,13 @@ def save_articles(display_link, articles):
     django.db.close_old_connections()
     print("save")
     i = 0
+
+    parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
+    connection = pika.BlockingConnection(parameters=parameters)
+    channel = connection.channel(channel_number=123)
+
     for article in articles:
+
         print("save: " + str(i))
         i += 1
 
@@ -135,6 +143,25 @@ def save_articles(display_link, articles):
             text += "\n" + video
         for sound in article.get('sounds', []):
             text += "\n" + sound
+        try:
+            rmq_json_data = {
+                "title": article.get('title', ''),
+                "content": text,
+                "created": article.get('date').strftime("%Y-%m-%d %H:%M:%S"),
+                "url": article.get('href'),
+                "author_name": author.username,
+                "author_icon": author.image,
+                "group_id": "",
+                "images": [],
+                "keyword_id": 10000002,
+            }
+            channel.basic_publish(exchange='',
+                                  routing_key='smi_posts',
+                                  body=json.dumps(rmq_json_data))
+            print("SEND RMQ")
+
+        except Exception as e:
+            print("can not send RMQ " + str(e))
         cache_id = get_sphinx_id(article.get('href'))
 
         posts.append(models.Post(
@@ -157,12 +184,14 @@ def save_articles(display_link, articles):
             keyword_id=10000002,
 
         ))
-    print("len : " + str(len(posts)))
-    print("save PostContent")
+    try:
+        connection.close()
+    except Exception as e:
+        print("connection.close " + str(e))
     try:
         models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size)
     except Exception as e:
-        print("save PostContent " +str(e))
+        print("save PostContent " + str(e))
 
         models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size, ignore_conflicts=True)
 
