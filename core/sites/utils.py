@@ -162,41 +162,41 @@ def save_articles(display_link, articles):
 
         except Exception as e:
             print("can not send RMQ " + str(e))
-        cache_id = get_sphinx_id(article.get('href'))
-
-        posts.append(models.Post(
-            cache_id=cache_id,
-            owner_sphinx_id=author.profile_id,
-            created=article.get('date'),
-            display_link=author.url,
-            owner=author.username,
-            title=article.get('title'),
-            link=article.get('href'),
-            image=author.image,
-            keyword_id=0,
-            trust=0
-        ))
-        print(str(cache_id) + "\n")
-        print(text)
-        posts_content.append(models.PostContent(
-            content=text,
-            cache_id=cache_id,
-            keyword_id=10000002,
-
-        ))
-    try:
-        connection.close()
-    except Exception as e:
-        print("connection.close " + str(e))
-    try:
-        models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size)
-    except Exception as e:
-        print("save PostContent " + str(e))
-
-        models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size, ignore_conflicts=True)
-
-    print("save Post")
-    models.Post.objects.bulk_create(posts, batch_size=50, ignore_conflicts=True)
+        # cache_id = get_sphinx_id(article.get('href'))
+        #
+        # posts.append(models.Post(
+        #     cache_id=cache_id,
+        #     owner_sphinx_id=author.profile_id,
+        #     created=article.get('date'),
+        #     display_link=author.url,
+        #     owner=author.username,
+        #     title=article.get('title'),
+        #     link=article.get('href'),
+        #     image=author.image,
+        #     keyword_id=0,
+        #     trust=0
+        # ))
+        # print(str(cache_id) + "\n")
+        # print(text)
+        # posts_content.append(models.PostContent(
+        #     content=text,
+        #     cache_id=cache_id,
+        #     keyword_id=10000002,
+        #
+        # ))
+    # try:
+    #     connection.close()
+    # except Exception as e:
+    #     print("connection.close " + str(e))
+    # try:
+    #     models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size)
+    # except Exception as e:
+    #     print("save PostContent " + str(e))
+    #
+    #     models.PostContent.objects.bulk_create(posts_content, batch_size=batch_size, ignore_conflicts=True)
+    #
+    # print("save Post")
+    # models.Post.objects.bulk_create(posts, batch_size=50, ignore_conflicts=True)
 
 
 def get_late_date(display_link):
