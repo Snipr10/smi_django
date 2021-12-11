@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+import json
 import os
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -11,6 +12,8 @@ from core.sites.utils import get_sphinx_id
 from core.utils.parsing_smi_url import parsing_smi_url
 
 contents = []
+
+
 def create_rmq(i):
     print("rabbit_mq")
     print("len " + str(i))
@@ -23,40 +26,44 @@ def create_rmq(i):
 
         def callback(ch, method, properties, body):
             try:
-
-                text = parsing_smi_url(body.decode("utf-8"))
+                url = body.decode("utf-8")
+                text = parsing_smi_url(url)
                 if text is not None and text.strip() != "":
                     try:
-                        s = PostContent.objects.create(
-                                content=text,
-                                cache_id=get_sphinx_id(body.decode("utf-8")),
-                                keyword_id=10000003)
-                        # contents.append(s)
-                        # print("contents " + str(len(contents)))
-                        print(ch.channel_number)
+                        # s = PostContent.objects.create(
+                        #         content=text,
+                        #         cache_id=get_sphinx_id(body.decode("utf-8")),
+                        #         keyword_id=10000003)
 
-                        # if len(contents) > 1000:
-                        #     new_list = contents.copy()
-                        #     contents.clear()
-                        #     print("list>1000")
-                        #     PostContent.objects.bulk_create(new_list, batch_size=200, ignore_conflicts=True)
+                        rmq_json_data = {
+                            "title": "",
+                            "content": text,
+                            "created": "",
+                            "url": url,
+                            "author_name": "",
+                            "author_icon": "",
+                            "group_id": "",
+                            "images": [],
+                            "keyword_id": 10000003,
+                        }
+                        channel.basic_publish(exchange='',
+                                              routing_key='smi_posts',
+                                              body=json.dumps(rmq_json_data))
+
                         print(get_sphinx_id(body.decode("utf-8")))
+
                     except Exception as e:
-                            print("save " + str(e))
+                        print("save " + str(e))
 
             except Exception as e:
-                    print(e)
+                print(e)
+
         channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback)
         # channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
         channel.start_consuming()
     except Exception as e:
         print(e)
         time.sleep(1)
-
-def prin(i):
-    print(i)
-    time.sleep(10)
-
 
 if __name__ == '__main__':
     while True:
@@ -75,7 +82,7 @@ if __name__ == '__main__':
                 ) from exc
             treads = []
             for i in range(15):
-                treads.append(Process(target=create_rmq, args=(i*9876,)))
+                treads.append(Process(target=create_rmq, args=(i * 9876,)))
             for t in treads:
                 t.start()
             for t in treads:
