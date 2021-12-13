@@ -14,6 +14,31 @@ from core.utils.parsing_smi_url import parsing_smi_url
 contents = []
 
 
+def open_save_chanel(i):
+    parameters_save = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
+    connection_save = pika.BlockingConnection(parameters=parameters_save)
+    channel_save = connection_save.channel(channel_number=i * 20)
+    return channel_save
+
+
+def save_data(rmq_json_data, channel_save, i, attempts=0):
+    try:
+        channel_save.basic_publish(exchange='',
+                                   routing_key='smi_posts',
+                                   body=json.dumps(rmq_json_data))
+        if attempts ==0:
+            return False
+        else:
+            return True
+    except Exception as e:
+        if attempts < 5:
+            attempts += 1
+            channel_save = open_save_chanel(i)
+            return save_data(rmq_json_data, channel_save, i, attempts=attempts)
+        else:
+            raise e
+
+
 def create_rmq(i):
     print("rabbit_mq")
     print("len " + str(i))
@@ -30,10 +55,6 @@ def create_rmq(i):
                 text = parsing_smi_url(url)
                 if text is not None and text.strip() != "":
                     try:
-                        # s = PostContent.objects.create(
-                        #         content=text,
-                        #         cache_id=get_sphinx_id(body.decode("utf-8")),
-                        #         keyword_id=10000003)
 
                         rmq_json_data = {
                             "title": "",
@@ -46,10 +67,10 @@ def create_rmq(i):
                             "images": [],
                             "keyword_id": 10000003,
                         }
-                        channel.basic_publish(exchange='',
-                                              routing_key='smi_posts',
-                                              body=json.dumps(rmq_json_data))
-
+                        # if save_data(rmq_json_data, ch, i):
+                        ch.basic_publish(exchange='',
+                                                  routing_key='smi_posts',
+                                                  body=json.dumps(rmq_json_data))
                         print(get_sphinx_id(body.decode("utf-8")))
 
                     except Exception as e:
@@ -82,7 +103,7 @@ if __name__ == '__main__':
                 ) from exc
             treads = []
             for i in range(15):
-                treads.append(Process(target=create_rmq, args=(i * 9876,)))
+                treads.append(Process(target=create_rmq, args=(i,)))
             for t in treads:
                 t.start()
             for t in treads:
