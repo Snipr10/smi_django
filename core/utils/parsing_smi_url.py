@@ -48,5 +48,17 @@ def parsing_smi_url(url, attempts =0):
     if text == "" and attempts < 5:
         attempts += 1
         text = parsing_smi_url(url, attempts=attempts)
-    return text
+    return update_text(url, text)
 
+
+def update_text(url, text):
+    try:
+        if 'https://www.kommersant.ru' in url:
+            first = text.split("\n")[0].replace(" ", "")
+            for d in '1234567890':
+                first = first.replace(d, '')
+            if first.strip() == "мин....":
+                text = "\n\r".join(text.split("\n")[1:])
+        return text
+    except Exception:
+        return text
