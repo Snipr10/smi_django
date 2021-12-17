@@ -33,6 +33,7 @@ def save_data(rmq_json_data, i, attempts=0):
         if attempts ==0:
             return False
         else:
+
             return True
     except Exception as e:
         if attempts < 5:
@@ -77,8 +78,8 @@ def create_rmq(i):
                             "keyword_id": 10000003,
                         }
                         # if save_data(rmq_json_data, ch, i):
-                        save_data(rmq_json_data, i)
-
+                        if save_data(rmq_json_data, i):
+                            print(get_sphinx_id(body.decode("utf-8")))
                     except Exception as e:
                         print("save " + str(e))
 
