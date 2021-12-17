@@ -20,6 +20,7 @@ def open_save_chanel(i):
     parameters_save = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
     connection_save = pika.BlockingConnection(parameters=parameters_save)
     channel_save = connection_save.channel(channel_number=i * 20)
+    print("open_save_chanel " + str(i))
     return channel_save
 
 
