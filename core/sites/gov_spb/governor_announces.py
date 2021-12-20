@@ -56,7 +56,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
 
         articles = soup.find_all("li", {"class": "object-list__item"})
 
-        if len(articles) == 0:
+        if len(articles) == 0 and "На данный момент нет опубликованных материалов" not in res.text:
             return False, body, proxy
         for article in articles:
             article_href = article.find("a")
