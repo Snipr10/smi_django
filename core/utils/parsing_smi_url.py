@@ -1,14 +1,49 @@
 import re
+
+import requests
+from bs4 import BeautifulSoup
 from newspaper import Article
 from newspaper.configuration import Configuration
 
 from core.sites.utils import update_proxy, stop_proxy
 
 
-def parsing_smi_url(url, attempts =0):
+URL_DICT = {
+    "https://infoneva.ru/": {"title": ["title", {}], "text": ["div", {"class": "text-content"}]},
+    "https://www.ntv.ru/": {"title": ["h1", {"itemprop": "headline"}], "text": ["div", {"class": "inpagebody"}]},
+}
+
+
+def _get_page_data(url, attempts=None):
+    proxy = None
+    for k in URL_DICT.keys():
+        if k in url:
+            if attempts > 1:
+                post = requests.get(url)
+            else:
+                proxy = update_proxy(proxy)
+                post = requests.get(url, proxies=proxy.get(list(proxy.keys())[0]))
+                stop_proxy(proxy, error=0, banned=0)
+
+            soup = BeautifulSoup(post.text, 'html.parser')
+            article_title = soup.find(name=URL_DICT.get(k).get("title")[0], attrs=URL_DICT.get(k).get("title")[1]).text
+            text = ""
+            for c in soup.find(name=URL_DICT.get(k).get("text")[0], attrs=URL_DICT.get(k).get("text")[1]).contents:
+                try:
+                    if c.text:
+                        text += c.text + "\r\n <br> "
+                except Exception:
+                    pass
+            return article_title, text
+    return "", ""
+
+
+def parsing_smi_url(url, attempts=0):
     try:
         proxy = None
-        text = ""
+        h, text = _get_page_data(url, attempts=None)
+        if h != "" and text != "":
+            return text
         try:
             if attempts > 1:
                 proxy = update_proxy(None)
