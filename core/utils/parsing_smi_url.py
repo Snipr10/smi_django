@@ -11,6 +11,32 @@ from core.sites.utils import update_proxy, stop_proxy
 URL_DICT = {
     "https://infoneva.ru/": {"title": ["title", {}], "text": ["div", {"class": "text-content"}]},
     "https://www.ntv.ru/": {"title": ["h1", {"itemprop": "headline"}], "text": ["div", {"class": "inpagebody"}]},
+    "https://peterburg2.ru/": {"title": ["h1", {}], "text": ["span", {"class": "article-content"}],
+                               "meta": ["p", {"class": "article-content"}]},
+    # "https://lenta.ru/": {"title": ["h1", {}], "text": ["div", {"class": "topic-body"}],
+    #                            "meta": ["div", {"class*=topic-header__title-yandex"}]},
+    # "https://bloknot.ru/": {"title": ["h1", {}], "text": ["div", {"class": "article__content"}]}
+    "https://spb.dixinews.ru/": {"title": ["h1", {}], "text": ["div", {"class": "entry-content"}], "wholetext": True},
+    "https://ria.ru/": {"title": ["div", {"class": "article__title"}], "text": ["div", {"class": "article__body"}],
+                        "meta": ["h1", {"class": "article__second-title"}]},
+    "https://vedomosti-spb.ru/": {"title": ["h1", {"class": "article-headline__title"}],
+                                  "text": ["div", {"class": "article-boxes-list article__boxes"}],
+                                  "meta": ["div", {"class": "article-authors__info"}]},
+    "https://live24.ru/": {"title": ["h1", {}],
+                           "text": ["div", {
+                               "class": "uk-panel uk-text-large uk-dropcap maintext uk-margin uk-width-2xlarge uk-margin-auto"}],
+                           },
+    "https://www.sobaka.ru/": {"title": ["h1", {"itemprop": "headline name"}],
+                               "text": ["div", {"itemprop": "articleBody"}],
+                               },
+    "https://www.flashnord.com/": {"title": ["h1", {"class": "entry-title"}],
+                                   "text": ["div", {"class": "entry-content"}],
+                                   },
+    "https://www.interfax-russia.ru/": {"title": ["div", {"itemprop": "headline"}],
+                                        "text": ["div", {"itemprop": "articleBody"}],
+                                        },
+
+
 }
 
 
@@ -28,14 +54,28 @@ def _get_page_data(url, attempts=None):
             soup = BeautifulSoup(post.text, 'html.parser')
             article_title = soup.find(name=URL_DICT.get(k).get("title")[0], attrs=URL_DICT.get(k).get("title")[1]).text
             text = ""
-            for c in soup.find(name=URL_DICT.get(k).get("text")[0], attrs=URL_DICT.get(k).get("text")[1]).contents:
-                try:
-                    if c.text:
-                        text += c.text + "\r\n <br> "
-                except Exception:
-                    pass
+            try:
+                if "meta" in URL_DICT.get(k).keys():
+                    for c in soup.find(name=URL_DICT.get(k).get("meta")[0],
+                                       attrs=URL_DICT.get(k).get("meta")[1]).contents:
+                        try:
+                            if c.text and c.text.strip():
+                                text += c.text + "\r\n <br> "
+                        except Exception:
+                            pass
+            except Exception:
+                pass
+            if URL_DICT.get(k).get("wholetext"):
+                text += soup.find(name=URL_DICT.get(k).get("text")[0], attrs=URL_DICT.get(k).get("text")[1]).text
+            else:
+                for c in soup.find(name=URL_DICT.get(k).get("text")[0], attrs=URL_DICT.get(k).get("text")[1]).contents:
+                    try:
+                        if c.text and c.text.strip():
+                            text += re.sub("\n+", "\n", c.text.strip()) + "\r\n <br> "
+                    except Exception:
+                        pass
             return article_title, text
-    return "", ""
+        return "", ""
 
 
 def parsing_smi_url(url, attempts=0):
