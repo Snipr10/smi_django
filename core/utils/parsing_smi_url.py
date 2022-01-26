@@ -35,16 +35,18 @@ URL_DICT = {
     "https://www.interfax-russia.ru/": {"title": ["div", {"itemprop": "headline"}],
                                         "text": ["div", {"itemprop": "articleBody"}],
                                         },
-
+    "https://www.fontanka.ru/": {"title": ["h1", {}],
+                                        "text": ["section", {"itemprop": "articleBody"}],
+                                        },
 
 }
 
 
-def _get_page_data(url, attempts=None):
+def _get_page_data(url, attempts=0):
     proxy = None
     for k in URL_DICT.keys():
         if k in url:
-            if attempts > 1:
+            if attempts < 1:
                 post = requests.get(url)
             else:
                 proxy = update_proxy(proxy)
@@ -75,13 +77,13 @@ def _get_page_data(url, attempts=None):
                     except Exception:
                         pass
             return article_title, text
-        return "", ""
+    return "", ""
 
 
 def parsing_smi_url(url, attempts=0):
     try:
         proxy = None
-        h, text = _get_page_data(url, attempts=None)
+        h, text = _get_page_data(url, attempts=0)
         if h != "" and text != "":
             return text
         try:
