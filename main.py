@@ -80,7 +80,7 @@ def create_rmq(i):
                         print(rmq_json_data)
                         # if save_data(rmq_json_data, ch, i):
                         save_data(rmq_json_data, i)
-                        print(get_sphinx_id(body.decode("utf-8")))
+                        # print(get_sphinx_id(body.decode("utf-8")))
                     except Exception as e:
                         print("save " + str(e))
 
