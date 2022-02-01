@@ -77,10 +77,9 @@ def create_rmq(i):
                             "images": [],
                             "keyword_id": 10000003,
                         }
-                        print(rmq_json_data)
                         # if save_data(rmq_json_data, ch, i):
                         save_data(rmq_json_data, i)
-                        # print(get_sphinx_id(body.decode("utf-8")))
+                        print(get_sphinx_id(url))
                     except Exception as e:
                         print("save " + str(e))
 
