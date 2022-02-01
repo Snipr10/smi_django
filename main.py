@@ -61,6 +61,7 @@ def create_rmq(i):
         def callback(ch, method, properties, body):
             try:
                 url = body.decode("utf-8")
+                print(url)
                 text = parsing_smi_url(url)
                 if text is not None and text.strip() != "":
                     try:
@@ -116,5 +117,5 @@ if __name__ == '__main__':
                 t.start()
             for t in treads:
                 t.join()
-        except Exception:
+        except Exception as e:
             pass
