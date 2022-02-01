@@ -60,16 +60,16 @@ def create_rmq(i):
 
         def callback(ch, method, properties, body):
             try:
-                url = json.loads(body.decode("utf-8"))
-                print(url)
+                body = json.loads(body.decode("utf-8"))
+                url = body.get("url")
                 text = parsing_smi_url(url)
                 if text is not None and text.strip() != "":
                     try:
 
                         rmq_json_data = {
-                            "title": "",
+                            "title": body.get("title"),
                             "content": text,
-                            "created": "",
+                            "created": body.get("created"),
                             "url": url,
                             "author_name": "",
                             "author_icon": "",
@@ -77,6 +77,7 @@ def create_rmq(i):
                             "images": [],
                             "keyword_id": 10000003,
                         }
+                        print(rmq_json_data)
                         # if save_data(rmq_json_data, ch, i):
                         save_data(rmq_json_data, i)
                         print(get_sphinx_id(body.decode("utf-8")))
