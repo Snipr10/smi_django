@@ -60,7 +60,7 @@ def create_rmq(i):
 
         def callback(ch, method, properties, body):
             try:
-                url = body.decode("utf-8")
+                url = json.loads(body.decode("utf-8"))
                 print(url)
                 text = parsing_smi_url(url)
                 if text is not None and text.strip() != "":
