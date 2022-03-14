@@ -86,8 +86,8 @@ def create_rmq(i):
             except Exception as e:
                 print(e)
 
-        channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback)
-        # channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=False)
+        # channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback)
+        channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=True)
         channel.start_consuming()
     except Exception as e:
         print(e)
