@@ -110,7 +110,7 @@ if __name__ == '__main__':
                     "forget to activate a virtual environment?"
                 ) from exc
             treads = []
-            for i in range(15):
+            for i in range(2):
                 CHANNELS.update({i: open_save_chanel(i)})
                 treads.append(Process(target=create_rmq, args=(i,)))
             for t in treads:
