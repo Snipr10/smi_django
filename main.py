@@ -48,6 +48,12 @@ def save_data(rmq_json_data, i, attempts=0):
             raise e
 
 
+def print_status(i):
+    while True:
+        print("work")
+        time.sleep(3600)
+
+
 def create_rmq(i):
     print("rabbit_mq")
     print("len " + str(i))
@@ -113,6 +119,8 @@ if __name__ == '__main__':
             for i in range(2):
                 CHANNELS.update({i: open_save_chanel(i)})
                 treads.append(Process(target=create_rmq, args=(i,)))
+            treads.append(Process(target=print_status, args=(0,)))
+
             for t in treads:
                 t.start()
             for t in treads:
