@@ -251,8 +251,9 @@ def get_proxy():
 
 
 def stop_proxy(proxy, error=0, banned=0):
-    proxy = list(proxy.keys())[0]
     try:
+        proxy = list(proxy.keys())[0]
+
         if error:
             proxy.errors = proxy.errors + 1
 

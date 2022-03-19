@@ -53,15 +53,20 @@ def start_task_parsing_by_time():
             print(site.url)
             print(RADIO_URL)
             print(ZENIT_RADIO_URL)
-            if site.url == RADIO_URL:
-                articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
-            if site.url == ZENIT_RADIO_URL:
-                articles, proxy = parsing_radio_zenit(site.last_parsing, update_proxy(None))
-            if site.url == "https://www.gov.spb.ru":
-                articles, proxy = start_parsing(site.last_parsing, update_proxy(None))
-            if site.url == DP_URL:
-                articles, proxy = parsing_dp(site.last_parsing, update_proxy(None))
-            stop_proxy(proxy)
+            articles = []
+            attempt = 0
+            while attempt < 30 and len(articles) == 0:
+                proxy = None
+                if site.url == RADIO_URL:
+                    articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
+                if site.url == ZENIT_RADIO_URL:
+                    articles, proxy = parsing_radio_zenit(site.last_parsing, update_proxy(None))
+                if site.url == "https://www.gov.spb.ru":
+                    articles, proxy = start_parsing(site.last_parsing, update_proxy(None))
+                if site.url == DP_URL:
+                    articles, proxy = parsing_dp(site.last_parsing, update_proxy(None))
+                attempt += 1
+                stop_proxy(proxy)
             save_articles(site.url, articles)
             site.last_parsing = update_time_timezone(timezone.localtime())
             site.taken = 0
