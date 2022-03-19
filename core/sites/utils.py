@@ -271,6 +271,8 @@ def get_proxies(proxy):
     proxy_info = models.AllProxy.objects.filter(id=proxy.id).first()
     if proxy_info is not None:
         return format_proxies(proxy_info)
+    else:
+        proxy.delete()
     return None
 
 
