@@ -19,6 +19,7 @@ DEFAULTS_TIMEOUT = 100
 
 def update_proxy(proxy):
     try:
+        print(f"proxy  {str(proxy)}")
         stop_proxy(list(proxy.keys())[0], error=1)
     except Exception as e:
         print("stop proxy")
