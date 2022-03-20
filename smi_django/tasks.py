@@ -143,6 +143,51 @@ def update_text_delete_duplicates():
 
 
 @app.task
+def update_key_pool():
+    MAX_UPDATE_KEY = 300
+
+    pool_source = ThreadPoolExecutor(15)
+    futures = []
+    select_sources = Sources.objects.filter(
+        Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+        status=1)
+
+    key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
+
+    key_words = Keyword.objects.filter(network_id=1, enabled=1,
+                                       id__in=list(key_source.values_list('keyword_id', flat=True))
+                                       )
+
+    site_key_words = SiteKeyword.objects.filter(taken=0, is_active=1,
+                                                keyword_id__in=list(key_words.values_list('id', flat=True))
+                                                ).order_by('last_parsing')[:MAX_UPDATE_KEY]
+    for site_key_word in site_key_words:
+        select_source = select_sources.get(
+            id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
+        last_update = site_key_word.last_parsing
+        if last_update < datetime.datetime(2001, 1, 1, 0, 0, tzinfo=UTC):
+            # depth = key_word.depth
+            retro_date = select_source.retro
+            last_update = datetime.datetime(retro_date.year, retro_date.month, retro_date.day, 0, 0, tzinfo=UTC)
+            time = select_source.sources
+            if time is None:
+                time = 10
+            if last_update is None or (last_update + datetime.timedelta(minutes=time) <
+                                       update_time_timezone(timezone.localtime())):
+                site_key_word.taken = 1
+
+    SiteKeyword.objects.bulk_update(site_key_words, fields=['taken'])
+    for site_key_word in site_key_words:
+        key_word = key_words.get(id=site_key_word.keyword_id)
+        last_update = site_key_word.last_parsing
+        futures.append(
+            pool_source.submit(parsing_key, site_key_word, last_update, key_word.keyword))
+    for future in concurrent.futures.as_completed(futures, timeout=300):
+        print(future.result())
+    print("stop update_key_pool")
+
+
+@app.task
 def task_parsing_key():
     pool_source = ThreadPoolExecutor(10)
     futures = []
