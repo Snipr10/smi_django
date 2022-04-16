@@ -19,11 +19,7 @@ def main():
         ) from exc
 
     execute_from_command_line(sys.argv)
-    print(1)
+
 
 if __name__ == '__main__':
-    s = PostContent.objects.create(
-        content="text",
-        cache_id=1,
-        keyword_id=10000003)
     main()
