@@ -24,6 +24,15 @@ def test_echo(request):
 
 
 @csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def text(request):
+    from core.utils.parsing_smi_url import parsing_smi_url
+    url = request.data['urls']
+    return Response(parsing_smi_url(url, attempts=0))
+
+
+@csrf_exempt
 @api_view(["GET"])
 @permission_classes((AllowAny,))
 def test_radio(request):
