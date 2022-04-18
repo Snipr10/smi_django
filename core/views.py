@@ -1,5 +1,6 @@
 import datetime
 # Create your views here.
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -35,7 +36,12 @@ def test(request):
 def text(request):
     from core.utils.parsing_smi_url import parsing_smi_url
     url = request.data['urls']
-    return Response(parsing_smi_url(url, attempts=0))
+    print(url)
+    try:
+        print(parsing_smi_url(url, attempts=0))
+    except Exception as e:
+        print(e)
+    return HttpResponse(parsing_smi_url(url, attempts=0))
 
 
 @csrf_exempt
