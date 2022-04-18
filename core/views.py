@@ -22,6 +22,12 @@ def test_echo(request):
     save_articles(ECHO_RADIO_URL, articles)
     return Response("Ok")
 
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((AllowAny,))
+def test(request):
+
+    return Response("Ok")
 
 @csrf_exempt
 @api_view(["POST"])
