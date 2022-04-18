@@ -40,10 +40,10 @@ def text(request):
         res = parsing_smi_url(url, attempts=0)
         print(res)
         if res:
-            return HttpResponse(res, content_type="text/plain")
-        return HttpResponse("", content_type="text/plain")
+            return HttpResponse(res)
+        return HttpResponse("")
     except Exception as e:
-        return HttpResponse("", content_type="text/plain")
+        return HttpResponse("")
 
 
 @csrf_exempt
