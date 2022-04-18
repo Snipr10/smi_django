@@ -38,6 +38,7 @@ def text(request):
     url = request.data['urls']
     try:
         res = parsing_smi_url(url, attempts=0)
+        print(res)
         if res:
             return HttpResponse(res, content_type="text/plain")
         return HttpResponse("", content_type="text/plain")
