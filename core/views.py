@@ -36,12 +36,13 @@ def test(request):
 def text(request):
     from core.utils.parsing_smi_url import parsing_smi_url
     url = request.data['urls']
-    print(url)
     try:
-        print(parsing_smi_url(url, attempts=0))
+        res = parsing_smi_url(url, attempts=0)
+        if res:
+            return HttpResponse(res)
+        return HttpResponse("")
     except Exception as e:
-        print(e)
-    return HttpResponse(parsing_smi_url(url, attempts=0))
+        return HttpResponse("")
 
 
 @csrf_exempt
