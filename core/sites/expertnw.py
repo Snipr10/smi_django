@@ -112,8 +112,12 @@ def get_page(articles, article_body, proxy, attempt=0):
                     photos.append(PAGE_URL + image_block.find("img").attrs.get("src"))
                 except Exception:
                     pass
-
-            articles.append({"date": article_body['date'],
+            date_ = article_body['date']
+            try:
+                date_ = dateparser.parse(soup.find("span", {"class": "article-date"}).text)
+            except Exception:
+                pass
+            articles.append({"date": date_,
                              "title": article_body['title'],
                              "text": text.strip(),
                              "href": url,
