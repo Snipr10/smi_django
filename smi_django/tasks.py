@@ -100,6 +100,7 @@ def add_new_key():
         for k in site_k:
             if k.keyword_id not in active_keys_list:
                 k.is_active = 0
+                print(k.keyword_id)
                 stop_list.append(k)
     try:
         SiteKeyword.objects.bulk_create(new_key_list, batch_size=200, ignore_conflicts=True)
@@ -107,6 +108,7 @@ def add_new_key():
         print(e)
 
     try:
+        print("SiteKeyword UPDATE")
         SiteKeyword.objects.bulk_update(stop_list, batch_size=200, fields=['is_active'])
     except Exception as e:
         print(e)
