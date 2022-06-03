@@ -110,7 +110,7 @@ def add_new_key():
     for site in GlobalSite.objects.filter(is_keyword=1):
         print(site.site_id)
         site_k = SiteKeyword.objects.filter(site_id=site.site_id)
-        active_keys_list = list(active_keyword)
+        active_keys_list = list(active_keyword.values_list('id', flat=True))
         for k in site_k:
             if k.keyword_id not in active_keys_list:
                 k.is_active = 0
