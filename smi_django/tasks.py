@@ -96,16 +96,27 @@ def add_new_key():
         new_keys = active_keyword.filter(~Q(id__in=keywords_list))
         for new_key in new_keys:
             new_key_list.append(SiteKeyword(site_id=site.site_id, keyword_id=new_key.id))
-        active_keys_list = list(active_keyword)
-        for k in site_k:
-            if k.keyword_id not in active_keys_list:
-                k.is_active = 0
-                # print(k.keyword_id)
-                stop_list.append(k)
+        # active_keys_list = list(active_keyword)
+        # for k in site_k:
+        #     if k.keyword_id not in active_keys_list:
+        #         k.is_active = 0
+        #         # print(k.keyword_id)
+        #         stop_list.append(k)
     try:
         SiteKeyword.objects.bulk_create(new_key_list, batch_size=200, ignore_conflicts=True)
     except Exception as e:
         print(e)
+
+    for site in GlobalSite.objects.filter(is_keyword=1):
+        print(site.site_id)
+        site_k = SiteKeyword.objects.filter(site_id=site.site_id)
+        active_keys_list = list(active_keyword)
+        for k in site_k:
+            if k.keyword_id not in active_keys_list:
+                k.is_active = 0
+                k.save()
+                # print(k.keyword_id)
+                stop_list.append(k)
 
     try:
         print("SiteKeyword UPDATE")
