@@ -24,6 +24,8 @@ from core.sites.novayagazeta import parsing_novayagazeta
 from core.sites.radiorus import parsing_radio_rus
 from core.sites.svoboda_new import parsing_svoboda_new
 from core.sites.vecherkaspb import parsing_vecherkaspb
+from core.sites.zaks import parsing_zaks
+
 from core.celery import app
 
 from core.sites.utils import get_late_date, update_proxy, stop_proxy, save_articles, update_time_timezone, batch_size, \
@@ -315,6 +317,12 @@ def parsing_key(key_word, last_update, key):
         elif key_word.site_id == 17097923825390536162:
             print("fontanka")
             articles, proxy = parsing_fontanka(key, last_update, update_proxy(None), [])
+
+        # https://www.zaks.ru
+        elif key_word.site_id == 8361677330337893298:
+            print("zaks")
+            articles, proxy = parsing_zaks(key, last_update, update_proxy(None), [])
+
         else:
             print("site_id not founded")
             raise Exception("site_id not founded")
