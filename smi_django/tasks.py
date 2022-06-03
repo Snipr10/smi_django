@@ -91,16 +91,25 @@ def add_new_key():
     for site in GlobalSite.objects.filter(is_keyword=1):
         print(site.site_id)
         i = 0
-        keywords_list = list(SiteKeyword.objects.filter(site_id=site.site_id).values_list('keyword_id', flat=True))
+        site_k = SiteKeyword.objects.filter(site_id=site.site_id)
+        keywords_list = list(site_k.values_list('keyword_id', flat=True))
         new_keys = active_keyword.filter(~Q(id__in=keywords_list))
         for new_key in new_keys:
             new_key_list.append(SiteKeyword(site_id=site.site_id, keyword_id=new_key.id))
-        print(key_source.values_list('keyword_id', flat=True))
+        active_keys_list = list(active_keyword)
+        for k in site_k:
+            if k.keyword_id not in active_keys_list:
+                k.is_active = 0
+                stop_list.append(k)
     try:
         SiteKeyword.objects.bulk_create(new_key_list, batch_size=200, ignore_conflicts=True)
     except Exception as e:
         print(e)
 
+    try:
+        SiteKeyword.objects.bulk_update(stop_list, batch_size=200, fields=['is_active'])
+    except Exception as e:
+        print(e)
 
 @app.task
 def delete_bad_posts():
