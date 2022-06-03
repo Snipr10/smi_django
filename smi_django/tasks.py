@@ -109,7 +109,10 @@ def add_new_key():
 
     try:
         print("SiteKeyword UPDATE")
-        SiteKeyword.objects.bulk_update(stop_list, batch_size=200, fields=['is_active'])
+        print(len(stop_list))
+        print("SiteKeyword UPDATE")
+
+        SiteKeyword.objects.bulk_update(stop_list, ['is_active'], batch_size=200)
     except Exception as e:
         print(e)
 
