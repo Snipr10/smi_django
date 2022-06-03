@@ -114,7 +114,7 @@ def add_new_key():
         for k in site_k:
             if k.keyword_id not in active_keys_list:
                 k.is_active = 0
-                k.save()
+                k.save(update_fields=['is_active'])
                 # print(k.keyword_id)
                 stop_list.append(k)
 
