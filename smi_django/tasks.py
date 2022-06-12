@@ -309,7 +309,7 @@ def parsing_key(key_word, last_update, key):
             articles, proxy = parsing_gorod_812(key, last_update, update_proxy(None), [])
 
         # https://expertnw.com
-        elif key_word.site_id == 3584747628370255388:
+        elif key_word.site_id == 3575266616937685158:
             print("expertnw")
             articles, proxy = parsing_expertnw(key, last_update, update_proxy(None), [])
 
