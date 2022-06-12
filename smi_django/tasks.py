@@ -319,7 +319,7 @@ def parsing_key(key_word, last_update, key):
             articles, proxy = parsing_5_tv(key, last_update, update_proxy(None), [])
 
         # https://echo.msk.ru
-        elif key_word.site_id == 7440394629060532294:
+        elif key_word.site_id == 148582668151048074:
             print("echo.msk.")
             articles, proxy = parsing_echo_msk(key, last_update, update_proxy(None), [])
 
