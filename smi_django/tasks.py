@@ -140,7 +140,7 @@ def delete_bad_posts():
 @app.task
 def update_time():
     i = 0
-    for site_id in SiteKeyword.objects.filter(site_id=17097923825390536162, last_parsing__gte=update_time_timezone(
+    for site_id in SiteKeyword.objects.filter(site_id=11880147896115333104, last_parsing__gte=update_time_timezone(
             timezone.localtime()
     ) - datetime.timedelta(days=360 * 3)):
         print(i)
@@ -164,7 +164,7 @@ def untaken_key():
 @app.task
 def update_text_delete_duplicates():
     i = 0
-    for site_id in SiteKeyword.objects.filter(site_id=17097923825390536162, last_parsing__gte=update_time_timezone(
+    for site_id in SiteKeyword.objects.filter(site_id=11880147896115333104, last_parsing__gte=update_time_timezone(
             timezone.localtime()
     ) - datetime.timedelta(days=360 * 3)):
         print(i)
@@ -299,12 +299,12 @@ def parsing_key(key_word, last_update, key):
             articles, proxy = parsing_radio_rus(key, last_update, update_proxy(None), [])
             print("radiorus ok")
         # https://vecherkaspb.ru
-        elif key_word.site_id == 8227953169434178:
+        elif key_word.site_id == 819475629408721317:
             print("vecherkaspb")
             articles, proxy = parsing_vecherkaspb(key, last_update, update_proxy(None), [])
 
         # https://gorod-812.ru
-        elif key_word.site_id == 833670931634090723:
+        elif key_word.site_id == 7881634854484899633:
             print("gorod-812")
             articles, proxy = parsing_gorod_812(key, last_update, update_proxy(None), [])
 
@@ -329,22 +329,22 @@ def parsing_key(key_word, last_update, key):
             articles, proxy = parsing_svoboda_new(key, last_update, update_proxy(None), [])
 
         # https://moika78.ru
-        elif key_word.site_id == 9392529751024449716:
+        elif key_word.site_id == 14576566779249943874:
             print("moika78")
             articles, proxy = parsing_moika78(key, last_update, update_proxy(None), [])
 
         # http://novayagazeta.spb.ru
-        elif key_word.site_id == 11450716446227110385:
+        elif key_word.site_id == 14580193992243647856:
             print("novayagazeta")
             articles, proxy = parsing_novayagazeta(key, last_update, update_proxy(None), [])
 
         # https://www.interfax.ru
-        elif key_word.site_id == 14036259156137978615:
+        elif key_word.site_id == 7686074743359215703:
             print("interfax")
             articles, proxy = parsing_interfax(key, last_update, update_proxy(None), [])
 
         # https://www.fontanka.ru
-        elif key_word.site_id == 17097923825390536162:
+        elif key_word.site_id == 11880147896115333104:
             print("fontanka")
             articles, proxy = parsing_fontanka(key, last_update, update_proxy(None), [])
 
