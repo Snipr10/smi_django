@@ -294,7 +294,7 @@ def parsing_key(key_word, last_update, key):
     print(f"start parsing_key {key}")
     try:
         # https://www.radiorus.ru/
-        if key_word.site_id == 1865850141197341:
+        if key_word.site_id == 10975640874931224455:
             print("radiorus")
             articles, proxy = parsing_radio_rus(key, last_update, update_proxy(None), [])
             print("radiorus ok")
