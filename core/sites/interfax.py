@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from core.sites.utils import update_proxy, DEFAULTS_TIMEOUT
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
-SEARCH_PAGE_URL = "https://www.interfax.ru/search/news/?sw="
+SEARCH_PAGE_URL = "https://www.interfax.ru/search/news/"
 PAGE_URL = "https://www.interfax.ru"
 
 
@@ -30,19 +30,28 @@ def parsing_interfax(keyword, limit_date, proxy, body):
 def get_urls(keyword, limit_date, proxy, body, urls, page, attempts=0):
     try:
         print("interfax url  " + str(SEARCH_PAGE_URL + requests.utils.quote(keyword.encode('windows-1251'))))
-        res = requests.get(SEARCH_PAGE_URL + requests.utils.quote(keyword.encode('windows-1251')),
-                           headers={
-                               "user-agent": USER_AGENT
-                           },
-                           params={"sec": 0,
-                                   "df": limit_date.date().strftime("%d.%m.%Y"),
-                                   "dt": date.today().strftime("%d.%m.%Y"),
-                                   "sort": "date",
-                                   "p": "page_" + str(page)
-                                   },
-                           proxies=proxy.get(list(proxy.keys())[0]),
-                           timeout=DEFAULTS_TIMEOUT
-                           )
+        res = requests.get(
+            f'''https://www.interfax.ru/search/news/?phrase={requests.utils.quote(keyword.encode('windows-1251'))}&df={limit_date.date().strftime("%d.%m.%Y")}&dt={date.today().strftime("%d.%m.%Y")}&sec=0&p=page_{str(page)}''',
+            headers={
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Connection': 'keep-alive',
+                'DNT': '1',
+                'Referer': 'https://www.interfax.ru/search/news/?df=14.12.2021&dt=12.06.2022&sec=0&phrase=%EC%EE%F1%EA%E2%E0',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'same-origin',
+                'Sec-Fetch-User': '?1',
+                'Upgrade-Insecure-Requests': '1',
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',
+                'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Linux"',
+            }
+            ,
+            proxies=proxy.get(list(proxy.keys())[0]),
+            timeout=DEFAULTS_TIMEOUT
+            )
 
     except Exception as e:
         # logger.info(str(e))
@@ -78,7 +87,6 @@ def get_urls(keyword, limit_date, proxy, body, urls, page, attempts=0):
                     return True, body, False, proxy
             else:
                 if article_date.date() >= limit_date.date():
-
                     body.append(
                         {
                             "href": href,
@@ -103,7 +111,7 @@ def get_page(articles, article_body, proxy, attempt=0):
         res = requests.get(url, headers={
             "user-agent": USER_AGENT
         },
-                           # proxies=proxy.get(list(proxy.keys())[0]),
+                           proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
         if res.ok:
@@ -136,4 +144,4 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    parsing_interfax("красота", datetime.strptime("01/09/2021", "%d/%m/%Y"), update_proxy(None), [])
+    parsing_interfax("москва", datetime.strptime("01/09/2021", "%d/%m/%Y"), None, [])
