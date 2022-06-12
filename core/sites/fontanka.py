@@ -40,8 +40,8 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
                                    "offset": page,
                                    "sortt": "date"
                                    },
-                           # proxies=proxy.get(list(proxy.keys())[0]),
-                           # timeout=DEFAULTS_TIMEOUT
+                           proxies=proxy.get(list(proxy.keys())[0]),
+                           timeout=DEFAULTS_TIMEOUT
                            )
     except Exception as e:
         # logger.info(str(e))
@@ -98,7 +98,7 @@ def get_page(articles, article_body, proxy, attempt=0):
         res = requests.get(url, headers={
             "user-agent": USER_AGENT
         },
-                           # proxies=proxy.get(list(proxy.keys())[0]),
+                           proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
         if res.ok:

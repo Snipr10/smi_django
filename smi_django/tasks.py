@@ -314,7 +314,7 @@ def parsing_key(key_word, last_update, key):
             articles, proxy = parsing_expertnw(key, last_update, update_proxy(None), [])
 
         # https://www.5-tv.ru
-        elif key_word.site_id == 5561022471722978546:
+        elif key_word.site_id == 15938616575921065567:
             print("www.5-tv")
             articles, proxy = parsing_5_tv(key, last_update, update_proxy(None), [])
 
