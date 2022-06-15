@@ -1,7 +1,7 @@
 import re
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 from newspaper import Article
 from newspaper.configuration import Configuration
 
@@ -38,8 +38,12 @@ URL_DICT = {
                                         "text": ["div", {"itemprop": "articleBody"}],
                                         },
     "https://www.fontanka.ru/": {"title": ["h1", {}],
-                                        "text": ["section", {"itemprop": "articleBody"}],
-                                        },
+                                 "text": ["section", {"itemprop": "articleBody"}],
+                                 },
+    "https://www.rtr.spb.ru/": {"title": ["font", {"class": "base"}],
+                                "text": ["p", {"align": "justify"}],
+                                "decoder": "windows-1251", "manual": True
+                                },
 
 }
 
@@ -49,10 +53,21 @@ def _get_page_data(url, attempts=0):
     for k in URL_DICT.keys():
         if k in url:
             if attempts < 1:
-                post = requests.get(url)
+                try:
+                    post = requests.get(url)
+                except Exception:
+                    post = requests.get(url, headers={
+                        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'
+                    })
             else:
                 proxy = update_proxy(proxy)
-                post = requests.get(url, proxies=proxy.get(list(proxy.keys())[0]))
+                try:
+                    post = requests.get(url, proxies=proxy.get(list(proxy.keys())[0]))
+                except Exception:
+                    post = requests.get(url, proxies=proxy.get(list(proxy.keys())[0]),  headers={
+                        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'
+                    })
+
                 stop_proxy(proxy, error=0, banned=0)
 
             soup = BeautifulSoup(post.text, 'html.parser')
@@ -77,12 +92,21 @@ def _get_page_data(url, attempts=0):
                     soup_cont = soup_all[-1]
                 else:
                     soup_cont = soup_all[0]
-                for c in soup_cont.contents:
-                    try:
-                        if c.text and c.text.strip():
-                            text += re.sub("\n+", "\n", c.text.strip()) + "\r\n <br> "
-                    except Exception:
-                        pass
+                text = ""
+
+                if URL_DICT.get(k).get("manual", False):
+                    for c in soup_cont.contents[0].contents:
+                        if isinstance(c, NavigableString) or len(c.attrs) == 0:
+                            text += str(c)
+                        else:
+                            break
+                else:
+                    for c in soup_cont.contents:
+                        try:
+                            if c.text and c.text.strip():
+                                text += re.sub("\n+", "\n", c.text.strip()) + "\r\n <br> "
+                        except Exception:
+                            pass
             return article_title, text
     return "", ""
 
