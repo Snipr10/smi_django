@@ -7,6 +7,7 @@ from newspaper.configuration import Configuration
 
 from core.sites.utils import update_proxy, stop_proxy
 
+URL_WITHOUT_META = ["https://lenta.ru"]
 
 URL_DICT = {
     "https://infoneva.ru/": {"title": ["title", {}], "text": ["div", {"class": "text-content"}]},
@@ -24,7 +25,8 @@ URL_DICT = {
                                   "meta": ["div", {"class": "article-authors__info"}]},
     "https://live24.ru/": {"title": ["h1", {}],
                            "text": ["div", {
-                               "class": "uk-panel uk-text-large uk-dropcap maintext uk-margin uk-width-2xlarge uk-margin-auto"}],
+                               "class": re.compile('.*panel uk-text-large maintext.*')}],
+                           "is_last": True
                            },
     "https://www.sobaka.ru/": {"title": ["h1", {"itemprop": "headline name"}],
                                "text": ["div", {"itemprop": "articleBody"}],
@@ -70,7 +72,12 @@ def _get_page_data(url, attempts=0):
             if URL_DICT.get(k).get("wholetext"):
                 text += soup.find(name=URL_DICT.get(k).get("text")[0], attrs=URL_DICT.get(k).get("text")[1]).text
             else:
-                for c in soup.find(name=URL_DICT.get(k).get("text")[0], attrs=URL_DICT.get(k).get("text")[1]).contents:
+                soup_all = soup.find_all(name=URL_DICT.get(k).get("text")[0], attrs=URL_DICT.get(k).get("text")[1])
+                if URL_DICT.get(k).get("is_last", False):
+                    soup_cont = soup_all[-1]
+                else:
+                    soup_cont = soup_all[0]
+                for c in soup_cont.contents:
                     try:
                         if c.text and c.text.strip():
                             text += re.sub("\n+", "\n", c.text.strip()) + "\r\n <br> "
@@ -115,7 +122,7 @@ def parsing_smi_url(url, attempts=0):
                     except Exception:
                         pass
             text = re.sub("\n\n+", "\r\n <br> ", text)
-            if article.meta_description.strip() not in text:
+            if len([s for s in URL_WITHOUT_META if s in url]) == 0 and article.meta_description.strip() not in text:
                 text = article.meta_description.strip() + "\r\n <br> " + text
         except Exception as e:
             print(e)
