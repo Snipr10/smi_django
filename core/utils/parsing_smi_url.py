@@ -114,7 +114,8 @@ def _get_page_data(url, attempts=0):
 def parsing_smi_url(url, attempts=0):
     if "https://glasnarod.ru/" in url:
         return None
-
+    if "https://vz.ru/" in url:
+        return None
     try:
         proxy = None
         h, text = _get_page_data(url, attempts=0)
