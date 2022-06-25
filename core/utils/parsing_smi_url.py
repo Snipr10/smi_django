@@ -28,9 +28,9 @@ URL_DICT = {
                                "class": re.compile('.*panel uk-text-large maintext.*')}],
                            "is_last": True
                            },
-    "https://www.sobaka.ru/": {"title": ["h1", {"itemprop": "headline name"}],
-                               "text": ["div", {"itemprop": "articleBody"}],
-                               },
+    # "https://www.sobaka.ru/": {"title": ["h1", {"itemprop": "headline name"}],
+    #                            "text": ["div", {"itemprop": "articleBody"}],
+    #                            },
     "https://www.flashnord.com/": {"title": ["h1", {"class": "entry-title"}],
                                    "text": ["div", {"class": "entry-content"}],
                                    },
@@ -46,7 +46,58 @@ URL_DICT = {
                                 },
     "https://spb.aif.ru/": {"title": ["h1", {}], "text": ["div", {"class": "article_text"}], "p": True, "next": True
                             },
-
+    "https://galernayas.ru/": {"title": ["h2", {}], "text": ["div", {"style": "text-align:justify"}], "p": True,
+                               },
+    "https://novayagazeta.spb.ru/": {"title": ["h1", {}], "text": ["div", {"class": "article"}],
+                               },
+    "https://www.interessant.ru/": {"title": ["h1", {}], "text": ["div", {"class": "text"}],
+                       "meta": ["h2", {}], "is_last": True},
+    "https://www.lenpravda.ru/": {"title": ["div", {"class":"razdeltitle1"}], "text": ["div", {"class": "bodytext"}],
+                                  "is_last": True},
+    "https://info24.ru/": {"title": ["h1", {}], "meta": ["h3", {}], "text": ["div", {"class": "material-body"}],
+                           "is_last": True},
+    "http://www.assembly.spb.ru/": {"title": ["h2", {}], "text": ["article", {}],
+                           "is_last": True},
+    "https://govoritmoskva.ru/": {"title": ["h1", {}], "text": ["div", {"class": "textContent"}],
+                                    "is_last": True},
+    "https://smotrim.ru/": {"title": ["header", {"class":"article-main-item__header"}], "text": ["div", {"class": "article-main-item__body"}],
+                                  "meta":["div", {"class":"article-main-item__anons"}],
+                                  "is_last": True},
+    "https://hudoznikov.ru/": {"title": ["h2", {}], "text": ["div", {"style": "text-align:justify"}],
+                                  "is_last": True},
+    "https://dorinfo.ru/": {"title": ["h1", {}],
+                            "text": ["div", {"class": "fulltext"}],
+                            "is_last": True},
+    "https://www.flashnord.com/": {"title": ["h1", {}],
+                            "text": ["div", {"class": "entry-content"}],
+                            "is_last": True},
+    "https://www.vedomosti.ru/": {"title": ["h1", {}],
+                            "text": ["div", {"class": "article-boxes-list article__boxes"}],
+                            "meta": ["em", {}],},
+    # "https://novayagazeta.ru/": {"title": ["h1", {}],
+    #                               "text": ["div", {"id": "materialBlock_0"}],
+    #                             },
+    "https://mir24.tv/": {"title": ["h1", {}],
+                                 "text": ["div", {"class": "article-content"}], "p": True, "next": True
+                                 },
+    "https://mos.news/": {"title": ["h1", {}],
+                          "text": ["div", {"class": "detail_text_container"}],  "decoder": "windows-1251",  "next": True
+                          },
+    "https://delta.news/": {"title": ["h5", {"class":"white-text grey darken-2"}],
+                          "text": ["article", {"class": "card"}], "next": True,
+                            "delete_title": True
+                          },
+    "https://spb.octagon.media/": {"title": ["h1", {}],
+                            "text": ["article", {}], "p": True,
+                            "delete_title": True
+                            },
+    "https://bloknot.ru/": {"title": ["h1", {}],
+                                   "text": ["div", {"class":"article__content"}], "p": True,
+                                   "delete_title": True, "next": True
+                                   },
+    "https://www.sobaka.ru/": {"title": ["h1", {}],
+                                   "text": ["div", {"class":"b-post-blocks"}], "p": True,
+                                   }
 }
 
 
@@ -121,6 +172,11 @@ def _get_page_data(url, attempts=0):
                                     text += re.sub("\n+", "\n", c.text.strip()) + "\r\n <br> "
                             except Exception:
                                 pass
+            if URL_DICT.get(k).get("delete_title", False):
+                try:
+                    text = text.replace(article_title.strip(), "").strip()
+                except Exception:
+                    pass
             return article_title, text
     return "", ""
 
