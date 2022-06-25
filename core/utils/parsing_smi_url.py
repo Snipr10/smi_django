@@ -44,6 +44,8 @@ URL_DICT = {
                                 "text": ["p", {"align": "justify"}],
                                 "decoder": "windows-1251", "manual": True
                                 },
+    "https://spb.aif.ru/": {"title": ["h1", {}], "text": ["div", {"class": "article_text"}], "p": True, "next": True
+                            },
 
 }
 
@@ -101,12 +103,24 @@ def _get_page_data(url, attempts=0):
                         else:
                             break
                 else:
-                    for c in soup_cont.contents:
-                        try:
-                            if c.text and c.text.strip():
-                                text += re.sub("\n+", "\n", c.text.strip()) + "\r\n <br> "
-                        except Exception:
-                            pass
+                    if URL_DICT.get(k).get("p", False):
+                        for c in soup_cont.find_all("p"):
+                            try:
+                                if URL_DICT.get(k).get("next", False):
+                                    if c.next and c.next.strip():
+                                        text += re.sub("\n+", "\n", c.next.strip()) + "\r\n <br> "
+                                else:
+                                    if c.text and c.text.strip():
+                                        text += re.sub("\n+", "\n", c.text.strip()) + "\r\n <br> "
+                            except Exception:
+                                pass
+                    else:
+                        for c in soup_cont.contents:
+                            try:
+                                if c.text and c.text.strip():
+                                    text += re.sub("\n+", "\n", c.text.strip()) + "\r\n <br> "
+                            except Exception:
+                                pass
             return article_title, text
     return "", ""
 
