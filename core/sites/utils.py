@@ -1,4 +1,5 @@
 import json
+import re
 import time
 import random
 import hashlib
@@ -145,8 +146,13 @@ def save_articles(display_link, articles):
         for sound in article.get('sounds', []):
             text += "\n" + sound
         try:
+            try:
+                title = re.sub(r"<[^>]+>", "", article.get('title', ''), flags=re.S)
+            except Exception:
+                title = article.get('title', '')
+
             rmq_json_data = {
-                "title": article.get('title', ''),
+                "title": title,
                 "content": text,
                 "created": article.get('date').strftime("%Y-%m-%d %H:%M:%S"),
                 "url": article.get('href'),

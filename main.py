@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import json
 import os
+import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 
@@ -71,9 +72,12 @@ def create_rmq(i):
                 text = parsing_smi_url(url)
                 if text is not None and text.strip() != "":
                     try:
-
+                        try:
+                            title = re.sub(r"<[^>]+>", "", body.get("title"), flags=re.S)
+                        except Exception:
+                            title = body.get("title")
                         rmq_json_data = {
-                            "title": body.get("title"),
+                            "title": title,
                             "content": text,
                             "created": body.get("created"),
                             "url": url,
