@@ -95,11 +95,11 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
                 site_date = dateparser.parse(site['PublicationDate'].split(".")[0])
             except Exception:
                 site_date = None
-
-                if site_date and site_date.date() < limit_date.date():
-                    return False, body, proxy
-                else:
-                    body.append({
+            print(site_date)
+            if site_date and site_date.date() < limit_date.date():
+                return False, body, proxy
+            else:
+                body.append({
                         "title": site['Headline'],
                         "href": PAGE_URL + "/" + site['ShortUrl'],
                         "date": site_date
