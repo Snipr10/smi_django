@@ -53,8 +53,7 @@ def start_task_parsing_by_time():
         django.db.close_old_connections()
         try:
             print(site.url)
-            print(RADIO_URL)
-            print(ZENIT_RADIO_URL)
+
             articles = []
             attempt = 0
             while attempt < 30 and len(articles) == 0:
@@ -62,7 +61,7 @@ def start_task_parsing_by_time():
                 if site.url == RADIO_URL:
                     articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
                 if site.url == ZENIT_RADIO_URL:
-                    articles, proxy = parsing_radio_zenit(site.last_parsing, update_proxy(None))
+                    articles, proxy = parsing_radio_zenit(site.last_parsing, update_proxy(None), [])
                 if site.url == "https://www.gov.spb.ru":
                     articles, proxy = start_parsing(site.last_parsing, update_proxy(None))
                 if site.url == DP_URL:
