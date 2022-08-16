@@ -93,6 +93,8 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
         for site in articles:
             try:
                 print(site)
+                print(site['PublicationDate'])
+
                 site_date = dateparser.parse(site['PublicationDate'])
                 print(site_date)
                 if site_date.date() >= limit_date.date():
