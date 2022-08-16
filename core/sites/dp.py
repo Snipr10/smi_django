@@ -32,7 +32,7 @@ def parsing_dp(limit_date, proxy):
         try:
             is_time, articles, proxy = get_page(articles, article, proxy)
         except Exception:
-             pass
+            pass
 
     return articles, proxy
 
@@ -91,12 +91,12 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
         if len(articles) == 0:
             return False, body, proxy
         for site in articles:
-                print(site)
-                print(site['PublicationDate'].split(".")[0])
-
+            try:
                 site_date = dateparser.parse(site['PublicationDate'].split(".")[0])
-                print(site_date)
-                if site_date.date() >= limit_date.date():
+            except Exception:
+                site_date = None
+
+                if site_date and site_date.date() >= limit_date.date():
                     body.append({
                         "title": site['Headline'],
                         "href": PAGE_URL + "/" + site['ShortUrl'],
@@ -109,7 +109,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
 
     elif res.status_code == 404:
         return False, body, None, proxy
-    return True, body,  proxy
+    return True, body, proxy
 
 
 def get_page(articles, article_body, proxy, attempt=0):
