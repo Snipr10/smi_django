@@ -81,6 +81,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
             return get_urls(limit_date, update_proxy(proxy), body, page, attempts + 1)
         return False, body, proxy
     if res.ok:
+        print("re ok")
         json_res = json.loads(res.text)
 
         articles = json_res['List']
@@ -93,7 +94,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
             if site_date.date() >= limit_date.date():
                 body.append({
                     "title": site['Headline'],
-                    "href": PAGE_URL +"/" + site['ShortUrl'],
+                    "href": PAGE_URL + "/" + site['ShortUrl'],
                     "date": site_date
                 })
             else:
