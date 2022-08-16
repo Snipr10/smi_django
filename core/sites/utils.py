@@ -222,7 +222,7 @@ def get_proxy():
         time.sleep(random.randint(0, 10) / 10)
 
         proxy = models.AllProxy.objects.filter(~Q(id__in=added_proxy_list), ~Q(port=0), ip__isnull=False,
-                                               login__isnull=False).last()
+                                               login__isnull=False).order_by('?').first()
 
         if proxy is not None:
             new_proxy = models.Proxy.objects.create(id=proxy.id)
