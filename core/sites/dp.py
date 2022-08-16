@@ -20,7 +20,7 @@ def parsing_dp(limit_date, proxy):
     page = 0
     body = []
     is_parsing_url = True
-    while page < 1000 and is_parsing_url:
+    while page < 500 and is_parsing_url:
         is_parsing_url, body, proxy = get_urls(limit_date, proxy, body, page)
         page += 1
         print("parsing_dp page" + str(page))
@@ -96,15 +96,14 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
             except Exception:
                 site_date = None
 
-                if site_date and site_date.date() >= limit_date.date():
+                if site_date and site_date.date() < limit_date.date():
+                    return False, body, proxy
+                else:
                     body.append({
                         "title": site['Headline'],
                         "href": PAGE_URL + "/" + site['ShortUrl'],
                         "date": site_date
                     })
-                else:
-                    return False, body, proxy
-
         return True, body, proxy
 
     elif res.status_code == 404:
