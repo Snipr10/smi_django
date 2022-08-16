@@ -38,22 +38,40 @@ def parsing_dp(limit_date, proxy):
 def get_urls(limit_date, proxy, body, page, attempts=0):
     try:
         # ?SearchString=&skip=0&take=10&DateFrom=&DateTo=&IsInIssue=false&SortType=2&SortOrder=1"
-        res = requests.get(SEARCH_PAGE_URL,
-                           headers={
-                               "user-agent": USER_AGENT
-                           },
-                           params={"SearchString": "",
-                                   "skip": 50 * page,
-                                   "take": 50,
-                                   "DateFrom": "",
-                                   "DateTo": "",
-                                   "IsInIssue": "false",
-                                   "SortType": 2,
-                                   "SortOrder": 1
-                                   },
-                           proxies=proxy.get(list(proxy.keys())[0]),
-                           timeout=DEFAULTS_TIMEOUT
-                           )
+        if attempts == 0:
+            res = requests.get(SEARCH_PAGE_URL,
+                               headers={
+                                   "user-agent": USER_AGENT
+                               },
+                               params={"SearchString": "",
+                                       "skip": 50 * page,
+                                       "take": 50,
+                                       "DateFrom": "",
+                                       "DateTo": "",
+                                       "IsInIssue": "false",
+                                       "SortType": 2,
+                                       "SortOrder": 1
+                                       },
+                               # proxies=proxy.get(list(proxy.keys())[0]),
+                               timeout=DEFAULTS_TIMEOUT
+                               )
+        else:
+            res = requests.get(SEARCH_PAGE_URL,
+                               headers={
+                                   "user-agent": USER_AGENT
+                               },
+                               params={"SearchString": "",
+                                       "skip": 50 * page,
+                                       "take": 50,
+                                       "DateFrom": "",
+                                       "DateTo": "",
+                                       "IsInIssue": "false",
+                                       "SortType": 2,
+                                       "SortOrder": 1
+                                       },
+                               proxies=proxy.get(list(proxy.keys())[0]),
+                               timeout=DEFAULTS_TIMEOUT
+                               )
     except Exception as e:
         stop_proxy(proxy)
         # logger.info(str(e))
@@ -91,12 +109,21 @@ def get_page(articles, article_body, proxy, attempt=0):
     videos = []
     try:
         url = article_body['href']
-        res = requests.get(url, headers={
-            "user-agent": USER_AGENT
-        },
-                           proxies=proxy.get(list(proxy.keys())[0]),
-                           timeout=DEFAULTS_TIMEOUT
-                           )
+        if attempt == 0:
+
+            res = requests.get(url, headers={
+                "user-agent": USER_AGENT
+            },
+                               # proxies=proxy.get(list(proxy.keys())[0]),
+                               timeout=DEFAULTS_TIMEOUT
+                               )
+        else:
+            res = requests.get(url, headers={
+                "user-agent": USER_AGENT
+            },
+                               proxies=proxy.get(list(proxy.keys())[0]),
+                               timeout=DEFAULTS_TIMEOUT
+                               )
         if res.ok:
             soup_all = BeautifulSoup(res.text)
             text = ""
@@ -134,5 +161,5 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_dp(datetime.strptime("01/01/2021", "%d/%m/%Y"), update_proxy(None))
+    articles, proxy = parsing_dp(datetime.strptime("15/08/2022", "%d/%m/%Y"), None)
     print(1)
