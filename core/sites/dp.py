@@ -94,6 +94,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
             try:
                 print(site)
                 site_date = dateparser.parse(site['PublicationDate'])
+                print(site_date)
                 if site_date.date() >= limit_date.date():
                     body.append({
                         "title": site['Headline'],
