@@ -91,11 +91,10 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
         if len(articles) == 0:
             return False, body, proxy
         for site in articles:
-            try:
                 print(site)
-                print(site['PublicationDate'])
+                print(site['PublicationDate'].split(".")[0])
 
-                site_date = dateparser.parse(site['PublicationDate'])
+                site_date = dateparser.parse(site['PublicationDate'].split(".")[0])
                 print(site_date)
                 if site_date.date() >= limit_date.date():
                     body.append({
@@ -105,8 +104,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
                     })
                 else:
                     return False, body, proxy
-            except Exception as e:
-                print(e)
+
         return True, body, proxy
 
     elif res.status_code == 404:
