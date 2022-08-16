@@ -14,6 +14,7 @@ PAGE_URL = "https://www.dp.ru"
 
 def parsing_dp(limit_date, proxy):
     print("parsing_dp")
+    print(limit_date)
     # first_request
     articles = []
     page = 0
