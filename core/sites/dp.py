@@ -91,19 +91,18 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
         if len(articles) == 0:
             return False, body, proxy
         for site in articles:
-            print("site")
-
-            site_date = dateparser.parse(site['PublicationDate'])
-            print("site_date")
-            print( site)
-            if site_date.date() >= limit_date.date():
-                body.append({
-                    "title": site['Headline'],
-                    "href": PAGE_URL + "/" + site['ShortUrl'],
-                    "date": site_date
-                })
-            else:
-                return False, body, proxy
+            try:
+                site_date = dateparser.parse(site['PublicationDate'])
+                if site_date.date() >= limit_date.date():
+                    body.append({
+                        "title": site['Headline'],
+                        "href": PAGE_URL + "/" + site['ShortUrl'],
+                        "date": site_date
+                    })
+                else:
+                    return False, body, proxy
+            except Exception as e:
+                print(e)
         return True, body, proxy
 
     elif res.status_code == 404:
