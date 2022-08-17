@@ -7,6 +7,7 @@ import django.db
 import datetime
 
 import pika
+from bs4 import BeautifulSoup
 from django.db.models import Q
 from django.utils import timezone
 import datetime
@@ -41,6 +42,17 @@ def get_sphinx_id(url):
     m = hashlib.md5()
     m.update(url.encode())
     return int(str(int(m.hexdigest()[:16], 16)))
+
+
+def delete_html_tags(title):
+    try:
+        title_without_tags = BeautifulSoup(title).get_text()
+    except Exception:
+        try:
+            title_without_tags = re.sub(r"<[^>]+>", "", title, flags=re.S)
+        except Exception:
+            title_without_tags = title
+    return title_without_tags
 
 
 def parse_date(s_date, format):
@@ -146,11 +158,7 @@ def save_articles(display_link, articles):
         for sound in article.get('sounds', []):
             text += "\n" + sound
         try:
-            try:
-                title = re.sub(r"<[^>]+>", "", article.get('title', ''), flags=re.S)
-            except Exception:
-                title = article.get('title', '')
-
+            title = delete_html_tags(article.get('title', ''))
             rmq_json_data = {
                 "title": title,
                 "content": text,

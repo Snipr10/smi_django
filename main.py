@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 import pika
 
 from core.models import PostContent
-from core.sites.utils import get_sphinx_id
+from core.sites.utils import get_sphinx_id, delete_html_tags
 from core.utils.parsing_smi_url import parsing_smi_url
 
 contents = []
@@ -72,10 +72,7 @@ def create_rmq(i):
                 text = parsing_smi_url(url)
                 if text is not None and text.strip() != "":
                     try:
-                        try:
-                            title = re.sub(r"<[^>]+>", "", body.get("title"), flags=re.S)
-                        except Exception:
-                            title = body.get("title")
+                        title = delete_html_tags(body.get("title"))
                         rmq_json_data = {
                             "title": title,
                             "content": text,
