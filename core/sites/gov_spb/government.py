@@ -30,8 +30,8 @@ def parsing_gov_government(limit_date, proxy):
             i += 1
             try:
                 is_time, articles, proxy = get_page(articles, article, proxy)
-            except Exception:
-                pass
+            except Exception as e:
+                print(e)
         if len(articles) == 0 or articles[-1]['date'].date() < limit_date.date():
             break
 
@@ -84,6 +84,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
 
 def get_page(articles, article_body, proxy, attempt=0):
     photos = []
+    print(attempt)
     try:
         url = PAGE_URL + article_body['href']
         if attempt == 0:
@@ -133,6 +134,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             return True, articles, proxy
         return True, articles, proxy
     except Exception as e:
+        print(e)
         if attempt > 2:
             return False, articles, proxy
         return get_page(articles, article_body, update_proxy(proxy), attempt + 1)
