@@ -10,7 +10,7 @@ click-didyoumean==0.0.3
 click-plugins==1.1.1
 click-repl==0.2.0
 cssselect==1.1.0
-dateparser==1.0.0
+dateparser==1.1.1
 Django~=3.1.4
 djangorestframework~=3.11.0
 idna==2.8
@@ -40,3 +40,4 @@ docutils~=0.15
 openpyxl~=3.0.9
 newspaper3k==0.2.8
 pika==1.2.0
+regex==2022.3.2
