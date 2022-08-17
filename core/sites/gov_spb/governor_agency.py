@@ -38,13 +38,21 @@ def parsing_gov_agency(limit_date, proxy):
 
 def get_urls(limit_date, proxy, body, page, attempts=0):
     try:
-        res = requests.get(SEARCH_PAGE_URL % page,
-                           headers={
-                               "user-agent": USER_AGENT
-                           },
-                           proxies=proxy.get(list(proxy.keys())[0]),
-                           timeout=DEFAULTS_TIMEOUT
-                           )
+        if attempts == 0:
+            res = requests.get(SEARCH_PAGE_URL % page,
+                               headers={
+                                   "user-agent": USER_AGENT
+                               },
+                               timeout=DEFAULTS_TIMEOUT
+                               )
+        else:
+            res = requests.get(SEARCH_PAGE_URL % page,
+                               headers={
+                                   "user-agent": USER_AGENT
+                               },
+                               proxies=proxy.get(list(proxy.keys())[0]),
+                               timeout=DEFAULTS_TIMEOUT
+                               )
     except Exception as e:
         # logger.info(str(e))
         if attempts < 10:
@@ -75,12 +83,19 @@ def get_page(articles, article_body, proxy, attempt=0):
     photos = []
     try:
         url = PAGE_URL + article_body['href']
-        res = requests.get(url, headers={
-            "user-agent": USER_AGENT
-        },
-                           proxies=proxy.get(list(proxy.keys())[0]),
-                           timeout=DEFAULTS_TIMEOUT
-                           )
+        if attempt == 0:
+            res = requests.get(url, headers={
+                "user-agent": USER_AGENT
+            },
+                               timeout=DEFAULTS_TIMEOUT
+                               )
+        else:
+            res = requests.get(url, headers={
+                "user-agent": USER_AGENT
+            },
+                               proxies=proxy.get(list(proxy.keys())[0]),
+                               timeout=DEFAULTS_TIMEOUT
+                               )
         if res.ok:
             soup_all = BeautifulSoup(res.text)
             text = ""
@@ -118,4 +133,3 @@ def get_page(articles, article_body, proxy, attempt=0):
         if attempt > 2:
             return False, articles, proxy
         return get_page(articles, article_body, update_proxy(proxy), attempt + 1)
-
