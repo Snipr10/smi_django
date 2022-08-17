@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 import json
 
@@ -92,7 +93,12 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
             return False, body, proxy
         for site in articles:
             try:
-                site_date = dateparser.parse(str(site['PublicationDate']).split("T")[0])
+                split_date = str(site['PublicationDate']).split("T")[0].split("-")
+                site_date = datetime(
+                            int(re.sub("[^0-9]", "", split_date[0])),
+                            int(re.sub("[^0-9]", "", split_date[1])),
+                            int(re.sub("[^0-9]", "", split_date[2]))
+                            )
             except Exception :
                 site_date = None
             print(site_date)
