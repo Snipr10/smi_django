@@ -16,7 +16,7 @@ def parsing_gov_government(limit_date, proxy):
     page = 1
     i = 0
     is_ok = True
-    while page < 1000:
+    while page < 250:
         body = []
         is_not_stopped, body, proxy = get_urls(limit_date, proxy, body, page)
         is_ok = is_not_stopped
@@ -56,6 +56,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
                                timeout=DEFAULTS_TIMEOUT
                                )
     except Exception as e:
+        print(e)
         # logger.info(str(e))
         if attempts < 10:
             return get_urls(limit_date, update_proxy(proxy), body, page, attempts + 1)

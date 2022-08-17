@@ -14,7 +14,7 @@ def parsing_gov_government_meeting(limit_date, proxy):
     page = 1
     i = 0
     is_ok = True
-    while page < 1000:
+    while page < 250:
         body = []
         is_not_stopped, body, proxy = get_urls(limit_date, proxy, body, page)
         is_ok = is_not_stopped
