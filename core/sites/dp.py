@@ -93,12 +93,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
             return False, body, proxy
         for site in articles:
             try:
-                split_date = str(site['PublicationDate']).split("T")[0].split("-")
-                site_date = datetime(
-                            int(re.sub("[^0-9]", "", split_date[0])),
-                            int(re.sub("[^0-9]", "", split_date[1])),
-                            int(re.sub("[^0-9]", "", split_date[2]))
-                            )
+                site_date = dateparser.parse(site['PublicationDate'])
             except Exception :
                 site_date = None
             print(site_date)
