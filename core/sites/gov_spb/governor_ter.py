@@ -36,7 +36,7 @@ def parsing_governor_ter(limit_date, proxy):
         is_ok, articles, proxy = parsing_governor_region(region, limit_date, proxy)
         all_articles.append(articles)
         is_oks.append(is_ok)
-    return all(is_ok), all_articles, proxy
+    return all(is_oks), all_articles, proxy
 
 
 def parsing_governor_region(region, limit_date, proxy):
