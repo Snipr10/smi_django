@@ -108,5 +108,5 @@ def start_parsing(limit_date, proxy):
 
 
 if __name__ == '__main__':
-    start_parsing(datetime.strptime("1/10/2021", "%d/%m/%Y"), None)
+    start_parsing(datetime.strptime("20/08/2022", "%d/%m/%Y"), None)
     print(1)

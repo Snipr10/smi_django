@@ -34,7 +34,7 @@ def parsing_governor_ter(limit_date, proxy):
     is_oks = []
     for region in REGS:
         is_ok, articles, proxy = parsing_governor_region(region, limit_date, proxy)
-        all_articles.append(articles)
+        all_articles.extend(articles)
         is_oks.append(is_ok)
     return all(is_oks), all_articles, proxy
 
