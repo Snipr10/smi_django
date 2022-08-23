@@ -44,7 +44,7 @@ def parsing_governor_region(region, limit_date, proxy):
     page = 1
     i = 0
     is_ok = True
-    while page < 250:
+    while page < 20:
         body = []
         is_not_stopped, body, proxy = get_urls(region, limit_date, proxy, body, page)
         is_ok = is_not_stopped
