@@ -123,7 +123,10 @@ def _get_page_data(url, attempts=0):
 
                 stop_proxy(proxy, error=0, banned=0)
 
-            soup = BeautifulSoup(post.text, 'html.parser')
+            if URL_DICT.get(k).get("decoder"):
+                soup = BeautifulSoup(post.content.decode(URL_DICT.get(k).get("decoder")))
+            else:
+                soup = BeautifulSoup(post.text, 'html.parser')
             article_title = soup.find(name=URL_DICT.get(k).get("title")[0], attrs=URL_DICT.get(k).get("title")[1]).text
             text = ""
             try:
