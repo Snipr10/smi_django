@@ -20,6 +20,7 @@ from core.sites.gorod_812 import parsing_gorod_812
 from core.sites.gov_spb.pars_gov import start_parsing
 from core.sites.interfax import parsing_interfax
 from core.sites.moika_78 import parsing_moika78
+from core.sites.news_admin_petr import parsing_news_admin_petr
 from core.sites.news_spb import parsing_news_spb
 from core.sites.novayagazeta import parsing_novayagazeta
 from core.sites.radiorus import parsing_radio_rus
@@ -66,6 +67,8 @@ def start_task_parsing_by_time():
                 if site.url == "https://www.gov.spb.ru":
                     articles, proxy = start_parsing(site.last_parsing, update_proxy(None))
                 if site.url == DP_URL:
+                    articles, proxy = parsing_news_admin_petr(site.last_parsing, update_proxy(None))
+                if site.url == "http://xn--e1aqccgid7fsa.xn--p1ai/":
                     articles, proxy = parsing_dp(site.last_parsing, update_proxy(None))
                 if site.url in ["http://www.admnews.ru/",
                                 "http://www.krgv.ru/",
