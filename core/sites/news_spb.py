@@ -34,6 +34,7 @@ REGS = ["http://www.admnews.ru/",
         "http://www.kalininnews.ru/",
         "http://www.vybnews.ru/",
         "http://www.vonews.ru/",
+
         ]
 
 
@@ -106,7 +107,7 @@ def get_urls(region_url, limit_date, proxy, attempts=0):
                 article_href = article.find("a")
                 try:
                     date = dateparser.parse(article_href.get("href").split("/")[2], settings={'DATE_ORDER': 'YMD'}) + timedelta(days=1)
-                    if date < limit_date:
+                    if date < datetime(limit_date.year, limit_date.month, limit_date.day):
                         continue
                 except Exception as e:
                     print(e)
