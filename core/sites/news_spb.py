@@ -60,6 +60,7 @@ def parsing_news_spb(region, limit_date, proxy):
             is_time, articles, proxy = get_page(articles, article, proxy)
         except Exception:
             pass
+    print("finish parsing_news_spb")
     return is_ok, articles, proxy
 
 
