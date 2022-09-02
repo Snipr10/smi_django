@@ -61,7 +61,7 @@ def parsing_news_spb(region, limit_date, proxy):
         except Exception:
             pass
     print("finish parsing_news_spb")
-    return is_ok, articles, proxy
+    return articles, proxy
 
 
 def get_urls(region_url, limit_date, proxy, attempts=0):
