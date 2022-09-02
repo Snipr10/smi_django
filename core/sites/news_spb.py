@@ -1,10 +1,6 @@
 import re
-
-import dateparser
-import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-import json
 from datetime import timedelta
 
 import dateparser
@@ -12,8 +8,6 @@ import requests
 from core.sites.utils import DEFAULTS_TIMEOUT, update_proxy
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
-# SEARCH_PAGE_URL = "https://www.gov.spb.ru/press/disproof/?page=%s"
-# PAGE_URL = "https://www.gov.spb.ru"
 
 REGS = ["http://www.admnews.ru/",
         "http://www.krgv.ru/",
@@ -91,6 +85,8 @@ def get_urls(region_url, limit_date, proxy, attempts=0):
     except Exception as e:
         # logger.info(str(e))
         if attempts < 10:
+            if attempts == 0:
+                return get_urls(region_url, limit_date, proxy, attempts + 1)
             return get_urls(region_url, limit_date, update_proxy(proxy), attempts + 1)
         return False, [], proxy
     if res.ok:
@@ -176,8 +172,10 @@ def get_page(articles, article_body, proxy, attempt=0):
             return True, articles, proxy
         return True, articles, proxy
     except Exception as e:
-        if attempt > 2:
+        if attempt > 3:
             return False, articles, proxy
+        if attempt == 0:
+            return get_page(articles, article_body, proxy, attempt + 1)
         return get_page(articles, article_body, update_proxy(proxy), attempt + 1)
 
 
