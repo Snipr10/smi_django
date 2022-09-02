@@ -20,6 +20,7 @@ from core.sites.gorod_812 import parsing_gorod_812
 from core.sites.gov_spb.pars_gov import start_parsing
 from core.sites.interfax import parsing_interfax
 from core.sites.moika_78 import parsing_moika78
+from core.sites.news_spb import parsing_news_spb
 from core.sites.novayagazeta import parsing_novayagazeta
 from core.sites.radiorus import parsing_radio_rus
 from core.sites.svoboda_new import parsing_svoboda_new
@@ -66,9 +67,33 @@ def start_task_parsing_by_time():
                     articles, proxy = start_parsing(site.last_parsing, update_proxy(None))
                 if site.url == DP_URL:
                     articles, proxy = parsing_dp(site.last_parsing, update_proxy(None))
+                if site.url in ["http://www.admnews.ru/",
+                                "http://www.krgv.ru/",
+                                "http://www.petrogradnews.ru/",
+                                "http://www.ksnews.ru/",
+                                "http://www.news-kron.ru/",
+                                "http://www.kurort-news.ru/",
+                                "http://www.mr-news.ru/",
+                                "http://www.nevnews.ru/",
+                                # "http://xn--e1aqccgid7fsa.xn--p1ai/",
+                                "http://www.pd-news.ru/",
+                                "http://www.primorsknews.ru/",
+                                "http://www.pushkin-news.ru/",
+                                "http://www.frunznews.ru/",
+                                "http://www.news-centre.ru/",
+                                "http://www.newskolpino.ru/",
+                                "http://www.kirnews.ru/",
+                                "http://www.kalininnews.ru/",
+                                "http://www.vybnews.ru/",
+                                "http://www.vonews.ru/",
+                                ]:
+                    articles, proxy = parsing_news_spb(site.url, site.last_parsing, update_proxy(None))
+
+                # parsing_news_spb(region, limit_date, proxy)
                 attempt += 1
                 stop_proxy(proxy)
             save_articles(site.url, articles)
+            django.db.close_old_connections()
             site.last_parsing = update_time_timezone(timezone.localtime())
             site.taken = 0
             site.save(update_fields=["taken", "last_parsing"])

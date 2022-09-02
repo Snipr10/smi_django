@@ -113,19 +113,19 @@ def get_or_create_author(display_link):
 
     author = models.PostAuthor.objects.filter(url=display_link).first()
     if author is not None:
-        return author
+        return author.username, author.image
     author = models.PostAuthor.objects.filter(profile_id=display_link).first()
     if author is not None:
-        return author
-    author = models.PostAuthor.objects.create(
-        profile_id=get_sphinx_id(display_link),
-        url=display_link,
-        username=usernames.get(display_link),
-        federal=0,
-        image=images.get(display_link),
-        followers=0
-    )
-    return author
+        return author.username, author.image
+    # author = models.PostAuthor.objects.create(
+    #     profile_id=get_sphinx_id(display_link),
+    #     url=display_link,
+    #     username=usernames.get(display_link),
+    #     federal=0,
+    #     image=images.get(display_link),
+    #     followers=0
+    # )
+    return None, None
 
 
 def save_articles(display_link, articles):
@@ -148,7 +148,7 @@ def save_articles(display_link, articles):
         i += 1
 
         print(article.get('href'))
-        author = get_or_create_author(display_link)
+        author_username, author_image = get_or_create_author(display_link)
         text = article.get('text')
 
         for photo in article.get('photos', []):
@@ -164,8 +164,8 @@ def save_articles(display_link, articles):
                 "content": text,
                 "created": article.get('date').strftime("%Y-%m-%d %H:%M:%S"),
                 "url": article.get('href'),
-                "author_name": author.username,
-                "author_icon": author.image,
+                "author_name": author_username,
+                "author_icon": author_image,
                 "group_id": "",
                 "images": [],
                 "keyword_id": 10000002,
