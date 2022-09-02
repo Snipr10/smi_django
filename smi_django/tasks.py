@@ -67,9 +67,9 @@ def start_task_parsing_by_time():
                 if site.url == "https://www.gov.spb.ru":
                     articles, proxy = start_parsing(site.last_parsing, update_proxy(None))
                 if site.url == DP_URL:
-                    articles, proxy = parsing_news_admin_petr(site.last_parsing, update_proxy(None))
-                if site.url == "http://xn--e1aqccgid7fsa.xn--p1ai/":
                     articles, proxy = parsing_dp(site.last_parsing, update_proxy(None))
+                if site.url == "http://xn--e1aqccgid7fsa.xn--p1ai/":
+                    articles, proxy = parsing_news_admin_petr(site.last_parsing, update_proxy(None))
                 if site.url in ["http://www.admnews.ru/",
                                 "http://www.krgv.ru/",
                                 "http://www.petrogradnews.ru/",
