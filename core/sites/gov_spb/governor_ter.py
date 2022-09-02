@@ -87,7 +87,7 @@ def get_urls(region, limit_date, proxy, body, page, attempts=0):
     except Exception as e:
         # logger.info(str(e))
         if attempts < 10:
-            return get_urls(limit_date, update_proxy(proxy), body, page, attempts + 1)
+            return get_urls(region, limit_date, update_proxy(proxy), body, page, attempts + 1)
         return False, body, proxy
     if res.ok:
         soup = BeautifulSoup(res.text)
