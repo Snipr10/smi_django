@@ -98,7 +98,7 @@ def get_urls(region_url, limit_date, proxy, attempts=0):
         for article in soup.find_all("li"):
             if article.find("a", href=re.compile("/news/")):
                 articles.append(article)
-
+        print(f"articles {region_url}: {len(articles)}")
         if len(articles) == 0:
             return False, [], proxy
         for article in articles:
