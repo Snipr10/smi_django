@@ -102,7 +102,7 @@ def start_task_parsing_by_time():
             site.save(update_fields=["taken", "last_parsing"])
 
         except Exception as e:
-            print(e)
+            print(f"start_task_parsing_by_time {site.url} {e}")
             site.taken = 0
             site.save(update_fields=["taken"])
 
