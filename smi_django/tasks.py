@@ -48,7 +48,7 @@ def start_task_parsing_by_time():
     print("start")
     for site in GlobalSite.objects.filter(taken=0, is_keyword=0, last_parsing__lte=update_time_timezone(
             timezone.localtime()
-    ) - datetime.timedelta(minutes=60)):
+    ) - datetime.timedelta(minutes=60)).order_by("last_parsing"):
         print(site.url)
         site.taken = 1
         site.save(update_fields=["taken"])
