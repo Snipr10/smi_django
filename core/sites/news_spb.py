@@ -84,12 +84,14 @@ def get_urls(region_url, limit_date, proxy, attempts=0):
                                timeout=DEFAULTS_TIMEOUT
                                )
     except Exception as e:
+        print(e)
         # logger.info(str(e))
         if attempts < 10:
             if attempts == 0:
                 return get_urls(region_url, limit_date, proxy, attempts + 1)
             return get_urls(region_url, limit_date, update_proxy(proxy), attempts + 1)
         return False, [], proxy
+    print(f"{region_url}: {res.status_code}")
     if res.ok:
         soup = BeautifulSoup(res.text)
         articles = []
@@ -181,5 +183,5 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 
 if __name__ == '__main__':
-    articles, proxy = parsing_news_spb_ter(datetime.strptime("15/08/2022", "%d/%m/%Y"), None)
+    articles, proxy = parsing_news_spb("http://www.petrogradnews.ru/", datetime.strptime("04/09/2022", "%d/%m/%Y"), None)
     print(1)
