@@ -48,10 +48,10 @@ def parsing_news_spb(region, limit_date, proxy):
     is_not_stopped, body, proxy = get_urls(region, limit_date, proxy)
     is_ok = is_not_stopped
     if not is_not_stopped:
-        return is_ok, articles, proxy
+        return articles, proxy
 
     if len(body) == 0:
-        return is_ok, articles, proxy
+        return articles, proxy
 
     for article in body:
         print(f"parsing_news_spb {region}" + str(i))
