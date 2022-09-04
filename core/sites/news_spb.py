@@ -46,7 +46,6 @@ def parsing_news_spb(region, limit_date, proxy):
     articles = []
     i = 0
     is_not_stopped, body, proxy = get_urls(region, limit_date, proxy)
-    is_ok = is_not_stopped
     if not is_not_stopped:
         return articles, proxy
 

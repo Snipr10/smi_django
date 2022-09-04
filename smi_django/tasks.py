@@ -70,6 +70,7 @@ def start_task_parsing_by_time():
                     articles, proxy = parsing_dp(site.last_parsing, update_proxy(None))
                 if site.url == "http://xn--e1aqccgid7fsa.xn--p1ai/":
                     articles, proxy = parsing_news_admin_petr(site.last_parsing, update_proxy(None))
+                    break
                 if site.url in ["http://www.admnews.ru/",
                                 "http://www.krgv.ru/",
                                 "http://www.petrogradnews.ru/",
@@ -91,7 +92,7 @@ def start_task_parsing_by_time():
                                 "http://www.vonews.ru/",
                                 ]:
                     articles, proxy = parsing_news_spb(site.url, site.last_parsing, update_proxy(None))
-
+                    break
                 # parsing_news_spb(region, limit_date, proxy)
                 attempt += 1
                 stop_proxy(proxy)
