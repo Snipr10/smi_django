@@ -68,8 +68,7 @@ def get_urls(page, limit_date, proxy, body, attempts=0):
         if len(articles) == 0:
             return False, body, proxy
         for article in articles:
-            if "70443" in article.find("a", href=re.compile("/news/\d+/")).get("href"):
-                print(1)
+
             try:
                 parse_date = dateparser.parse(article.find("div", {"class": "time"}).text.strip())
                 try:
@@ -81,8 +80,7 @@ def get_urls(page, limit_date, proxy, body, attempts=0):
                 title = article.find("h2").text
                 url = URL_MAIN + article.find("a", href=re.compile("/news/\d+/")).get("href")
                 print(url)
-                if "news/70433/" in url:
-                    print(1)
+
                 body.append(
                     {
                         "href": url,
