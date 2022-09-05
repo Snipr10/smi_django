@@ -19,11 +19,12 @@ def parsing_news_admin_petr(limit_date, proxy):
     page = 1
     body = []
     is_ok = True
-    while page < 100 and is_ok:
+    len = -1
+    while page < 100 and is_ok and len < body.__len__():
+        len = body.__len__()
         is_ok, body, proxy = get_urls(page, limit_date, proxy, body)
         page += 1
         print("parsing_news_admin_petr page" + str(page))
-
     i = 0
     for article in body:
         print("parsing_news_admin_petr " + str(i))
@@ -146,5 +147,5 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 
 if __name__ == '__main__':
-    articles, proxy = parsing_news_admin_petr(datetime.strptime("15/08/2022", "%d/%m/%Y"), None)
+    articles, proxy = parsing_news_admin_petr(datetime.strptime("01/08/2022", "%d/%m/%Y"), None)
     print(1)
