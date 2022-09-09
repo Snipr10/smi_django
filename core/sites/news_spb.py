@@ -145,6 +145,7 @@ def get_page(articles, article_body, proxy, attempt=0):
                                timeout=DEFAULTS_TIMEOUT
                                )
         if res.ok:
+            res.encoding = 'windows-1251'
             soup_all = BeautifulSoup(res.text)
             text = ""
 
@@ -154,7 +155,7 @@ def get_page(articles, article_body, proxy, attempt=0):
 
             try:
                 for p in soup.find_all("p"):
-                    text += p.text.encode('ISO-8859-1').decode("windows-1251") + "<br> \n"
+                    text += p.text + "<br> \n"
             except Exception:
                 pass
             try:
