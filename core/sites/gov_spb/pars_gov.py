@@ -6,12 +6,27 @@ from core.sites.gov_spb.governor import parsing_gov_governor
 from core.sites.gov_spb.governor_agency import parsing_gov_agency
 from core.sites.gov_spb.governor_announces import parsing_gov_announces
 from core.sites.gov_spb.governor_disproof import parsing_governor_disproof
+from core.sites.gov_spb.governor_orsl import parsing_governor_otrsl
 from core.sites.gov_spb.governor_ter import parsing_governor_ter
 
 
 def start_parsing(limit_date, proxy):
     all_articles = []
     max_limit = 100
+
+    limit = 0
+    while limit < max_limit:
+        is_ok, articles, proxy = parsing_governor_otrsl(limit_date, proxy)
+
+        if is_ok:
+            all_articles.extend(articles)
+            limit = 2 * max_limit
+        else:
+            limit += 1
+            if limit >= max_limit:
+                print("can not parse parsing_governor_ter")
+                raise Exception("can not parse parsing_governor_ter")
+
 
     limit = 0
     while limit < max_limit:
