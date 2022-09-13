@@ -40,7 +40,7 @@ def parsing_gov_government(limit_date, proxy):
 
 def get_urls(limit_date, proxy, body, page, attempts=0):
     try:
-        if attempts == 0:
+        if attempts == 0 and proxy is None:
             res = requests.get(SEARCH_PAGE_URL % page,
                                headers={
                                    "user-agent": USER_AGENT
@@ -87,7 +87,7 @@ def get_page(articles, article_body, proxy, attempt=0):
     print(attempt)
     try:
         url = PAGE_URL + article_body['href']
-        if attempt == 0:
+        if attempt == 0 and proxy is None:
             res = requests.get(url, headers={
                 "user-agent": USER_AGENT
             },
