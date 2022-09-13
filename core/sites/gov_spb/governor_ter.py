@@ -44,7 +44,7 @@ def parsing_governor_region(region, limit_date, proxy):
     page = 1
     i = 0
     is_ok = True
-    while page < 20:
+    while page < 100:
         body = []
         is_not_stopped, body, proxy = get_urls(region, limit_date, proxy, body, page)
         is_ok = is_not_stopped
@@ -69,7 +69,7 @@ def parsing_governor_region(region, limit_date, proxy):
 def get_urls(region, limit_date, proxy, body, page, attempts=0):
     url = region + "?page=%s"
     try:
-        if attempts == 0:
+        if attempts == 0 and proxy is None:
             res = requests.get(url % page,
                                headers={
                                    "user-agent": USER_AGENT
@@ -114,13 +114,14 @@ def get_page(articles, article_body, proxy, attempt=0):
     photos = []
     try:
         url = PAGE_URL + article_body['href']
-        if attempt == 0:
+        if attempt == 0 and proxy is None:
             res = requests.get(url, headers={
                 "user-agent": USER_AGENT
             },
                                timeout=DEFAULTS_TIMEOUT
                                )
         else:
+            print(f"proxy {proxy}")
             res = requests.get(url, headers={
                 "user-agent": USER_AGENT
             },
