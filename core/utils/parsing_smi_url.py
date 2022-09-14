@@ -97,6 +97,9 @@ URL_DICT = {
                                    },
     "https://www.sobaka.ru/": {"title": ["h1", {}],
                                    "text": ["div", {"class":"b-post-blocks"}], "p": True,
+                                   },
+    "https://www.dp.ru/": {"title": ["h1", {"class":"headline"}],
+                                   "text": ["div", {"itemprop":"articleBody"}], "delete_first": True
                                    }
 }
 
@@ -169,9 +172,13 @@ def _get_page_data(url, attempts=0):
                             except Exception:
                                 pass
                     else:
+                        is_first = True
                         for c in soup_cont.contents:
                             try:
                                 if c.text and c.text.strip():
+                                    if is_first and URL_DICT.get(k).get("delete_first", False):
+                                        is_first = False
+                                        continue
                                     text += re.sub("\n+", "\n", c.text.strip()) + "\r\n <br> "
                             except Exception:
                                 pass
