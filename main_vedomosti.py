@@ -1,0 +1,72 @@
+import threading
+import multiprocessing
+import time
+import os
+import random
+import datetime
+from datetime import timedelta
+
+
+def new_process_vedomosti(i):
+    for i in range(5):
+        time.sleep(random.randint(3, 9))
+
+        print(f"multiprocessing {i}")
+        x = multiprocessing.Process(target=start_parsing_vedomosti, args=())
+        x.start()
+
+
+def start_parsing_vedomosti():
+    print("start_parsing_account_source_while")
+    while True:
+        try:
+            start_parsing_vedomosti_by_key()
+        except Exception as e:
+            print(e)
+            time.sleep(5 * 60)
+
+
+def start_parsing_vedomosti_by_key():
+    from django.utils import timezone
+    from core.models import SiteKeyword, Keyword
+    from core.sites.vedomosti import parsing_vedomosti
+    from core.sites.utils import save_articles
+    from core.sites.utils import update_time_timezone
+
+    site_keyword = SiteKeyword.objects.filter(taken=0, is_active=1, site_id=1813906118771286836).order_by("last_parsing").first()
+    print(f"site_keyword {site_keyword.id}")
+    site_keyword.taken = 1
+    site_keyword.save(update_fields=['taken'])
+    last_parsing = datetime.datetime(site_keyword.last_parsing.year, site_keyword.last_parsing.month, site_keyword.last_parsing.day) - timedelta(days=1)
+    articles, proxy = parsing_vedomosti(Keyword.objects.get(id=site_keyword.keyword_id).keyword, last_parsing, None, [])
+    save_articles(site_keyword.site_id, articles)
+    site_keyword.taken = 0
+    site_keyword.last_parsing = update_time_timezone(timezone.localtime())
+    site_keyword.save(update_fields=["taken", "last_parsing"])
+    print(f"site_keyword ok {site_keyword.id}")
+    return
+
+
+if __name__ == '__main__':
+    from threading import Thread
+    from multiprocessing import Process
+
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smi_django.settings')
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError as exc:
+        raise ImportError(
+            "Couldn't import Django. Are you sure it's installed and "
+            "available on your PYTHONPATH environment variable? Did you "
+            "forget to activate a virtual environment?"
+        ) from exc
+
+    print(1)
+    import django
+
+    django.setup()
+    for i in range(2):
+        time.sleep(10)
+        print("thread new_process_vedomosti " + str(i))
+        x = threading.Thread(target=new_process_vedomosti, args=(i,))
+        x.start()

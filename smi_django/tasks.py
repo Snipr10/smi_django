@@ -382,9 +382,7 @@ def parsing_key(key_word, last_update, key):
             print("zaks")
             articles, proxy = parsing_zaks(key, last_update, update_proxy(None), [])
         # https://www.vedomosti.ru/
-        elif key_word.site_id == 1813906118771286836:
-            print("vedomosti")
-            articles, proxy = parsing_vedomosti(key, last_update, update_proxy(None), [])
+
         else:
             print("site_id not founded")
             raise Exception("site_id not founded")
