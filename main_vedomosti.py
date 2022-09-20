@@ -65,8 +65,35 @@ if __name__ == '__main__':
     import django
 
     django.setup()
-    for i in range(2):
-        time.sleep(10)
-        print("thread new_process_vedomosti " + str(i))
-        x = threading.Thread(target=new_process_vedomosti, args=(i,))
-        x.start()
+
+    while True:
+        from django.utils import timezone
+        from core.models import SiteKeyword, Keyword
+        from core.sites.vedomosti import parsing_vedomosti
+        from core.sites.utils import save_articles
+        from core.sites.utils import update_time_timezone
+        try:
+            site_keywords = SiteKeyword.objects.filter(taken=0, is_active=1, site_id=1813906118771286836).order_by(
+                "last_parsing").first()
+            active_keyword = Keyword.objects.filter(id__in=list(site_keywords.values_list('keyword_id', flat=True)),
+                                                    network_id=1, disabled=0, enabled=1)
+
+            for s in site_keywords:
+                key = active_keyword.filter(id=s.keyword_id).last()
+                if key is None:
+                    continue
+                s.taken = 1
+                s.save(update_fields=['taken'])
+                last_parsing = datetime.datetime(s.last_parsing.year, s.last_parsing.month,
+                                                 s.last_parsing.day) - timedelta(days=1)
+                articles, proxy = parsing_vedomosti(key.keyword,
+                                                    last_parsing, None, [])
+                save_articles(s.site_id, articles)
+        except Exception as e:
+            pass
+
+    # for i in range(2):
+    #     time.sleep(10)
+    #     print("thread new_process_vedomosti " + str(i))
+    #     x = threading.Thread(target=new_process_vedomosti, args=(i,))
+    #     x.start()
