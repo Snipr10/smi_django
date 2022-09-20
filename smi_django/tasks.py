@@ -26,6 +26,7 @@ from core.sites.novayagazeta import parsing_novayagazeta
 from core.sites.radiorus import parsing_radio_rus
 from core.sites.svoboda_new import parsing_svoboda_new
 from core.sites.vecherkaspb import parsing_vecherkaspb
+from core.sites.vedomosti import parsing_vedomosti
 from core.sites.zaks import parsing_zaks
 
 from core.celery import app
@@ -380,7 +381,10 @@ def parsing_key(key_word, last_update, key):
         elif key_word.site_id == 8361677330337893298:
             print("zaks")
             articles, proxy = parsing_zaks(key, last_update, update_proxy(None), [])
-
+        # https://www.vedomosti.ru/
+        elif key_word.site_id == 1813906118771286836:
+            print("vedomosti")
+            articles, proxy = parsing_vedomosti(key, last_update, update_proxy(None), [])
         else:
             print("site_id not founded")
             raise Exception("site_id not founded")
