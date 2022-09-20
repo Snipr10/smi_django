@@ -104,6 +104,7 @@ def get_urls(keyword, limit_date, proxy, articles, page, attempts=0):
                                 "sounds": [],
                                 "videos": []
                                 })
+            print(f"{keyword}   {json_res['stat']['total']}")
             if json_res['stat']['total'] > page * 20 + 20:
                 return True, articles, False, proxy, False
             else:
