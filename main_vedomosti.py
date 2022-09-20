@@ -9,7 +9,7 @@ from datetime import timedelta
 
 def new_process_vedomosti(i):
     for i in range(3):
-        time.sleep(random.randint(3, 9))
+        time.sleep(random.randint(1, 99))
 
         print(f"multiprocessing {i}")
         x = multiprocessing.Process(target=start_parsing_vedomosti, args=())
