@@ -90,7 +90,7 @@ if __name__ == '__main__':
                                                     last_parsing, None, [])
                 save_articles(s.site_id, articles)
         except Exception as e:
-            pass
+            print(e)
 
     # for i in range(2):
     #     time.sleep(10)
