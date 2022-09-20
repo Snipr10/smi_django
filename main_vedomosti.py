@@ -8,7 +8,7 @@ from datetime import timedelta
 
 
 def new_process_vedomosti(i):
-    for i in range(5):
+    for i in range(3):
         time.sleep(random.randint(3, 9))
 
         print(f"multiprocessing {i}")
@@ -34,7 +34,7 @@ def start_parsing_vedomosti_by_key():
     from core.sites.utils import update_time_timezone
 
     site_keyword = SiteKeyword.objects.filter(taken=0, is_active=1, site_id=1813906118771286836).order_by("last_parsing").first()
-    print(f"site_keyword {site_keyword.id}")
+    print(f"site_keyword {site_keyword.keyword_id}")
     site_keyword.taken = 1
     site_keyword.save(update_fields=['taken'])
     last_parsing = datetime.datetime(site_keyword.last_parsing.year, site_keyword.last_parsing.month, site_keyword.last_parsing.day) - timedelta(days=1)
@@ -43,7 +43,7 @@ def start_parsing_vedomosti_by_key():
     site_keyword.taken = 0
     site_keyword.last_parsing = update_time_timezone(timezone.localtime())
     site_keyword.save(update_fields=["taken", "last_parsing"])
-    print(f"site_keyword ok {site_keyword.id}")
+    print(f"site_keyword ok {site_keyword.keyword_id}")
     return
 
 
