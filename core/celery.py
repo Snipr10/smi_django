@@ -26,7 +26,7 @@ app.conf.beat_schedule = {
     'add_new_key': {
         'task': 'smi_django.tasks.add_new_key',
         # 'schedule': crontab(minute='29')
-        'schedule': crontab(minute='*/52')
+        'schedule': crontab(minute='*/10')
     },
     'task_parsing_key': {
         'task': 'smi_django.tasks.task_parsing_key',
