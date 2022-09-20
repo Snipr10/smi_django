@@ -91,7 +91,10 @@ if __name__ == '__main__':
                 save_articles(s.site_id, articles)
         except Exception as e:
             print(e)
-
+        try:
+            SiteKeyword.objects.filter(taken=1, site_id=1813906118771286836).update(taken=0)
+        except Exception:
+            pass
     # for i in range(2):
     #     time.sleep(10)
     #     print("thread new_process_vedomosti " + str(i))
