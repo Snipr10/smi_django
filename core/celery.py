@@ -6,7 +6,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smi_django.settings')
 
 import django
 
-django.setup()
+try:
+    django.setup()
+except Exception as e:
+    print("can not start django")
 
 app = Celery('smi_django', include=['smi_django.tasks'])
 app.config_from_object('django.conf:settings')
