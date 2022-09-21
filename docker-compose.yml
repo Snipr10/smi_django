@@ -10,9 +10,9 @@ services:
   main_t:
     build: ./
     command: python3 main_vedomosti.py -t
-  main_f:
+  main_h:
     build: ./
-    command: python3 main_vedomosti.py -f
+    command: python3 main_vedomosti.py -h
 #  redis:
 #    image: redis:alpine
 #  celery:
