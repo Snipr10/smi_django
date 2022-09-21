@@ -1,18 +1,24 @@
 version: '3.6'
 
 services:
-  main:
+  main_f:
     build: ./
-    command: python3 main_vedomosti.py
-  redis:
-    image: redis:alpine
-  celery:
+    command: python3 main_vedomosti.py -f
+  main_s:
     build: ./
-    command: celery -A core worker --loglevel=INFO --concurrency=10
-    depends_on:
-      - redis
-  celery-beat:
+    command: python3 main_vedomosti.py -s
+  main_t:
     build: ./
-    command: celery -A core beat -l info
-    depends_on:
-      - redis
+    command: python3 main_vedomosti.py -t
+#  redis:
+#    image: redis:alpine
+#  celery:
+#    build: ./
+#    command: celery -A core worker --loglevel=INFO --concurrency=10
+#    depends_on:
+#      - redis
+#  celery-beat:
+#    build: ./
+#    command: celery -A core beat -l info
+#    depends_on:
+#      - redis

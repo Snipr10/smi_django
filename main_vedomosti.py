@@ -48,7 +48,22 @@ def start_parsing_vedomosti_by_key():
 
 
 if __name__ == '__main__':
-    from threading import Thread
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser()
+
+    parser.add_argument("-f", "--first",
+                        action="store_true",
+                        help="special mode")
+    parser.add_argument("-s", "--second",
+                        action="store_true",
+                        help="special mode")
+    parser.add_argument("-t", "-third",
+                        action="store_true",
+                        help="special mode")
+    args = parser.parse_args()
+
+
     from multiprocessing import Process
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smi_django.settings')
@@ -75,8 +90,16 @@ if __name__ == '__main__':
         print("start")
         try:
             site_keywords = SiteKeyword.objects.filter(taken=0, is_active=1, site_id=1813906118771286836)
+            site_keywords_len = len(site_keywords)
             active_keyword = Keyword.objects.filter(id__in=list(site_keywords.values_list('keyword_id', flat=True)),
                                                     network_id=1, disabled=0, enabled=1)
+
+            if args.first:
+                site_keywords = site_keywords[0:int(site_keywords_len/3) + 1]
+            elif args.second:
+                site_keywords = site_keywords[int(site_keywords_len/3)-1:int(site_keywords_len/3) +1]
+            elif args.third:
+                site_keywords = site_keywords[2+int(site_keywords_len/3) - 1:]
 
             for s in site_keywords:
                 key = active_keyword.filter(id=s.keyword_id).last()
