@@ -117,6 +117,9 @@ if __name__ == '__main__':
                 articles, proxy = parsing_vedomosti(key.keyword,
                                                     last_parsing, None, [])
                 save_articles(s.site_id, articles)
+                s.last_parsing = update_time_timezone(timezone.localtime())
+                s.taken = 0
+                s.save(update_fields=["taken", "last_parsing"])
         except Exception as e:
             print(e)
         try:
