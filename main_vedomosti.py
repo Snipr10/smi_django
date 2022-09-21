@@ -61,6 +61,9 @@ if __name__ == '__main__':
     parser.add_argument("-t", "--third",
                         action="store_true",
                         help="special mode")
+    parser.add_argument("-h", "--fouth",
+                        action="store_true",
+                        help="special mode")
     args = parser.parse_args()
 
 
@@ -93,13 +96,15 @@ if __name__ == '__main__':
             site_keywords_len = len(site_keywords)
             active_keyword = Keyword.objects.filter(id__in=list(site_keywords.values_list('keyword_id', flat=True)),
                                                     network_id=1, disabled=0, enabled=1)
-
+            len_4 = int(site_keywords_len/4)
             if args.first:
-                site_keywords = site_keywords[0:int(site_keywords_len/3) + 1]
+                site_keywords = site_keywords[0:len_4 + 1]
             elif args.second:
-                site_keywords = site_keywords[int(site_keywords_len/3)-1:int(site_keywords_len/3) +1]
+                site_keywords = site_keywords[len_4-1:len_4*2 +1]
             elif args.third:
-                site_keywords = site_keywords[2+int(site_keywords_len/3) - 1:]
+                site_keywords = site_keywords[len_4*2 -1:len_4*3+1]
+            else:
+                site_keywords = site_keywords[3*int(site_keywords_len/3) - 1:]
 
             for s in site_keywords:
                 key = active_keyword.filter(id=s.keyword_id).last()
