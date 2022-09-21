@@ -58,7 +58,7 @@ if __name__ == '__main__':
     parser.add_argument("-s", "--second",
                         action="store_true",
                         help="special mode")
-    parser.add_argument("-t", "-third",
+    parser.add_argument("-t", "--third",
                         action="store_true",
                         help="special mode")
     args = parser.parse_args()
