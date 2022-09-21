@@ -61,7 +61,7 @@ if __name__ == '__main__':
     parser.add_argument("-t", "--third",
                         action="store_true",
                         help="special mode")
-    parser.add_argument("-h", "--houth",
+    parser.add_argument("-a", "--afour",
                         action="store_true",
                         help="special mode")
     args = parser.parse_args()
