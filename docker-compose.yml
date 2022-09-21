@@ -13,15 +13,15 @@ services:
   main_a:
     build: ./
     command: python3 main_vedomosti.py -a
-#  redis:
-#    image: redis:alpine
-#  celery:
-#    build: ./
-#    command: celery -A core worker --loglevel=INFO --concurrency=10
-#    depends_on:
-#      - redis
-#  celery-beat:
-#    build: ./
-#    command: celery -A core beat -l info
-#    depends_on:
-#      - redis
+  redis:
+    image: redis:alpine
+  celery:
+    build: ./
+    command: celery -A core worker --loglevel=INFO --concurrency=10
+    depends_on:
+      - redis
+  celery-beat:
+    build: ./
+    command: celery -A core beat -l info
+    depends_on:
+      - redis
