@@ -92,7 +92,7 @@ if __name__ == '__main__':
         from core.sites.utils import update_time_timezone
         print("start")
         try:
-            site_keywords = SiteKeyword.objects.filter(taken=0, is_active=1, site_id=1813906118771286836).order_by('last_parsing')
+            site_keywords = SiteKeyword.objects.filter(taken=0, is_active=1, site_id=1813906118771286836).order_by('keyword_id')
             site_keywords_len = len(site_keywords)
             active_keyword = Keyword.objects.filter(id__in=list(site_keywords.values_list('keyword_id', flat=True)),
                                                     network_id=1, disabled=0, enabled=1)
