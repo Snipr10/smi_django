@@ -26,14 +26,14 @@ URL_DICT = {
     "https://live24.ru/": {"title": ["h1", {}],
                            "text": ["div", {
                                "class": re.compile('.*panel uk-text-large maintext.*')}],
-                           "is_last": True
+                           "is_all": True
                            },
     # "https://www.sobaka.ru/": {"title": ["h1", {"itemprop": "headline name"}],
     #                            "text": ["div", {"itemprop": "articleBody"}],
     #                            },
-    "https://www.flashnord.com/": {"title": ["h1", {"class": "entry-title"}],
-                                   "text": ["div", {"class": "entry-content"}],
-                                   },
+    # "https://www.flashnord.com/": {"title": ["h1", {"class": "entry-title"}],
+    #                                "text": ["div", {"class": "entry-content"}],
+    #                                },
     "https://www.interfax-russia.ru/": {"title": ["div", {"itemprop": "headline"}],
                                         "text": ["div", {"itemprop": "articleBody"}],
                                         },
@@ -49,58 +49,119 @@ URL_DICT = {
     "https://galernayas.ru/": {"title": ["h2", {}], "text": ["div", {"style": "text-align:justify"}], "p": True,
                                },
     "https://novayagazeta.spb.ru/": {"title": ["h1", {}], "text": ["div", {"class": "article"}],
-                               },
+                                     },
     "https://www.interessant.ru/": {"title": ["h1", {}], "text": ["div", {"class": "text"}],
-                       "meta": ["h2", {}], "is_last": True},
-    "https://www.lenpravda.ru/": {"title": ["div", {"class":"razdeltitle1"}], "text": ["div", {"class": "bodytext"}],
+                                    "meta": ["h2", {}], "is_last": True},
+    "https://www.lenpravda.ru/": {"title": ["div", {"class": "razdeltitle1"}], "text": ["div", {"class": "bodytext"}],
                                   "is_last": True},
     "https://info24.ru/": {"title": ["h1", {}], "meta": ["h3", {}], "text": ["div", {"class": "material-body"}],
                            "is_last": True},
     "http://www.assembly.spb.ru/": {"title": ["h2", {}], "text": ["article", {}],
-                           "is_last": True},
-    "https://govoritmoskva.ru/": {"title": ["h1", {}], "text": ["div", {"class": "textContent"}],
                                     "is_last": True},
-    "https://smotrim.ru/": {"title": ["header", {"class":"article-main-item__header"}], "text": ["div", {"class": "article-main-item__body"}],
-                                  "meta":["div", {"class":"article-main-item__anons"}],
+    "https://govoritmoskva.ru/": {"title": ["h1", {}], "text": ["div", {"class": "textContent"}],
                                   "is_last": True},
+    "https://smotrim.ru/": {"title": ["header", {"class": "article-main-item__header"}],
+                            "text": ["div", {"class": "article-main-item__body"}],
+                            "meta": ["div", {"class": "article-main-item__anons"}],
+                            "is_last": True},
     "https://hudoznikov.ru/": {"title": ["h2", {}], "text": ["div", {"style": "text-align:justify"}],
-                                  "is_last": True},
+                               "is_last": True},
     "https://dorinfo.ru/": {"title": ["h1", {}],
                             "text": ["div", {"class": "fulltext"}],
                             "is_last": True},
     "https://www.flashnord.com/": {"title": ["h1", {}],
-                            "text": ["div", {"class": "entry-content"}],
-                            "is_last": True},
+                                   "text": ["div", {"class": "entry-content"}],
+                                   "is_last": True},
     "https://www.vedomosti.ru/": {"title": ["h1", {}],
-                            "text": ["div", {"class": "article-boxes-list article__boxes"}],
-                            "meta": ["em", {}],},
+                                  "text": ["div", {"class": "article-boxes-list article__boxes"}],
+                                  "meta": ["em", {}], },
     # "https://novayagazeta.ru/": {"title": ["h1", {}],
     #                               "text": ["div", {"id": "materialBlock_0"}],
     #                             },
     "https://mir24.tv/": {"title": ["h1", {}],
-                                 "text": ["div", {"class": "article-content"}], "p": True, "next": True
-                                 },
+                          "text": ["div", {"class": "article-content"}], "p": True, "next": True
+                          },
     "https://mos.news/": {"title": ["h1", {}],
-                          "text": ["div", {"class": "detail_text_container"}],  "decoder": "windows-1251",  "next": True
+                          "text": ["div", {"class": "detail_text_container"}], "decoder": "windows-1251", "next": True
                           },
-    "https://delta.news/": {"title": ["h5", {"class":"white-text grey darken-2"}],
-                          "text": ["article", {"class": "card"}], "next": True,
-                            "delete_title": True
-                          },
-    "https://spb.octagon.media/": {"title": ["h1", {}],
-                            "text": ["article", {}], "p": True,
+    "https://delta.news/": {"title": ["h5", {"class": "white-text grey darken-2"}],
+                            "text": ["article", {"class": "card"}], "next": True,
                             "delete_title": True
                             },
+    "https://spb.octagon.media/": {"title": ["h1", {}],
+                                   "text": ["article", {}], "p": True,
+                                   "delete_title": True
+                                   },
     "https://bloknot.ru/": {"title": ["h1", {}],
-                                   "text": ["div", {"class":"article__content"}], "p": True,
-                                   "delete_title": True, "next": True
-                                   },
+                            "text": ["div", {"class": "article__content"}], "p": True,
+                            "delete_title": True, "next": True
+                            },
     "https://www.sobaka.ru/": {"title": ["h1", {}],
-                                   "text": ["div", {"class":"b-post-blocks"}], "p": True,
-                                   },
-    "https://www.dp.ru/": {"title": ["h1", {"class":"headline"}],
-                                   "text": ["div", {"itemprop":"articleBody"}], "delete_first": True
-                                   }
+                               "text": ["div", {"class": "b-post-blocks"}], "p": True,
+                               },
+    "https://www.fontanka.ru/": {"title": ["h1", {}],
+                                 "text": ["section", {"itemprop": "articleBody"}], "p": True,
+                                 },
+    "https://nevnov.ru/": {"title": ["h1", {"itemprop": "headline"}],
+                           "text": ["div", {"class": "editorjs-show"}], "p": True,
+                           },
+    "https://riafan.ru/": {"title": ["h1", {"itemprop": "headline"}],
+                           "text": ["div", {"itemprop": "articleBody"}],
+                           },
+    "https://tass.ru/": {"title": ["h1", {}], "text": ["article", {}],
+                         "meta": ["meta", {"name": "description"}], "p": True, },
+    "https://aif.ru/": {"title": ["h1", {}],
+                        "text": ["div", {"class": "article_text"}],
+                        "p": True, },
+    "https://rg.ru/": {"title": ["h1", {}],
+                       "text": ["div", {"class": "PageArticleContent_content___3MI5"}],
+                       "meta": ["div", {"class": "PageArticleContent_lead__gvX5C"}],
+                       "p": True, },
+    "https://nation-news.ru/": {"title": ["h1", {"itemprop": "headline"}],
+                                "text": ["div", {"itemprop": "articleBody"}],
+                                },
+    "https://mos.news/": {"title": ["h1", {}],
+                          "text": ["div", {"class": "detail_text_container"}],
+                          },
+    "https://octagon.media/": {"title": ["h1", {}],
+                               "text": ["article", {}],
+                               },
+    "https://m.47news.ru/": {"title": ["h1", {}],
+                             "text": ["div", {"class": "article-text"}],
+                             },
+    "https://infosmi.net/": {"title": ["h1", {}],
+                             "text": ["div", {"class": "theiaPostSlider_slides"}],
+                             },
+    "https://news-r.ru/": {"title": ["div", {"class": "item-header"}],
+                           "text": ["div", {"itemprop": "articleBody"}],
+                           },
+    "https://rueconomics.ru/": {"title": ["h1", {"itemprop": "headline"}],
+                                "text": ["div", {"itemprop": "articleBody"}],
+                                },
+    "https://newinform.com/": {"title": ["h1", {"itemprop": "headline"}],
+                               "text": ["div", {"itemprop": "articleBody"}], "p": True
+                               },
+    "https://www.vedomosti.ru/": {"title": ["h1", {"class": "article-headline__title"}],
+                                  "text": ["div", {"class": "article__body"}],
+                                  "meta": ["em", {"class": "article-headline__subtitle"}],
+                                  "p": True
+                                  },
+    "https://rusargument.ru/": {"title": ["h1", {}],
+                                "text": ["div", {"class": "text-article"}], "p": True
+                                },
+    "https://gorsreda-spb.ru/": {"title": ["h1", {}],
+                                 "text": ["div", {"class": "text-block"}],
+                                 "meta": ["header", {"class": "title"}],
+
+                                 },
+
+    "https://doctorpiter.ru/": {"title": ["h1", {}],
+                                "text": ["section", {"itemprop": "articleBody"}],
+                                "meta": ["p", {"itemprop": "description alternativeHeadline"}],
+                                },
+    "https://www.dp.ru/": {"title": ["h1", {"class": "headline"}],
+                           "text": ["div", {"itemprop": "articleBody"}], "delete_first": True
+                           }
 }
 
 
@@ -120,7 +181,7 @@ def _get_page_data(url, attempts=0):
                 try:
                     post = requests.get(url, proxies=proxy.get(list(proxy.keys())[0]))
                 except Exception:
-                    post = requests.get(url, proxies=proxy.get(list(proxy.keys())[0]),  headers={
+                    post = requests.get(url, proxies=proxy.get(list(proxy.keys())[0]), headers={
                         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'
                     })
 
@@ -141,10 +202,16 @@ def _get_page_data(url, attempts=0):
                                 text += c.text + "\r\n <br> "
                         except Exception:
                             pass
+                    if not text:
+                        text += soup.find(name=URL_DICT.get(k).get("meta")[0],
+                                  attrs=URL_DICT.get(k).get("meta")[1]).get("content")
             except Exception:
                 pass
             if URL_DICT.get(k).get("wholetext"):
                 text += soup.find(name=URL_DICT.get(k).get("text")[0], attrs=URL_DICT.get(k).get("text")[1]).text
+            elif URL_DICT.get(k).get("is_all", False):
+                for s in soup.find_all(name=URL_DICT.get(k).get("text")[0], attrs=URL_DICT.get(k).get("text")[1]):
+                    text += s.text + "\r\n <br> "
             else:
                 soup_all = soup.find_all(name=URL_DICT.get(k).get("text")[0], attrs=URL_DICT.get(k).get("text")[1])
                 if URL_DICT.get(k).get("is_last", False):
@@ -160,8 +227,11 @@ def _get_page_data(url, attempts=0):
                         else:
                             break
                 else:
-                    if URL_DICT.get(k).get("p", False):
-                        for c in soup_cont.find_all("p"):
+                    if URL_DICT.get(k).get("p", False) or URL_DICT.get(k).get("br", False):
+                        search_text = "p"
+                        if URL_DICT.get(k).get("br", False):
+                            search_text = "br"
+                        for c in soup_cont.find_all(search_text):
                             try:
                                 if URL_DICT.get(k).get("next", False):
                                     if c.next and c.next.strip():
