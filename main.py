@@ -41,7 +41,7 @@ def save_data(rmq_json_data, i, attempts=0):
             try:
                 CHANNELS.get(i).close()
             except Exception as e:
-                print(e)
+                print(f"save_data {e}")
             channel_save = open_save_chanel(i)
             CHANNELS[i] = channel_save
             return save_data(rmq_json_data, i, attempts=attempts)
@@ -91,12 +91,14 @@ def create_rmq(i):
                         print("save " + str(e))
 
             except Exception as e:
-                print(e)
+                print(f"callback{e}")
 
         # channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback)
         channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=True)
         channel.start_consuming()
     except Exception as e:
+        print(f"create_rmq{e}")
+
         time.sleep(100)
         create_rmq(i)
 
@@ -127,4 +129,5 @@ if __name__ == '__main__':
             for t in treads:
                 t.join()
         except Exception as e:
+            print(f"__name__{e}")
             pass
