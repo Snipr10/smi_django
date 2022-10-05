@@ -97,8 +97,8 @@ def create_rmq(i):
         channel.basic_consume(queue='full_posts_tasks', on_message_callback=callback, auto_ack=True)
         channel.start_consuming()
     except Exception as e:
-        print(e)
-        time.sleep(1)
+        time.sleep(100)
+        create_rmq(i)
 
 
 if __name__ == '__main__':
