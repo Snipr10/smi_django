@@ -141,6 +141,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
             "offset": limit * page,
         }
         res_json = request(params, proxy)
+        print(f"res_json {res_json}")
     except Exception as e:
         if attempts < 10:
             return get_urls(keyword, limit_date, update_proxy(proxy), body, page, attempts + 1)
