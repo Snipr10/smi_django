@@ -16,40 +16,41 @@ URL = "https://tass.ru"
 MEDIA_URL = "https://cdn-storage-tass.cdnvideo.ru/"
 
 HEADERS = {
-              'authority': 'tass.ru',
-              'accept': 'application/json, text/plain, */*',
-              'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-              'cache-control': 'no-cache',
-              'dnt': '1',
-              'pragma': 'no-cache',
-              'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
-              'sec-ch-ua-mobile': '?0',
-              'sec-ch-ua-platform': '"Linux"',
-              'sec-fetch-dest': 'empty',
-              'sec-fetch-mode': 'cors',
-              'sec-fetch-site': 'same-origin',
-              'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',
+    'authority': 'tass.ru',
+    'accept': 'application/json, text/plain, */*',
+    'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+    'cache-control': 'no-cache',
+    'dnt': '1',
+    'pragma': 'no-cache',
+    'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Linux"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'same-origin',
+    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',
 
-          }
+}
 
 POST_HEADER = headers = {
-  'authority': 'tass.ru',
-  'accept': '*/*',
-  'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-  'cache-control': 'no-cache',
-  'dnt': '1',
-  'pragma': 'no-cache',
-  'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
-  'sec-ch-ua-mobile': '?0',
-  'sec-ch-ua-platform': '"Linux"',
-  'sec-fetch-dest': 'empty',
-  'sec-fetch-mode': 'cors',
-  'sec-fetch-site': 'same-origin',
-  'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',
-  'x-nextjs-data': '1'
+    'authority': 'tass.ru',
+    'accept': '*/*',
+    'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+    'cache-control': 'no-cache',
+    'dnt': '1',
+    'pragma': 'no-cache',
+    'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Linux"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'same-origin',
+    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',
+    'x-nextjs-data': '1'
 }
 
 COOKIE = "__jhash_=26; __hash_=9919349849e67f6ad9248a280c884142;"
+
 
 # logger = get_logger(__name__)
 
@@ -92,7 +93,8 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
         res = requests.get(url,
                            params=params,
                            headers=headers,
-                           timeout=DEFAULTS_TIMEOUT
+                           timeout=DEFAULTS_TIMEOUT,
+                           verify=False
                            )
         print(res)
         res_json = get_json(res)
@@ -106,7 +108,8 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
             res = requests.get(url,
                                params=params,
                                headers=headers_cookie,
-                               timeout=DEFAULTS_TIMEOUT
+                               timeout=DEFAULTS_TIMEOUT,
+                           verify=False
                                )
             print(res)
             res_json = get_json(res)
@@ -120,6 +123,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                headers=headers,
                                timeout=DEFAULTS_TIMEOUT,
                                proxies=proxy.get(list(proxy.keys())[0]),
+                           verify=False
                                )
             res_json = get_json(res)
         except Exception as e:
@@ -132,6 +136,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                headers=headers_cookie,
                                timeout=DEFAULTS_TIMEOUT,
                                proxies=proxy.get(list(proxy.keys())[0]),
+                           verify=False
                                )
             res_json = get_json(res)
         except Exception as e:
@@ -238,7 +243,6 @@ def get_json(res):
         except Exception:
             pass
     return res_json
-
 
 
 # Press the green button in the gutter to run the script.
