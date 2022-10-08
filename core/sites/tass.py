@@ -58,6 +58,7 @@ def parsing_tass(keyword, limit_date, proxy, body):
     limit_date = date(limit_date.year, limit_date.month, limit_date.day) - timedelta(days=1)
     is_not_stopped = False
     page = 0
+    print(f"tass {keyword}")
     while not is_not_stopped:
         try:
             body, is_time, proxy, is_error = get_urls(keyword, limit_date, proxy, body, page)
@@ -69,6 +70,8 @@ def parsing_tass(keyword, limit_date, proxy, body):
             if is_error:
                 break
         except Exception as e:
+            print(f"tass ex {e}")
+
             is_not_stopped = True
     articles = []
     print(f"articles1 {articles}")
@@ -91,6 +94,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                            headers=headers,
                            timeout=DEFAULTS_TIMEOUT
                            )
+        print(res)
         res_json = get_json(res)
     except Exception as e:
         pass
@@ -103,6 +107,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                headers=headers_cookie,
                                timeout=DEFAULTS_TIMEOUT
                                )
+            print(res)
             res_json = get_json(res)
         except Exception as e:
             pass
