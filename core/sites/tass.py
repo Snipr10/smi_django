@@ -59,7 +59,6 @@ def parsing_tass(keyword, limit_date, proxy, body):
     limit_date = date(limit_date.year, limit_date.month, limit_date.day) - timedelta(days=1)
     is_not_stopped = False
     page = 0
-    print(f"tass {keyword}")
     while not is_not_stopped:
         try:
             body, is_time, proxy, is_error = get_urls(keyword, limit_date, proxy, body, page)
@@ -71,18 +70,15 @@ def parsing_tass(keyword, limit_date, proxy, body):
             if is_error:
                 break
         except Exception as e:
-            print(f"tass ex {e}")
 
             is_not_stopped = True
     articles = []
-    print(f"articles1 {articles}")
 
     for post in body:
         try:
             articles, proxy = get_page(articles, post, proxy)
         except Exception as e:
             pass
-    print(f"articles {articles}")
 
     return articles, proxy
 
@@ -98,11 +94,9 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                headers=headers,
                                timeout=DEFAULTS_TIMEOUT,
                                proxies=proxy.get(list(proxy.keys())[0]),
-                           # verify=False, allow_redirects=False
                                )
             res_json = get_json(res)
         except Exception as e:
-            print(f"request {e}")
             pass
     if not res_json:
         try:
@@ -111,11 +105,9 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                headers=headers_cookie,
                                timeout=DEFAULTS_TIMEOUT,
                                proxies=proxy.get(list(proxy.keys())[0]),
-                           # verify=False, allow_redirects=False
                                )
             res_json = get_json(res)
         except Exception as e:
-            print(f"request {e}")
             pass
     return res_json
 
@@ -132,9 +124,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
         res_json = request(params, proxy)
         if not res_json:
             raise Exception("restart")
-        print(f"res_json {res_json}")
     except Exception as e:
-        print(f"get_urls {e}")
         if attempts < 10:
             return get_urls(keyword, limit_date, update_proxy(proxy), body, page, attempts + 1)
         return body, False, proxy, True
@@ -189,7 +179,6 @@ def get_page(articles, article_body, proxy, attempt=0):
                     content_text = item.get('text') or ""
                     if content_text:
                         text += "<br> \n" + content_text
-            print(url)
             articles.append(
                 {
                     "date": article_body['date'],
