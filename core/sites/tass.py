@@ -71,11 +71,15 @@ def parsing_tass(keyword, limit_date, proxy, body):
         except Exception as e:
             is_not_stopped = True
     articles = []
+    print(f"articles1 {articles}")
+
     for post in body:
         try:
             articles, proxy = get_page(articles, post, proxy)
         except Exception as e:
             pass
+    print(f"articles {articles}")
+
     return articles, proxy
 
 
