@@ -89,33 +89,8 @@ def parsing_tass(keyword, limit_date, proxy, body):
 
 def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
     res_json = None
-    try:
-        res = requests.get(url,
-                           params=params,
-                           headers=headers,
-                           timeout=DEFAULTS_TIMEOUT,
-                           verify=False, allow_redirects=False
-                           )
-        print(res)
-        res_json = get_json(res)
-    except Exception as e:
-        print(f"request {e}")
-        pass
     headers_cookie = headers.copy()
     headers_cookie["cookie"] = COOKIE
-    if not res_json:
-        try:
-            res = requests.get(url,
-                               params=params,
-                               headers=headers_cookie,
-                               timeout=DEFAULTS_TIMEOUT,
-                           verify=False, allow_redirects=False
-                               )
-            print(res)
-            res_json = get_json(res)
-        except Exception as e:
-            print(f"request {e}")
-            pass
     if not res_json:
         try:
             res = requests.get(url,
@@ -249,6 +224,6 @@ def get_json(res):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_tass("единая россия", datetime.strptime("21/05/2022", "%d/%m/%Y"), None, [])
+    articles, proxy = parsing_tass("единая россия", datetime.strptime("21/05/2022", "%d/%m/%Y"), update_proxy(None), [])
     print(1)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
