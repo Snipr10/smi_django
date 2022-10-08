@@ -189,7 +189,7 @@ def get_page(articles, article_body, proxy, attempt=0):
                     content_text = item.get('text') or ""
                     if content_text:
                         text += "<br> \n" + content_text
-
+            print(url)
             articles.append(
                 {
                     "date": article_body['date'],
