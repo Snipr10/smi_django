@@ -94,7 +94,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                            params=params,
                            headers=headers,
                            timeout=DEFAULTS_TIMEOUT,
-                           verify=False
+                           verify=False, allow_redirects=False
                            )
         print(res)
         res_json = get_json(res)
@@ -109,7 +109,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                params=params,
                                headers=headers_cookie,
                                timeout=DEFAULTS_TIMEOUT,
-                           verify=False
+                           verify=False, allow_redirects=False
                                )
             print(res)
             res_json = get_json(res)
@@ -123,7 +123,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                headers=headers,
                                timeout=DEFAULTS_TIMEOUT,
                                proxies=proxy.get(list(proxy.keys())[0]),
-                           verify=False
+                           verify=False, allow_redirects=False
                                )
             res_json = get_json(res)
         except Exception as e:
@@ -136,7 +136,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                headers=headers_cookie,
                                timeout=DEFAULTS_TIMEOUT,
                                proxies=proxy.get(list(proxy.keys())[0]),
-                           verify=False
+                           verify=False, allow_redirects=False
                                )
             res_json = get_json(res)
         except Exception as e:
@@ -155,6 +155,8 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
             "offset": limit * page,
         }
         res_json = request(params, proxy)
+        if not res_json:
+            raise Exception(e)
         print(f"res_json {res_json}")
     except Exception as e:
         print(f"get_urls {e}")
