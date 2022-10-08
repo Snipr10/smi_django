@@ -98,7 +98,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                headers=headers,
                                timeout=DEFAULTS_TIMEOUT,
                                proxies=proxy.get(list(proxy.keys())[0]),
-                           verify=False, allow_redirects=False
+                           # verify=False, allow_redirects=False
                                )
             res_json = get_json(res)
         except Exception as e:
@@ -111,7 +111,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                headers=headers_cookie,
                                timeout=DEFAULTS_TIMEOUT,
                                proxies=proxy.get(list(proxy.keys())[0]),
-                           verify=False, allow_redirects=False
+                           # verify=False, allow_redirects=False
                                )
             res_json = get_json(res)
         except Exception as e:
