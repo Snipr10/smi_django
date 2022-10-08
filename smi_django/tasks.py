@@ -389,7 +389,6 @@ def parsing_key(key_word, last_update, key):
         elif key_word.site_id == 7878146650456123781:
             print("tass")
             articles, proxy = parsing_tass(key, last_update, None, [])
-            return
         else:
             print("site_id not founded")
             raise Exception("site_id not founded")
