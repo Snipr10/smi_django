@@ -142,6 +142,9 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
             return get_urls(keyword, limit_date, update_proxy(proxy), body, page, attempts + 1)
         return body, False, proxy, True
     if res_json:
+        if not res_json.get("result"):
+            return body, True, proxy, True
+
         for r in res_json.get("result") or []:
             pub_date = datetime.strptime(r['published_dt'], '%Y-%m-%dT%H:%M:%S')
             if pub_date.date() < limit_date:
@@ -225,6 +228,6 @@ def get_json(res):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_tass("Беглов", datetime.strptime("21/05/2022", "%d/%m/%Y"), None, [])
+    articles, proxy = parsing_tass("детский сад 32 его воспитатель наталья демченко прозвучали на всю страну", datetime.strptime("21/05/2022", "%d/%m/%Y"), None, [])
     print(1)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
