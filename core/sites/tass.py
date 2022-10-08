@@ -16,18 +16,18 @@ URL = "https://tass.ru"
 MEDIA_URL = "https://cdn-storage-tass.cdnvideo.ru/"
 
 HEADERS = {
-    'authority': 'tass.ru',
-    'accept': 'application/json, text/plain, */*',
-    'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-    'cache-control': 'no-cache',
-    'dnt': '1',
-    'pragma': 'no-cache',
-    'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
-    'sec-ch-ua-mobile': '?0',
-    'sec-ch-ua-platform': '"Linux"',
-    'sec-fetch-dest': 'empty',
-    'sec-fetch-mode': 'cors',
-    'sec-fetch-site': 'same-origin',
+    # 'authority': 'tass.ru',
+    # 'accept': 'application/json, text/plain, */*',
+    # 'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+    # 'cache-control': 'no-cache',
+    # 'dnt': '1',
+    # 'pragma': 'no-cache',
+    # 'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+    # 'sec-ch-ua-mobile': '?0',
+    # 'sec-ch-ua-platform': '"Linux"',
+    # 'sec-fetch-dest': 'empty',
+    # 'sec-fetch-mode': 'cors',
+    # 'sec-fetch-site': 'same-origin',
     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',
 
 }
@@ -156,7 +156,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
         }
         res_json = request(params, proxy)
         if not res_json:
-            raise Exception(e)
+            raise Exception("restart")
         print(f"res_json {res_json}")
     except Exception as e:
         print(f"get_urls {e}")
