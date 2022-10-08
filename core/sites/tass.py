@@ -228,6 +228,6 @@ def get_json(res):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_tass("детский сад 32 его воспитатель наталья демченко прозвучали на всю страну", datetime.strptime("21/05/2022", "%d/%m/%Y"), None, [])
+    articles, proxy = parsing_tass("единая россия", datetime.strptime("21/05/2022", "%d/%m/%Y"), None, [])
     print(1)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
