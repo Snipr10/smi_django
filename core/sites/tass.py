@@ -97,6 +97,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
         print(res)
         res_json = get_json(res)
     except Exception as e:
+        print(f"request {e}")
         pass
     headers_cookie = headers.copy()
     headers_cookie["cookie"] = COOKIE
@@ -110,6 +111,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
             print(res)
             res_json = get_json(res)
         except Exception as e:
+            print(f"request {e}")
             pass
     if not res_json:
         try:
@@ -121,6 +123,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                )
             res_json = get_json(res)
         except Exception as e:
+            print(f"request {e}")
             pass
     if not res_json:
         try:
@@ -132,6 +135,7 @@ def request(params, proxy, url=SEARCH_PAGE_URL, headers=HEADERS):
                                )
             res_json = get_json(res)
         except Exception as e:
+            print(f"request {e}")
             pass
     return res_json
 
