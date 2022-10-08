@@ -25,6 +25,7 @@ from core.sites.news_spb import parsing_news_spb
 from core.sites.novayagazeta import parsing_novayagazeta
 from core.sites.radiorus import parsing_radio_rus
 from core.sites.svoboda_new import parsing_svoboda_new
+from core.sites.tass import parsing_tass
 from core.sites.vecherkaspb import parsing_vecherkaspb
 from core.sites.vedomosti import parsing_vedomosti
 from core.sites.zaks import parsing_zaks
@@ -384,6 +385,10 @@ def parsing_key(key_word, last_update, key):
         # https://www.vedomosti.ru/
         elif key_word.site_id == 1813906118771286836:
             print("vedomosti")
+            return
+        elif key_word.site_id == 7878146650456123781:
+            print("tass")
+            articles, proxy = parsing_tass(key, last_update, update_proxy(None), [])
             return
         else:
             print("site_id not founded")
