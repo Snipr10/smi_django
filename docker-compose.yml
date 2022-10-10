@@ -1,18 +1,18 @@
 version: '3.6'
 
 services:
-#  main_f:
-#    build: ./
-#    command: python3 main_vedomosti.py -f
-#  main_s:
-#    build: ./
-#    command: python3 main_vedomosti.py -s
-#  main_t:
-#    build: ./
-#    command: python3 main_vedomosti.py -t
-#  main_a:
-#    build: ./
-#    command: python3 main_vedomosti.py -a
+  main_f:
+    build: ./
+    command: python3 main_vedomosti.py -f
+  main_s:
+    build: ./
+    command: python3 main_vedomosti.py -s
+  main_t:
+    build: ./
+    command: python3 main_vedomosti.py -t
+  main_a:
+    build: ./
+    command: python3 main_vedomosti.py -a
   redis:
     image: redis:alpine
   celery:
