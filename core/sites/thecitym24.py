@@ -45,7 +45,7 @@ def parsing_thecitym24(keyword, limit_date, proxy, body):
                 break
         except Exception as e:
             is_not_stopped = True
-    return articles, proxy
+    return body, proxy
 
 
 def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
