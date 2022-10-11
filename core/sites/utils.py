@@ -110,6 +110,7 @@ def get_or_create_author(display_link):
         "https://echo.msk.ru": "https://echomsk.static-storage.net/Eg4gT0209/a47fd3HZi/37pnEFqk3f5_xqthoMRiXuoEeTmMzAZs7nqlRf0AaH0LvdWhk7O_LJ_fpYVU10_ih7t_JQyRkTlMwB2hxyQaH7eyfoWamBlmQ-dTSTxlljKzdMxFRKSewIKmbQnZ-LAV70mx1R9z0ym7H_m1hOMjQmeLZ0EYhR2peGBZND9UPiq3ogJNp7h90lN3Sx3IOfKaj5gMxUSMIgCe1o2FAdz46VNZiVnziw-lj4uhUUA38_7P-_OlLD25yZAk-UC31D5mK0bOtbscnRrjE1cRYM3Guuvw_M3QSC5gwpZ1BR2gtK3jhc3x3-9X1UN7vQ14I8-mg1-PfeTFCUX8SHHUw1jiqt8eBqFT-M2ut0cfgfztslor3EhFDGjifC52sQVtuCzhO4k5DQOr_93jO0XVrKPvbpPLq2A",
 
     }
+    display_link = str(display_link)
     try:
         author = models.PostAuthor.objects.filter(url=display_link).first()
         if author is not None:
@@ -117,7 +118,7 @@ def get_or_create_author(display_link):
         author = models.PostAuthor.objects.filter(url=display_link[:-1]).first()
         if author is not None:
             return author.username, author.image
-        author = models.PostAuthor.objects.filter(profile_id=str(display_link)).first()
+        author = models.PostAuthor.objects.filter(profile_id=display_link).first()
         if author is not None:
             return author.username, author.image
     except Exception as e:
