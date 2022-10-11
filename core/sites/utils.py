@@ -146,6 +146,7 @@ def save_articles(display_link, articles):
     parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
     connection = pika.BlockingConnection(parameters=parameters)
     channel = connection.channel()
+    author_username, author_image = get_or_create_author(display_link)
 
     for article in articles:
 
@@ -153,8 +154,9 @@ def save_articles(display_link, articles):
         i += 1
 
         print(article.get('href'))
-        author_username, author_image = get_or_create_author(display_link)
         text = article.get('text')
+        print(author_username)
+        print(author_image)
 
         for photo in article.get('photos', []):
             text += "\n" + photo
@@ -175,10 +177,10 @@ def save_articles(display_link, articles):
                 "images": [],
                 "keyword_id": 10000002,
             }
+            print(rmq_json_data)
             channel.basic_publish(exchange='',
                                   routing_key='smi_posts',
                                   body=json.dumps(rmq_json_data))
-            print("SEND RMQ")
 
         except Exception as e:
             print("can not send RMQ " + str(e))

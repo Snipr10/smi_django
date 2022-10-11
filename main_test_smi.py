@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 
+
 if __name__ == '__main__':
     while True:
         try:
@@ -17,10 +18,12 @@ if __name__ == '__main__':
                     "available on your PYTHONPATH environment variable? Did you "
                     "forget to activate a virtual environment?"
                 ) from exc
-            from core.sites.tass import parsing_tass
             from datetime import datetime
+            from core.sites.thecitym24 import parsing_thecitym24
+            from core.sites.utils import save_articles
 
-            articles, proxy = parsing_tass("единая россия", datetime.strptime("21/05/2022", "%d/%m/%Y"), None, [])
+            articles, proxy = parsing_thecitym24("россия", datetime.strptime("21/09/2022", "%d/%m/%Y"), None, [])
+            save_articles(14935787485712012734, articles)
 
         except Exception as e:
             print(f"__name__{e}")
