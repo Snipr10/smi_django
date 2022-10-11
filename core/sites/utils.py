@@ -117,7 +117,7 @@ def get_or_create_author(display_link):
         author = models.PostAuthor.objects.filter(url=display_link[:-1]).first()
         if author is not None:
             return author.username, author.image
-        author = models.PostAuthor.objects.filter(profile_id=display_link).first()
+        author = models.PostAuthor.objects.filter(profile_id=str(display_link)).first()
         if author is not None:
             return author.username, author.image
     except Exception as e:
