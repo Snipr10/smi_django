@@ -39,7 +39,7 @@ def parsing_thecitym24(keyword, limit_date, proxy, body):
             is_not_stopped = is_error or is_time
             page += 1
             print(f"page {page}")
-            if page > 1:
+            if page > 10:
                 break
             if is_error:
                 break
@@ -112,7 +112,6 @@ def get_page(url, title, proxy, limit_date, attempt=0):
     sounds = []
     videos = []
     print(url)
-    url = "https://thecity.m24.ru/news/6256"
     try:
         res = requests.get(url,
                            timeout=DEFAULTS_TIMEOUT,
