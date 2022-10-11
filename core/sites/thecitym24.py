@@ -112,6 +112,7 @@ def get_page(url, title, proxy, limit_date, attempt=0):
     sounds = []
     videos = []
     print(url)
+    url = "https://thecity.m24.ru/news/6256"
     try:
         res = requests.get(url,
                            timeout=DEFAULTS_TIMEOUT,
