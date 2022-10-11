@@ -22,7 +22,7 @@ if __name__ == '__main__':
             from core.sites.thecitym24 import parsing_thecitym24
             from core.sites.utils import save_articles
 
-            articles, proxy = parsing_thecitym24("россия", datetime.strptime("21/09/2022", "%d/%m/%Y"), None, [])
+            articles, proxy = parsing_thecitym24("россия", datetime.strptime("05/10/2022", "%d/%m/%Y"), None, [])
             save_articles(14935787485712012734, articles)
 
         except Exception as e:
