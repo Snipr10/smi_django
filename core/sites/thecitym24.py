@@ -54,23 +54,28 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
             "criteria": keyword,
             "page": page,
         }
-
-        try:
-            res = requests.get(SEARCH_PAGE_URL,
-                               params=params,
-                               timeout=DEFAULTS_TIMEOUT,
-                               headers=HEADERS,
-                               # proxies=proxy,
-                               )
-            if not res.ok:
-                raise Exception("error")
-        except Exception as e:
-            res = requests.get(SEARCH_PAGE_URL,
-                               params=params,
-                               timeout=DEFAULTS_TIMEOUT,
-                               headers=HEADERS,
-                               proxies=proxy.get(list(proxy.keys())[0]),
-                               )
+        res = requests.get(SEARCH_PAGE_URL,
+                           params=params,
+                           timeout=DEFAULTS_TIMEOUT,
+                           headers=HEADERS,
+                           proxies=proxy.get(list(proxy.keys())[0]),
+                           )
+        # try:
+        #     res = requests.get(SEARCH_PAGE_URL,
+        #                        params=params,
+        #                        timeout=DEFAULTS_TIMEOUT,
+        #                        headers=HEADERS,
+        #                        # proxies=proxy,
+        #                        )
+        #     if not res.ok:
+        #         raise Exception("error")
+        # except Exception as e:
+        #     res = requests.get(SEARCH_PAGE_URL,
+        #                        params=params,
+        #                        timeout=DEFAULTS_TIMEOUT,
+        #                        headers=HEADERS,
+        #                        proxies=proxy.get(list(proxy.keys())[0]),
+        #                        )
     except Exception as e:
         if attempts < 10:
             return get_urls(keyword, limit_date, update_proxy(proxy), body, page, attempts + 1)
@@ -108,20 +113,25 @@ def get_page(url, title, proxy, limit_date, attempt=0):
     videos = []
     print(url)
     try:
-        try:
-            res = requests.get(url,
-                               timeout=DEFAULTS_TIMEOUT,
-                               headers=HEADERS,
-                               # proxies=proxy,
-                               )
-            if not res.ok:
-                raise Exception("error")
-        except Exception as e:
-            res = requests.get(url,
-                               timeout=DEFAULTS_TIMEOUT,
-                               headers=HEADERS,
-                               proxies=proxy.get(list(proxy.keys())[0]),
-                               )
+        res = requests.get(url,
+                           timeout=DEFAULTS_TIMEOUT,
+                           headers=HEADERS,
+                           proxies=proxy.get(list(proxy.keys())[0]),
+                           )
+        # try:
+        #     res = requests.get(url,
+        #                        timeout=DEFAULTS_TIMEOUT,
+        #                        headers=HEADERS,
+        #                        # proxies=proxy,
+        #                        )
+        #     if not res.ok:
+        #         raise Exception("error")
+        # except Exception as e:
+        #     res = requests.get(url,
+        #                        timeout=DEFAULTS_TIMEOUT,
+        #                        headers=HEADERS,
+        #                        proxies=proxy.get(list(proxy.keys())[0]),
+        #                        )
         if res.ok:
             res_data = BeautifulSoup(res.text)
             body_article = res_data.find("div", {"class": "b-material-body"})
