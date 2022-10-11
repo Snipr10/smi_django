@@ -156,7 +156,7 @@ def get_page(url, title, proxy, limit_date, attempt=0):
                     pass
             date = dateparser.parse(res_data.find("p", {"class": "b-material__date"}).text)
             return {
-                       "date": dateparser.parse(res_data.find("p", {"class": "b-material__date"}).text),
+                       "date": date,
                        "title": title,
                        "text": text.strip(),
                        "href": url,
