@@ -39,7 +39,7 @@ def parsing_thecitym24(keyword, limit_date, proxy, body):
             is_not_stopped = is_error or is_time
             page += 1
             print(f"page {page}")
-            if page > 100:
+            if page > 1:
                 break
             if is_error:
                 break
