@@ -120,7 +120,8 @@ def get_or_create_author(display_link):
         author = models.PostAuthor.objects.filter(profile_id=display_link).first()
         if author is not None:
             return author.username, author.image
-    except Exception:
+    except Exception as e:
+        print(f"get_or_create_author {e}")
         pass
     # author = models.PostAuthor.objects.create(
     #     profile_id=get_sphinx_id(display_link),
