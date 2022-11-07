@@ -161,7 +161,15 @@ URL_DICT = {
                                 },
     "https://www.dp.ru/": {"title": ["h1", {"class": "headline"}],
                            "text": ["div", {"itemprop": "articleBody"}], "delete_first": True
-                           }
+                           },
+    "https://madeinrussia.ru": {"title": ["title", {}],
+                           "text": ["div", {"class":  re.compile('styles_news__content_.*')}], "p": True
+                           },
+    "https://spbdnevnik.ru": {"title": ["h2", {"class":"news-full--element-title"}],
+                                "meta": ["div", {"class": "news-full--element-subtitle"}],
+
+                                "text": ["div", {"class": "news-full--element-wrapper"}], "p": True
+                                }
 }
 
 
@@ -201,7 +209,10 @@ def _get_page_data(url, attempts=0):
                             if c.text and c.text.strip():
                                 text += c.text + "\r\n <br> "
                         except Exception:
-                            pass
+                            try:
+                                text += c + "\r\n <br> "
+                            except Exception:
+                                pass
                     if not text:
                         text += soup.find(name=URL_DICT.get(k).get("meta")[0],
                                   attrs=URL_DICT.get(k).get("meta")[1]).get("content")
@@ -218,7 +229,6 @@ def _get_page_data(url, attempts=0):
                     soup_cont = soup_all[-1]
                 else:
                     soup_cont = soup_all[0]
-                text = ""
 
                 if URL_DICT.get(k).get("manual", False):
                     for c in soup_cont.contents[0].contents:
