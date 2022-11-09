@@ -169,7 +169,9 @@ URL_DICT = {
                                 "meta": ["div", {"class": "news-full--element-subtitle"}],
 
                                 "text": ["div", {"class": "news-full--element-wrapper"}], "p": True
-                                }
+                                },
+    "https://karelinform.ru": {},
+
 }
 
 
@@ -199,6 +201,20 @@ def _get_page_data(url, attempts=0):
                 soup = BeautifulSoup(post.content.decode(URL_DICT.get(k).get("decoder")))
             else:
                 soup = BeautifulSoup(post.text, 'html.parser')
+
+            try:
+                if "https://karelinform.ru" in url:
+                    article_title = soup.find(name="div", attrs={"class": re.compile(".*leading-relaxed.*")}).text
+                    text = ""
+                    for t in soup.find_all(name="div", attrs={"class": re.compile("Common_common.*")}):
+                        text += t.text + "\r\n <br> "
+                    # "https://madeinrussia.ru": {"title": ["title", {}],
+                    #                             "text": ["div", {"class": re.compile('styles_news__content_.*')}], "p": True
+                    #                             },
+                    return article_title, text
+            except Exception:
+                pass
+
             article_title = soup.find(name=URL_DICT.get(k).get("title")[0], attrs=URL_DICT.get(k).get("title")[1]).text
             text = ""
             try:
@@ -268,6 +284,8 @@ def _get_page_data(url, attempts=0):
                 except Exception:
                     pass
             return article_title, text
+
+
     return "", ""
 
 
@@ -334,3 +352,9 @@ def update_text(url, text):
         return text
     except Exception:
         return text
+
+
+if __name__ == '__main__':
+    parsing_smi_url(
+        "https://glasnarod.ru/novosti-regionov/bryanskaya-oblast/kolichestvo-zabolevshih-koronavirusom-v-bryanskoj-oblasti-na-3-fevralya-uvelichilos-na-1-537/",
+        attempts=0)
