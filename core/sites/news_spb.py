@@ -46,8 +46,8 @@ def parsing_news_spb(region, limit_date, proxy):
     articles = []
     i = 0
     is_not_stopped, body, proxy = get_urls(region, limit_date, proxy)
-    if not is_not_stopped:
-        return articles, proxy
+    # if not is_not_stopped:
+    #     return articles, proxy
 
     if len(body) == 0:
         return articles, proxy
@@ -162,8 +162,10 @@ def get_page(articles, article_body, proxy, attempt=0):
                 photos.append(url.split("/news/")[0] + soup_all.find("div", {"class": "img big"}).find("img").get("src"))
             except Exception:
                 pass
-            article_date = dateparser.parse(soup_all.find("div", {"class":"date-time"}).text.encode('ISO-8859-1').decode("windows-1251"))
-
+            try:
+                article_date = dateparser.parse(soup_all.find("div", {"class":"date-time"}).text.encode('ISO-8859-1').decode("windows-1251"))
+            except Exception:
+                article_date = dateparser.parse(soup_all.find("div", {"class": "date-time"}).text)
             articles.append(
                 {"date": article_date,
                  "title": title,
@@ -183,5 +185,5 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 
 if __name__ == '__main__':
-    articles, proxy = parsing_news_spb("http://www.petrogradnews.ru/", datetime.strptime("04/09/2022", "%d/%m/%Y"), None)
+    articles, proxy = parsing_news_spb("http://www.admnews.ru/", datetime.strptime("10/11/2022", "%d/%m/%Y"), None)
     print(1)
