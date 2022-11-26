@@ -7,7 +7,7 @@ from newspaper.configuration import Configuration
 
 from core.sites.utils import update_proxy, stop_proxy
 
-URL_WITHOUT_META = ["https://lenta.ru"]
+URL_WITHOUT_META = ["https://lenta.ru", "https://chistovik.info/"]
 
 URL_DICT = {
     "https://infoneva.ru/": {"title": ["title", {}], "text": ["div", {"class": "text-content"}]},
