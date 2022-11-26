@@ -174,7 +174,10 @@ URL_DICT = {
                               "text": ["div", {"class": "entry-content"}], "p": True
                               },
     "https://karelinform.ru": {},
-
+    "https://www.kommersant.ru": {"title": ["h1", {"itemprop":"headline"}],
+                                "meta": ["h2", {"itemprop": "alternativeHeadline"}],
+                                "text": ["div", {"itemprop": "articleBody"}], "p": True
+                                },
 }
 
 
