@@ -170,6 +170,9 @@ URL_DICT = {
 
                                 "text": ["div", {"class": "news-full--element-wrapper"}], "p": True
                                 },
+    "https://nvdaily.ru": {"title": ["h1", {"class": "cs-entry__title"}],
+                              "text": ["div", {"class": "entry-content"}], "p": True
+                              },
     "https://karelinform.ru": {},
 
 }
