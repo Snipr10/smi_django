@@ -83,7 +83,7 @@ def get_urls(region_url, limit_date, proxy, attempts=0):
                                timeout=DEFAULTS_TIMEOUT
                                )
     except Exception as e:
-        print(e)
+        print(f"attempt {attempts}, {e}, {proxy}")
         # logger.info(str(e))
         if attempts < 10:
             if attempts == 0:
