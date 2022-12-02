@@ -177,7 +177,7 @@ def save_articles(display_link, articles):
                 "author_icon": author_image,
                 "group_id": "",
                 "images": [],
-                "keyword_id": 10000002,
+                "keyword_id": 10000003,
             }
             print(rmq_json_data)
             channel.basic_publish(exchange='',
