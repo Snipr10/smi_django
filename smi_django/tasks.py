@@ -101,7 +101,8 @@ def start_task_parsing_by_time():
                 stop_proxy(proxy)
             save_articles(site.url, articles)
             django.db.close_old_connections()
-            site.last_parsing = update_time_timezone(timezone.localtime())
+            if articles > 0:
+                site.last_parsing = update_time_timezone(timezone.localtime())
             site.taken = 0
             site.save(update_fields=["taken", "last_parsing"])
 
