@@ -92,6 +92,7 @@ def get_urls(region_url, limit_date, proxy, attempts=0):
             print("update_proxy")
             return get_urls(region_url, limit_date, update_proxy(proxy), attempts + 1)
         return False, [], proxy
+    print(proxy.get(list(proxy.keys())[0]))
     print(f"{region_url}: {res.status_code}")
     if res.ok:
         soup = BeautifulSoup(res.text)
