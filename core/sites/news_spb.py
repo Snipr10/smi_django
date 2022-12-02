@@ -87,7 +87,9 @@ def get_urls(region_url, limit_date, proxy, attempts=0):
         # logger.info(str(e))
         if attempts < 10:
             if attempts == 0:
+                print("proxy")
                 return get_urls(region_url, limit_date, proxy, attempts + 1)
+            print("update_proxy")
             return get_urls(region_url, limit_date, update_proxy(proxy), attempts + 1)
         return False, [], proxy
     print(f"{region_url}: {res.status_code}")
@@ -185,5 +187,5 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 
 if __name__ == '__main__':
-    articles, proxy = parsing_news_spb("http://www.admnews.ru/", datetime.strptime("10/11/2022", "%d/%m/%Y"), None)
+    articles, proxy = parsing_news_spb("http://www.frunznews.ru/", datetime.strptime("01/12/2022", "%d/%m/%Y"), None)
     print(1)
