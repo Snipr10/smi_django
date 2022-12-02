@@ -487,7 +487,7 @@ def update_smi_text(parsing_site):
                             PostContent(
                                 content=text,
                                 cache_id=update_post.cache_id,
-                                keyword_id=10000002,
+                                keyword_id=10000005,
                             )
                         )
                         update_post.parsing = 2
@@ -538,7 +538,7 @@ def update_smi():
                     PostContent.objects.create(
                         content=text,
                         cache_id=update_post.cache_id,
-                        keyword_id=10000002,
+                        keyword_id=10000005,
 
                     )
                     update_post.parsing = 2
