@@ -4,27 +4,27 @@ services:
   main_news:
     build: ./
     command: python3 main_news.py
-#  main_f:
-#    build: ./
-#    command: python3 main_vedomosti.py -f
-#  main_s:
-#    build: ./
-#    command: python3 main_vedomosti.py -s
-#  main_t:
-#    build: ./
-#    command: python3 main_vedomosti.py -t
-#  main_a:
-#    build: ./
-#    command: python3 main_vedomosti.py -a
-#  redis:
-#    image: redis:alpine
-#  celery:
-#    build: ./
-#    command: celery -A core worker --loglevel=INFO --concurrency=10
-#    depends_on:
-#      - redis
-#  celery-beat:
-#    build: ./
-#    command: celery -A core beat -l info
-#    depends_on:
-#      - redis
+  main_f:
+    build: ./
+    command: python3 main_vedomosti.py -f
+  main_s:
+    build: ./
+    command: python3 main_vedomosti.py -s
+  main_t:
+    build: ./
+    command: python3 main_vedomosti.py -t
+  main_a:
+    build: ./
+    command: python3 main_vedomosti.py -a
+  redis:
+    image: redis:alpine
+  celery:
+    build: ./
+    command: celery -A core worker --loglevel=INFO --concurrency=10
+    depends_on:
+      - redis
+  celery-beat:
+    build: ./
+    command: celery -A core beat -l info
+    depends_on:
+      - redis
