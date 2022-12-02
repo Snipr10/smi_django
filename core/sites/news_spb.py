@@ -127,6 +127,9 @@ def get_urls(region_url, limit_date, proxy, attempts=0):
 
     elif res.status_code == 404:
         return True, [], proxy
+    elif res.status_code == 502:
+        if attempts < 10:
+            return get_urls(region_url, limit_date, update_proxy(proxy), attempts + 1)
     return True, body, proxy
 
 
