@@ -53,11 +53,10 @@ def get_urls(page, limit_date, proxy, body):
             return False, body, False, proxy
         for table in tables:
             article_date = dateparser.parse(table.find("p", {"class": "news-preview__publish-time"}).text)
-            if article_date.date() >= limit_date.date():
 
-                href = table.find("a", {"class": "news-preview__link"}).attrs.get("href")
-                body.append({"date": article_date, "href": href})
-            else:
+            href = table.find("a", {"class": "news-preview__link"}).attrs.get("href")
+            body.append({"date": article_date, "href": href})
+            if article_date.date() < limit_date.date():
                 return False, body, True, proxy
         return True, body, False, proxy
     else:
