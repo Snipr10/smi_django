@@ -33,7 +33,6 @@ def parsing_radio_url(page, limit_date, proxy, body):
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
 
     if res.ok:
-        new_datas = False
         soup = BeautifulSoup(res.text)
         tables = soup.find("p", {"align": "center"}).find_all("table", {"id": "AutoNumber5"})
         if len(tables) == 0:
@@ -41,14 +40,10 @@ def parsing_radio_url(page, limit_date, proxy, body):
         for table in tables:
 
             article_date = datetime.strptime(table.find("font", {"size": 1}).text, "%d-%m-%Y")
-            if article_date.date() >= limit_date.date():
-                href = table.find("a", {"class": "base"}).attrs.get("href")
-                body.append({"date": article_date, "href": href})
-            else:
-                new_datas = True
-        if new_datas:
-            return False, body, False, proxy
-
+            href = table.find("a", {"class": "base"}).attrs.get("href")
+            body.append({"date": article_date, "href": href})
+            if article_date.date() < limit_date.date():
+                return False, body, False, proxy
         return True, body, False, proxy
     else:
         return parsing_radio_url(page, limit_date, update_proxy(proxy), body)
@@ -73,7 +68,8 @@ def get_page(articles, url, limit_date, proxy, attempt=0):
             for face in soup.find_all("font", {"face": "Arial"}):
                 if len(face.find_all("font", {"size": 1})) > 0:
                     date = datetime.strptime(face.find_all("font", {"size": 1})[-1].text, "%d-%m-%Y")
-                    if date and date.date() >= limit_date.date():
+                    # if date and date.date() >= limit_date.date():
+                    if True:
                         title = face.find_all("font", {"size": 3})[-1].text.encode('ISO-8859-1').decode("windows-1251")
                         text = ''
                         for justify in face.find_all("p", {"align": "justify"}):
