@@ -92,7 +92,6 @@ def get_urls(region_url, limit_date, proxy, attempts=0):
             print("update_proxy")
             return get_urls(region_url, limit_date, update_proxy(proxy), attempts + 1)
         return False, [], proxy
-    print(proxy.get(list(proxy.keys())[0]))
     print(f"{region_url}: {res.status_code}")
     if res.ok:
         soup = BeautifulSoup(res.text)
@@ -108,7 +107,7 @@ def get_urls(region_url, limit_date, proxy, attempts=0):
                 article_href = article.find("a")
                 try:
                     date = dateparser.parse(article_href.get("href").split("/")[2], settings={'DATE_ORDER': 'YMD'}) + timedelta(days=1)
-                    if date < datetime(limit_date.year, limit_date.month, limit_date.day):
+                    if date < datetime(limit_date.year, limit_date.month, limit_date.day) and len(body) > 0:
                         continue
                 except Exception as e:
                     print(e)
@@ -191,5 +190,5 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 
 if __name__ == '__main__':
-    articles, proxy = parsing_news_spb("http://www.frunznews.ru/", datetime.strptime("01/12/2022", "%d/%m/%Y"), None)
+    articles, proxy = parsing_news_spb("http://www.mr-news.ru/", datetime.strptime("04/12/2022", "%d/%m/%Y"), None)
     print(1)
