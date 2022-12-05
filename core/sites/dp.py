@@ -97,14 +97,14 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
             except Exception :
                 site_date = None
             print(site_date)
-            if site_date and site_date.date() < limit_date.date():
-                return False, body, proxy
-            else:
-                body.append({
+
+            body.append({
                         "title": site['Headline'],
                         "href": PAGE_URL + "/" + site['ShortUrl'],
                         "date": site_date
                     })
+            if site_date and site_date.date() < limit_date.date():
+                return False, body, proxy
         return True, body, proxy
 
     elif res.status_code == 404:
