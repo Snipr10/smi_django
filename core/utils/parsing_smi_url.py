@@ -174,6 +174,10 @@ URL_DICT = {
                               "text": ["div", {"class": "entry-content"}], "p": True
                               },
     "https://karelinform.ru": {},
+    "https://mr-7.ru": {"title": ["h1"],
+                        "meta": ["h1", {"class": "_1_qpv"}],
+                        "text": ["div", {"id": "articleBody"}], "p": True,  "decoder": "utf-8"
+                        },
     "https://www.kommersant.ru": {"title": ["h1", {"itemprop":"headline"}],
                                 "meta": ["h2", {"itemprop": "alternativeHeadline"}],
                                 "text": ["div", {"itemprop": "articleBody"}], "p": True
@@ -185,23 +189,35 @@ def _get_page_data(url, attempts=0):
     proxy = None
     for k in URL_DICT.keys():
         if k in url:
+            if "https://mr-7.ru" in url:
+                url = url.replace("https://mr-7.ru/articles/", "https://mr-7.ru/api/v1/get/record?slug=")
             if attempts < 1:
                 try:
                     post = requests.get(url)
                 except Exception:
                     post = requests.get(url, headers={
-                        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'
-                    })
+                            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'
+                        })
             else:
                 proxy = update_proxy(proxy)
                 try:
                     post = requests.get(url, proxies=proxy.get(list(proxy.keys())[0]))
                 except Exception:
                     post = requests.get(url, proxies=proxy.get(list(proxy.keys())[0]), headers={
-                        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'
-                    })
+                            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'
+                        })
 
                 stop_proxy(proxy, error=0, banned=0)
+
+            if "https://mr-7.ru/" in url:
+                post_json = post.json()
+                article_title = post_json['record']['title']
+                try:
+                    text = post_json['record']['subtitle'] +  "\r\n <br> "
+                except Exception:
+                    text = ""
+                text += post_json['record']['body'][1]['data'].replace("</p>", "\r\n<br>").replace("<em>", "").replace("</em>", "")
+                return article_title, text
 
             if URL_DICT.get(k).get("decoder"):
                 soup = BeautifulSoup(post.content.decode(URL_DICT.get(k).get("decoder")))
