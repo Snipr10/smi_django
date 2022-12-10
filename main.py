@@ -78,11 +78,11 @@ def create_rmq(i):
                             "content": text,
                             "created": body.get("created"),
                             "url": url,
-                            "author_name": "",
-                            "author_icon": "",
-                            "group_id": "",
+                            "author_name": body.get("author_name"),
+                            "author_icon": body.get("author_icon"),
+                            "group_id": body.get("group_id"),
                             "images": [],
-                            "keyword_id": 10000003,
+                            "keyword_id": 10000005,
                         }
                         # if save_data(rmq_json_data, ch, i):
                         save_data(rmq_json_data, i)
