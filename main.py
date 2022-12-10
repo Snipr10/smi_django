@@ -119,6 +119,14 @@ if __name__ == '__main__':
                     "forget to activate a virtual environment?"
                 ) from exc
             treads = []
+
+            # z = parsing_smi_url("https://mr-7.ru/articles/2022/12/05/dom-korsaka-na-goncharnoi-ulitse-vnesli-v-reestr-pamiatnikov-news", attempts=0)
+            print("OPEN")
+            try:
+                open_save_chanel(1)
+            except Exception  as e:
+                print(f"error open {e}")
+            print("Done")
             for i in range(10):
                 CHANNELS.update({i: open_save_chanel(i)})
                 treads.append(Process(target=create_rmq, args=(i,)))
