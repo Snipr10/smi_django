@@ -61,7 +61,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
     if res.ok:
         soup = BeautifulSoup(res.text)
 
-        articles = soup.find_all("li", {"class": "object-list__item"})
+        articles = soup.find_all("li", {"class": "news-list__item"})
 
         if len(articles) == 0:
             return False, body, proxy
