@@ -12,7 +12,7 @@ from core.sites.gov_spb.governor_ter import parsing_governor_ter
 
 def start_parsing(limit_date, proxy):
     all_articles = []
-    max_limit = 100
+    max_limit = 1000000
     proxy = None
     limit = 0
     while limit < max_limit:

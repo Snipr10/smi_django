@@ -21,7 +21,7 @@ def parsing_dp(limit_date, proxy):
     page = 0
     body = []
     is_parsing_url = True
-    while page < 500 and is_parsing_url:
+    while page < 5000000 and is_parsing_url:
         is_parsing_url, body, proxy = get_urls(limit_date, proxy, body, page)
         page += 1
         print("parsing_dp page" + str(page))

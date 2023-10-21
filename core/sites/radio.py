@@ -18,7 +18,7 @@ RADIO_URL = "https://www.rtr.spb.ru/radio/"
 
 
 def parsing_radio_url(page, limit_date, proxy, body):
-    if page > 100:
+    if page > 100_000:
         return False, body, False, proxy
     print(f"page {page}")
 

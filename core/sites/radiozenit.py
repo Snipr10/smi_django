@@ -21,7 +21,7 @@ def parsing_radio_zenit(limit_date, proxy, body=[]):
             is_not_stopped, body, is_time, proxy = get_urls(page, limit_date, proxy, body)
             page += 1
             print(f"page {page}")
-            if page > 100:
+            if page > 100_000:
                 break
         except Exception:
             is_not_stopped = False

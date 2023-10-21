@@ -20,7 +20,7 @@ def parsing_news_admin_petr(limit_date, proxy):
     body = []
     is_ok = True
     len = -1
-    while page < 100 and is_ok and len < body.__len__():
+    while page < 100000 and is_ok and len < body.__len__():
         len = body.__len__()
         is_ok, body, proxy = get_urls(page, limit_date, proxy, body)
         page += 1
