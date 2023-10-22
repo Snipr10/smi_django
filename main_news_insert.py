@@ -18,6 +18,8 @@ from core.sites.thecitym24 import parsing_thecitym24
 from core.sites.vecherkaspb import parsing_vecherkaspb
 from core.sites.vedomosti import parsing_vedomosti
 from core.sites.zaks import parsing_zaks
+from core.sites.five_tv import parsing_5_tv
+
 def parsing_key(key_word, last_update, key):
     print(f"start parsing_key {key}")
     try:
