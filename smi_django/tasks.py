@@ -267,7 +267,7 @@ def task_parsing_key():
     # site_key_words = SiteKeyword.objects.filter(site_id__in=[17097923825390536162, 14036259156137978615], taken=0, is_active=1,
 
     site_key_words = SiteKeyword.objects.filter(taken=0, is_active=1,
-                                                keyword_id__in=list(key_words.values_list('id', flat=True))
+                                                # keyword_id__in=list(key_words.values_list('id', flat=True))
                                                 ).exclude(site_id=1813906118771286836).order_by('last_parsing')
     iteration = 0
     MAX_SIZE_PARSE_BY_WORD = 10
