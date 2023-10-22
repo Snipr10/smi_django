@@ -278,10 +278,14 @@ if __name__ == '__main__':
     import multiprocessing
     jobs = []
 
-    for i in range(5):
-        p = multiprocessing.Process(target=func, args=(i, ))
-        jobs.append(p)
-        p.start()
+    while True:
+        try:
+            for i in range(5):
+                p = multiprocessing.Process(target=func, args=(i, ))
+                jobs.append(p)
+                p.start()
 
-    for proc in jobs:
-        proc.join()
+            for proc in jobs:
+                proc.join()
+        except Exception:
+            pass
