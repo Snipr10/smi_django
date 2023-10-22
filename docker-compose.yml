@@ -21,18 +21,18 @@ services:
     build: ./
     command: python3 main_vedomosti.py -a
     restart: always
-#  redis:
-#    image: redis:alpine
-#    restart: always
-#  celery:
-#    build: ./
-#    command: celery -A core worker --loglevel=INFO --concurrency=10
-#    restart: always
-#    depends_on:
-#      - redis
-#  celery-beat:
-#    build: ./
-#    command: celery -A core beat -l info
-#    restart: always
-#    depends_on:
-#      - redis
+  redis:
+    image: redis:alpine
+    restart: always
+  celery:
+    build: ./
+    command: celery -A core worker --loglevel=INFO --concurrency=10
+    restart: always
+    depends_on:
+      - redis
+  celery-beat:
+    build: ./
+    command: celery -A core beat -l info
+    restart: always
+    depends_on:
+      - redis
