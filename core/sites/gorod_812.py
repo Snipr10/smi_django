@@ -49,7 +49,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
         for article in articles:
             try:
                 article_date = dateparser.parse(article.find("time", class_="date updated").attrs.get("datetime"))
-                if page > 100:
+                if page > 100000:
                     return True, body, True, proxy
                 if article_date.date() < limit_date.date():
                     return True, body, True, proxy
