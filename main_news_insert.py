@@ -115,40 +115,9 @@ def parsing_key(key_word, last_update, key):
 
 
 
-if __name__ == '__main__':
 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smi_django.settings')
-    try:
-        from django.core.management import execute_from_command_line
-    except ImportError as exc:
-        raise ImportError(
-            "Couldn't import Django. Are you sure it's installed and "
-            "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate a virtual environment?"
-        ) from exc
 
-    print(1)
-    import django
-
-    django.setup()
-    import django.db
-    from django.db.models import Q
-    from pytz import UTC
-
-    from django.utils import timezone
-    from core.models import GlobalSite, SiteKeyword, Keyword, KeywordSource, Sources
-    from core.sites.utils import save_articles
-    from core.sites.utils import update_time_timezone
-    from core.sites.dp import parsing_dp, PAGE_URL as DP_URL
-    from core.sites.gov_spb.pars_gov import start_parsing
-    from core.sites.news_admin_petr import parsing_news_admin_petr
-    from core.sites.news_spb import parsing_news_spb
-
-    from core.sites.utils import update_proxy, stop_proxy, save_articles, update_time_timezone
-    from core.sites.radio import parsing_radio, RADIO_URL
-    from core.sites.radiozenit import parsing_radio_zenit, RADIO_URL as ZENIT_RADIO_URL
-
-    print(1)
+def func(i):
 
     select_sources = Sources.objects.filter(
         Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
@@ -274,3 +243,45 @@ if __name__ == '__main__':
 #                 SiteKeyword.objects.create(site_id=k, keyword_id=w)
 #             except Exception as e:
 #                 print(e)
+if __name__ == '__main__':
+
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smi_django.settings')
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError as exc:
+        raise ImportError(
+            "Couldn't import Django. Are you sure it's installed and "
+            "available on your PYTHONPATH environment variable? Did you "
+            "forget to activate a virtual environment?"
+        ) from exc
+
+    print(1)
+    import django
+
+    django.setup()
+    import django.db
+    from django.db.models import Q
+    from pytz import UTC
+
+    from django.utils import timezone
+    from core.models import GlobalSite, SiteKeyword, Keyword, KeywordSource, Sources
+    from core.sites.utils import save_articles
+    from core.sites.utils import update_time_timezone
+    from core.sites.dp import parsing_dp, PAGE_URL as DP_URL
+    from core.sites.gov_spb.pars_gov import start_parsing
+    from core.sites.news_admin_petr import parsing_news_admin_petr
+    from core.sites.news_spb import parsing_news_spb
+
+    from core.sites.utils import update_proxy, stop_proxy, save_articles, update_time_timezone
+    from core.sites.radio import parsing_radio, RADIO_URL
+    from core.sites.radiozenit import parsing_radio_zenit, RADIO_URL as ZENIT_RADIO_URL
+    import multiprocessing
+    jobs = []
+
+    for i in range(5):
+        p = multiprocessing.Process(target=func, args=(i, ))
+        jobs.append(p)
+        p.start()
+
+    for proc in jobs:
+        proc.join()
