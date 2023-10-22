@@ -119,12 +119,12 @@ def parsing_key(key_word, last_update, key):
 
 def func(i):
 
-    select_sources = Sources.objects.filter()
-        # Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
-        # status=1)
-    print(2)
+    # select_sources = Sources.objects.filter()
+    #     # Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+    #     # status=1)
+    # print(2)
 
-    key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
+    # key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
     print(3)
 
     key_words = Keyword.objects.filter()
@@ -157,21 +157,21 @@ def func(i):
             try:
                 key_word = key_words.get(id=site_key_word.keyword_id)
             except Exception as e:
+                print(f"start2 {e}")
 
                 site_key_word.is_active = 0
                 site_key_word.last_parsing = update_time_timezone(timezone.localtime())
                 site_key_word.save()
 
-            select_source = select_sources.get(
-                id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
+            # select_source = select_sources.get(
+            #     id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
             last_update = site_key_word.last_parsing
-            if last_update < datetime.datetime(2001, 1, 1, 0, 0, tzinfo=UTC):
-                # depth = key_word.depth
-                retro_date = select_source.retro
-                last_update = datetime.datetime(retro_date.year, retro_date.month, retro_date.day, 0, 0, tzinfo=UTC)
-            time = select_source.sources
-            print("start3")
+            if last_update < datetime.datetime(2022, 1, 1, 0, 0, tzinfo=UTC):
+                last_update = site_key_word.last_parsing
 
+                # depth = key_word.depth
+            print("start3")
+            time = None
             if time is None:
                 time = 10
             if last_update is None or (last_update + datetime.timedelta(minutes=time) <
