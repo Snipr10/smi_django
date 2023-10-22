@@ -34,18 +34,26 @@ if __name__ == '__main__':
     from core.sites.radio import parsing_radio, RADIO_URL
     from core.sites.radiozenit import parsing_radio_zenit, RADIO_URL as ZENIT_RADIO_URL
 
+    print(1)
+
     select_sources = Sources.objects.filter(
         Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
         status=1)
+    print(2)
 
     key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
+    print(3)
 
     key_words = Keyword.objects.filter()
+    print(4)
+
     # site_key_words = SiteKeyword.objects.filter(site_id__in=[17097923825390536162, 14036259156137978615], taken=0, is_active=1,
 
     site_key_words = SiteKeyword.objects.filter(taken=0, is_active=1,
                                                 # keyword_id__in=list(key_words.values_list('id', flat=True))
                                                 ).exclude(site_id=1813906118771286836).order_by('last_parsing')
+    print(5)
+
     iteration = 0
     MAX_SIZE_PARSE_BY_WORD = 10
     site_key_word = site_key_words.first()
