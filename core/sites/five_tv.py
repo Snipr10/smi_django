@@ -109,7 +109,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
             article_date = dateparser.parse(article.text.strip())
             if article_date.date() < limit_date.date():
                 return True, body, True, proxy
-            if page > 100:
+            if page > 100000:
                 return True, body, True, proxy
             if article_date.date() >= limit_date.date():
                 body.append(
