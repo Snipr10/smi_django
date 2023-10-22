@@ -65,7 +65,7 @@ def parsing_tass(keyword, limit_date, proxy, body):
             is_not_stopped = is_error or is_time
             page += 1
             print(f"page {page}")
-            if page > 100:
+            if page > 100000:
                 break
             if is_error:
                 break
