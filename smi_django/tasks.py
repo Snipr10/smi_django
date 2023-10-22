@@ -291,6 +291,7 @@ def task_parsing_key():
             except Exception as e:
                 site_key_word.is_active = 0
                 site_key_word.save()
+                return
             select_source = select_sources.get(
                 id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
             last_update = site_key_word.last_parsing
