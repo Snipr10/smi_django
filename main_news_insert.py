@@ -119,9 +119,9 @@ def parsing_key(key_word, last_update, key):
 
 def func(i):
 
-    select_sources = Sources.objects.filter(
-        Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
-        status=1)
+    select_sources = Sources.objects.filter()
+        # Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+        # status=1)
     print(2)
 
     key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
