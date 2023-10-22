@@ -1,5 +1,116 @@
 import os
 import datetime
+from core.sites.dp import parsing_dp, PAGE_URL as DP_URL
+from core.sites.echo_msk import parsing_echo_msk
+from core.sites.expertnw import parsing_expertnw
+from core.sites.fontanka import parsing_fontanka
+from core.sites.gorod_812 import parsing_gorod_812
+from core.sites.gov_spb.pars_gov import start_parsing
+from core.sites.interfax import parsing_interfax
+from core.sites.moika_78 import parsing_moika78
+from core.sites.news_admin_petr import parsing_news_admin_petr
+from core.sites.news_spb import parsing_news_spb
+from core.sites.novayagazeta import parsing_novayagazeta
+from core.sites.radiorus import parsing_radio_rus
+from core.sites.svoboda_new import parsing_svoboda_new
+from core.sites.tass import parsing_tass
+from core.sites.thecitym24 import parsing_thecitym24
+from core.sites.vecherkaspb import parsing_vecherkaspb
+from core.sites.vedomosti import parsing_vedomosti
+from core.sites.zaks import parsing_zaks
+def parsing_key(key_word, last_update, key):
+    print(f"start parsing_key {key}")
+    try:
+        # https://www.radiorus.ru/
+        if key_word.site_id == 5409945336605195500:
+            print("radiorus")
+            articles, proxy = parsing_radio_rus(key, last_update, update_proxy(None), [])
+            print("radiorus ok")
+        # https://vecherkaspb.ru
+        elif key_word.site_id == 819475629408721317:
+            print("vecherkaspb")
+            articles, proxy = parsing_vecherkaspb(key, last_update, update_proxy(None), [])
+
+        # https://gorod-812.ru
+        elif key_word.site_id == 7881634854484899633:
+            print("gorod-812")
+            articles, proxy = parsing_gorod_812(key, last_update, update_proxy(None), [])
+
+        # https://expertnw.com
+        elif key_word.site_id == 3575266616937685158:
+            print("expertnw")
+            articles, proxy = parsing_expertnw(key, last_update, update_proxy(None), [])
+
+        # https://www.5-tv.ru
+        elif key_word.site_id == 15938616575921065567:
+            print("www.5-tv")
+            articles, proxy = parsing_5_tv(key, last_update, update_proxy(None), [])
+
+        # https://echo.msk.ru
+        elif key_word.site_id == 148582668151048074:
+            print("echo.msk.")
+            articles, proxy = parsing_echo_msk(key, last_update, update_proxy(None), [])
+
+        # https://www.svoboda.org
+        elif key_word.site_id == 9223372036854775807:
+            print("svoboda")
+            articles, proxy = parsing_svoboda_new(key, last_update, update_proxy(None), [])
+
+        # https://moika78.ru
+        elif key_word.site_id == 14576566779249943874:
+            print("moika78")
+            articles, proxy = parsing_moika78(key, last_update, update_proxy(None), [])
+
+        # http://novayagazeta.spb.ru
+        elif key_word.site_id == 14580193992243647856:
+            print("novayagazeta")
+            articles, proxy = parsing_novayagazeta(key, last_update, update_proxy(None), [])
+
+        # https://www.interfax.ru
+        elif key_word.site_id == 7686074743359215703:
+            print("interfax")
+            articles, proxy = parsing_interfax(key, last_update, update_proxy(None), [])
+
+        # https://www.fontanka.ru
+        elif key_word.site_id == 11880147896115333104:
+            print("fontanka")
+            articles, proxy = parsing_fontanka(key, last_update, update_proxy(None), [])
+
+        # https://www.zaks.ru
+        elif key_word.site_id == 8361677330337893298:
+            print("zaks")
+            articles, proxy = parsing_zaks(key, last_update, update_proxy(None), [])
+        # https://www.vedomosti.ru/
+        elif key_word.site_id == 1813906118771286836:
+            print("vedomosti")
+            return
+        elif key_word.site_id == 7878146650456123781:
+            print("tass")
+            articles, proxy = parsing_tass(key, last_update, update_proxy(None), [])
+        elif key_word.site_id == 14935787485712012734:
+            print("tass")
+            articles, proxy = parsing_thecitym24(key, last_update, update_proxy(None), [])
+
+        else:
+            print("site_id not founded")
+            raise Exception("site_id not founded")
+        stop_proxy(proxy)
+
+        # TODO fix
+        print("save")
+        save_articles(key_word.site_id, articles)
+        key_word.taken = 0
+        key_word.last_parsing = update_time_timezone(timezone.localtime())
+        key_word.save(update_fields=["taken", "last_parsing"])
+    except Exception as e:
+        print("Exception" + str(e))
+        print("Exception" + str(key_word.site_id))
+
+        # key_word.taken = 0
+        key_word.is_active = 0
+        key_word.save(update_fields=["taken"])
+        print(e)
+
 
 
 if __name__ == '__main__':
@@ -20,6 +131,7 @@ if __name__ == '__main__':
     django.setup()
     import django.db
     from django.db.models import Q
+    from pytz import UTC
 
     from django.utils import timezone
     from core.models import GlobalSite, SiteKeyword, Keyword, KeywordSource, Sources
