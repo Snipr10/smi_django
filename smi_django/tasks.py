@@ -290,6 +290,8 @@ def task_parsing_key():
                 key_word = key_words.get(id=site_key_word.keyword_id)
             except Exception as e:
                 site_key_word.is_active = 0
+                site_key_word.last_parsing = update_time_timezone(timezone.localtime())
+
                 site_key_word.save()
                 return
             select_source = select_sources.get(
