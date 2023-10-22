@@ -50,7 +50,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
             return True, body, False, proxy
         for article in articles:
             article_date = dateparser.parse(article.find("time").text)
-            if page > 100:
+            if page > 100000:
                 return True, body, True, proxy
             article_title = article.find("h2", class_="entry-title").find("a", rel="bookmark")
 
