@@ -36,7 +36,7 @@ def parsing_vedomosti(keyword, limit_date, proxy, articles):
             is_not_stopped, articles, is_time, proxy, is_error = get_urls(keyword, limit_date, proxy, articles, page)
             page += 1
             print(f"page {page}")
-            if page > 100:
+            if page > 100000:
                 break
             if is_error:
                 break
