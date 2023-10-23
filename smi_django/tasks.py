@@ -261,11 +261,13 @@ def task_parsing_key():
 
     key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
 
-
+    key_words = Keyword.objects.filter(network_id=1, enabled=1,
+                                       id__in=list(key_source.values_list('keyword_id', flat=True))
+                                       )
     # site_key_words = SiteKeyword.objects.filter(site_id__in=[17097923825390536162, 14036259156137978615], taken=0, is_active=1,
 
     site_key_words = SiteKeyword.objects.filter(taken=0, is_active=1,
-                                                # keyword_id__in=list(key_words.values_list('id', flat=True))
+                                                keyword_id__in=list(key_words.values_list('id', flat=True))
                                                 ).exclude(site_id=1813906118771286836).order_by('last_parsing')
     iteration = 0
     MAX_SIZE_PARSE_BY_WORD = 10
@@ -291,9 +293,7 @@ def task_parsing_key():
                 site_key_word.last_parsing = update_time_timezone(timezone.localtime())
 
                 site_key_word.save()
-                key_words = Keyword.objects.filter(network_id=1, enabled=1,
-                                                   id__in=list(key_source.values_list('keyword_id', flat=True))
-                                                   )
+
             select_source = select_sources.get(
                 id=key_source.filter(keyword_id=site_key_word.keyword_id).first().source_id)
             last_update = site_key_word.last_parsing
