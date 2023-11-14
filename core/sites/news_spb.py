@@ -166,12 +166,10 @@ def get_page(region_url, articles, article_body, proxy, attempt=0):
                                 timeout=DEFAULTS_TIMEOUT, data=payload
                                 )
         else:
-            res = requests.get(url, headers={
-                "user-agent": USER_AGENT
-            },
-                               proxies=proxy.get(list(proxy.keys())[0]),
-                               timeout=DEFAULTS_TIMEOUT
-                               )
+            res = requests.post(url, headers=headers,
+                                proxies=proxy.get(list(proxy.keys())[0]),
+                                timeout=DEFAULTS_TIMEOUT, data=payload
+                                )
         if res.ok:
 
             res_json = res.json()
