@@ -119,6 +119,9 @@ def start_parsing(limit_date, proxy):
                 raise Exception("can not parse parsing_governor_disproof")
 
     print("gov parsing stop")
+    now = datetime.now()
+    for a in all_articles:
+        a['date'] = a['date'].replace(hour=now.hour, minute=now.minute)
     return all_articles, proxy
 
 
