@@ -62,25 +62,24 @@ if __name__ == '__main__':
                         if site.url == "http://xn--e1aqccgid7fsa.xn--p1ai/":
                             articles, proxy = parsing_news_admin_petr(site.last_parsing, update_proxy(None))
                             break
-                        if site.url in ["http://www.admnews.ru/",
-                                        "http://www.krgv.ru/",
-                                        "http://www.petrogradnews.ru/",
-                                        "http://www.ksnews.ru/",
-                                        "http://www.news-kron.ru/",
-                                        "http://www.kurort-news.ru/",
-                                        "http://www.mr-news.ru/",
-                                        "http://www.nevnews.ru/",
-                                        # "http://xn--e1aqccgid7fsa.xn--p1ai/",
-                                        "http://www.pd-news.ru/",
-                                        "http://www.primorsknews.ru/",
-                                        "http://www.pushkin-news.ru/",
-                                        "http://www.frunznews.ru/",
-                                        "http://www.news-centre.ru/",
-                                        "http://www.newskolpino.ru/",
-                                        "http://www.kirnews.ru/",
-                                        "http://www.kalininnews.ru/",
-                                        "http://www.vybnews.ru/",
-                                        "http://www.vonews.ru/",
+                        if site.url in ['https://admnews.ru/',
+                                        'https://krgv.ru/',
+                                        'https://petrogradnews.ru/',
+                                        'https://ksnews.ru/',
+                                        'https://news-kron.ru/',
+                                        'https://kurort-news.ru/',
+                                        'https://mr-news.ru/',
+                                        'https://nevnews.ru/',
+                                        'https://pd-news.ru/',
+                                        'https://primorsknews.ru/',
+                                        'https://pushkin-news.ru/',
+                                        'https://frunznews.ru/',
+                                        'https://news-centre.ru/',
+                                        'https://newskolpino.ru/',
+                                        'https://kirnews.ru/',
+                                        'https://kalininnews.ru/',
+                                        'https://vybnews.ru/',
+                                        'https://vonews.ru/'
                                         ]:
                             articles, proxy = parsing_news_spb(site.url, site.last_parsing, update_proxy(None))
                             break
