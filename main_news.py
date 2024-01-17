@@ -64,7 +64,7 @@ if __name__ == '__main__':
                             articles, proxy = parsing_news_admin_petr(site.last_parsing, update_proxy(None))
                             break
                         # htopspb
-                        elif site.url == 15938616575921065567:
+                        elif site.url == "https://tvspb.ru":
                             articles, proxy = parsing_topspb(site.last_parsing, update_proxy(None))
                         elif site.url in ['https://admnews.ru/',
                                         'https://krgv.ru/',
