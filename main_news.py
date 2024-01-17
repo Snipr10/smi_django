@@ -1,6 +1,7 @@
 import os
 import datetime
 
+from core.sites.topspb import parsing_topspb
 
 if __name__ == '__main__':
 
@@ -53,16 +54,19 @@ if __name__ == '__main__':
                         proxy = None
                         if site.url == RADIO_URL:
                             articles, proxy = parsing_radio(site.last_parsing, update_proxy(None))
-                        if site.url == ZENIT_RADIO_URL:
+                        elif site.url == ZENIT_RADIO_URL:
                             articles, proxy = parsing_radio_zenit(site.last_parsing, update_proxy(None), [])
-                        if site.url == "https://www.gov.spb.ru":
+                        elif site.url == "https://www.gov.spb.ru":
                             articles, proxy = start_parsing(site.last_parsing, update_proxy(None))
-                        if site.url == DP_URL:
+                        elif site.url == DP_URL:
                             articles, proxy = parsing_dp(site.last_parsing, update_proxy(None))
-                        if site.url == "http://xn--e1aqccgid7fsa.xn--p1ai/":
+                        elif site.url == "http://xn--e1aqccgid7fsa.xn--p1ai/":
                             articles, proxy = parsing_news_admin_petr(site.last_parsing, update_proxy(None))
                             break
-                        if site.url in ['https://admnews.ru/',
+                        # htopspb
+                        elif site.url == 15938616575921065567:
+                            articles, proxy = parsing_topspb(site.last_parsing, update_proxy(None))
+                        elif site.url in ['https://admnews.ru/',
                                         'https://krgv.ru/',
                                         'https://petrogradnews.ru/',
                                         'https://ksnews.ru/',
