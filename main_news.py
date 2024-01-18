@@ -1,7 +1,6 @@
 import os
 import datetime
 
-from core.sites.topspb import parsing_topspb
 
 if __name__ == '__main__':
 
@@ -36,6 +35,9 @@ if __name__ == '__main__':
             from core.sites.utils import update_proxy, stop_proxy, save_articles, update_time_timezone
             from core.sites.radio import parsing_radio, RADIO_URL
             from core.sites.radiozenit import parsing_radio_zenit, RADIO_URL as ZENIT_RADIO_URL
+            from core.sites.spbdnevnik import parsing_spbdnevnik
+            from core.sites.topspb import parsing_topspb
+
 
             print("start")
             for site in GlobalSite.objects.filter(taken=0, is_keyword=0, last_parsing__lte=update_time_timezone(
@@ -66,6 +68,8 @@ if __name__ == '__main__':
                         # htopspb
                         elif site.url == "https://tvspb.ru":
                             articles, proxy = parsing_topspb(site.last_parsing, update_proxy(None))
+                        elif site.url == "https://spbdnevnik.ru":
+                            articles, proxy = parsing_spbdnevnik(site.last_parsing, update_proxy(None))
                         elif site.url in ['https://admnews.ru/',
                                         'https://krgv.ru/',
                                         'https://petrogradnews.ru/',
