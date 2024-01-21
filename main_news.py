@@ -37,7 +37,7 @@ if __name__ == '__main__':
             from core.sites.radiozenit import parsing_radio_zenit, RADIO_URL as ZENIT_RADIO_URL
             from core.sites.spbdnevnik import parsing_spbdnevnik
             from core.sites.topspb import parsing_topspb
-
+            from core.sites.metronews import parsing_metronews
 
             print("start")
             for site in GlobalSite.objects.filter(taken=0, is_keyword=0, last_parsing__lte=update_time_timezone(
@@ -70,6 +70,9 @@ if __name__ == '__main__':
                             articles, proxy = parsing_topspb(site.last_parsing, update_proxy(None))
                         elif site.url == "https://spbdnevnik.ru":
                             articles, proxy = parsing_spbdnevnik(site.last_parsing, update_proxy(None))
+                        elif site.url == "https://www.metronews.ru":
+                            articles, proxy = parsing_metronews(site.last_parsing, update_proxy(None))
+
                         elif site.url in ['https://admnews.ru/',
                                         'https://krgv.ru/',
                                         'https://petrogradnews.ru/',
