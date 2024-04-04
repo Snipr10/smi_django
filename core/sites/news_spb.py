@@ -53,6 +53,8 @@ def parsing_news_spb(region, limit_date, proxy):
     for article in body:
         print(f"parsing_news_spb {region}" + str(i))
         i += 1
+        if i > 50:
+            break
         try:
             is_time, articles, proxy = get_page(region, articles, article, proxy)
         except Exception:
