@@ -99,9 +99,9 @@ def get_urls(limit_date, proxy, body, time_stamp, attempts=0):
     if res.ok:
         soup = BeautifulSoup(res.text)
 
-        for site in soup.find_all("div", {"class": "material_item"}):
+        for site in soup.find_all("div", {"class": "group flex gap-3"}):
             try:
-                site_date = dateparser.parse(site.attrs['timestamp'])
+                site_date = dateparser.parse(site.attrs['data-timestamp'])
             except Exception:
                 site_date = None
             try:
@@ -145,11 +145,16 @@ def get_page(articles, article_body, proxy, attempt=0):
             text = article_body['text']
 
             try:
-                text += soup.find("div", {"id": "body-text-comp"}).text.strip()
+                text += soup.find("h2").text.strip()
+            except Exception:
+                pass
+
+            try:
+                text += soup.find("div", {"class": "article-body"}).text.strip()
             except Exception:
                 pass
             try:
-                for img in soup.find("div", {"class": "article-header main"}).find_all("img"):
+                for img in soup.find("div", {"class": "article-top"}).find_all("img"):
                     photos.append(img.attrs.get("src", ""))
             except Exception:
                 pass
