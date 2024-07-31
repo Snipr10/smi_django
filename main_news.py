@@ -38,6 +38,10 @@ if __name__ == '__main__':
             from core.sites.spbdnevnik import parsing_spbdnevnik
             from core.sites.topspb import parsing_topspb
             from core.sites.metronews import parsing_metronews
+            from core.sites.piter_news import parsing_piter_news
+            from core.sites.news_myseldon import parsing_news_myseldon
+
+
 
             print("start")
             for site in GlobalSite.objects.filter(taken=0, is_keyword=0, last_parsing__lte=update_time_timezone(
@@ -72,7 +76,10 @@ if __name__ == '__main__':
                             articles, proxy = parsing_spbdnevnik(site.last_parsing, update_proxy(None))
                         elif site.url == "https://www.metronews.ru":
                             articles, proxy = parsing_metronews(site.last_parsing, update_proxy(None))
-
+                        elif site.url == "https://piter-news.net":
+                            articles, proxy = parsing_piter_news(site.last_parsing, update_proxy(None))
+                        elif site.url == "https://news.myseldon.com":
+                            articles, proxy = parsing_news_myseldon(site.last_parsing, update_proxy(None))
                         elif site.url in ['https://admnews.ru/',
                                         'https://krgv.ru/',
                                         'https://petrogradnews.ru/',
