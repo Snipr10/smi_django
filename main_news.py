@@ -40,7 +40,7 @@ if __name__ == '__main__':
             from core.sites.metronews import parsing_metronews
             from core.sites.piter_news import parsing_piter_news
             from core.sites.news_myseldon import parsing_news_myseldon
-
+            from core.sites.raioni import parsing_raioni
 
 
             print("start")
@@ -80,6 +80,8 @@ if __name__ == '__main__':
                             articles, proxy = parsing_piter_news(site.last_parsing, update_proxy(None))
                         elif site.url == "https://news.myseldon.com":
                             articles, proxy = parsing_news_myseldon(site.last_parsing, update_proxy(None))
+                        elif site.url == "https://xn--80asmdh4e.xn--p1ai/":
+                            articles, proxy = parsing_raioni(site.last_parsing, update_proxy(None))
                         elif site.url in ['https://admnews.ru/',
                                         'https://krgv.ru/',
                                         'https://petrogradnews.ru/',

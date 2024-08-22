@@ -11,7 +11,7 @@ from core.sites.utils import stop_proxy, update_proxy, DEFAULTS_TIMEOUT
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
 
 SEARCH_URL = "https://xn--80asmdh4e.xn--p1ai/api/graphql"
-PAGE_URL = "https://xn--80asmdh4e.xn--p1ai/"
+PAGE_URL = "https://районы.рф/"
 
 def parsing_raioni(limit_date, proxy):
     print("parsing_raioni")
