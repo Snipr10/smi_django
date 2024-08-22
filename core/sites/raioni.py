@@ -9,27 +9,27 @@ from bs4 import BeautifulSoup
 from core.sites.utils import stop_proxy, update_proxy, DEFAULTS_TIMEOUT
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
-SEARCH_PAGE_URL = "https://piter-news.net/all"
-PAGE_URL = "https://www.dp.ru"
 
+SEARCH_URL = "https://xn--80asmdh4e.xn--p1ai/api/graphql"
+PAGE_URL = "https://xn--80asmdh4e.xn--p1ai/"
 
-def parsing_news_myseldon(limit_date, proxy):
-    print("parsing_news_myseldon")
+def parsing_raioni(limit_date, proxy):
+    print("parsing_raioni")
     print(limit_date)
     # first_request
     articles = []
-    page = 0
+    page = 1
     body = []
     is_parsing_url = True
 
-    while page < 50 and is_parsing_url:
+    while page < 100 and is_parsing_url:
         is_parsing_url, body, proxy = get_urls(limit_date, proxy, body, page)
         page += 1
-        print("parsing_news_myseldon page" + str(page))
+        print("parsing_raioni page" + str(page))
 
     i = 0
     for article in body:
-        print("parsing_news_myseldon " + str(i))
+        print("parsing_raioni " + str(i))
         i += 1
         try:
             is_time, articles, proxy = get_page(articles, article, proxy)
@@ -40,26 +40,49 @@ def parsing_news_myseldon(limit_date, proxy):
 
 
 def get_urls(limit_date, proxy, body, page, attempts=0):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0',
+        'Accept': '*/*',
+        'Accept-Language': 'ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Referer': 'https://xn--80asmdh4e.xn--p1ai/catalog',
+        'content-type': 'application/json',
+        'Origin': 'https://xn--80asmdh4e.xn--p1ai',
+        'Connection': 'keep-alive',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'Priority': 'u=4'
+    }
+    payload = json.dumps({
+        "operationName": "publicationsShortCardGet",
+        "variables": {
+            "limit": 100,
+            "offset": 0,
+            "publishedAt": "DESC",
+            "pressRelease": False,
+            "districtIds": [
+                "1"
+            ]
+        },
+        "query": "query publicationsShortCardGet($authorId: ID, $categoryIds: [ID!], $categoryUrl: String, $districtIds: [ID!], $districtPublication: Boolean, $ids: [ID!], $limit: Int, $mainline: Boolean, $offset: Int, $pressRelease: Boolean, $publishedAt: OrderDirection, $publishedAtGt: ISO8601Date, $publishedAtLt: ISO8601Date, $title: String, $urgent: Boolean, $url: String) {\n  publicationsGet(\n    authorId: $authorId\n    categoryIds: $categoryIds\n    categoryUrl: $categoryUrl\n    districtIds: $districtIds\n    districtPublication: $districtPublication\n    ids: $ids\n    limit: $limit\n    mainline: $mainline\n    offset: $offset\n    pressRelease: $pressRelease\n    publishedAt: $publishedAt\n    publishedAtGt: $publishedAtGt\n    publishedAtLt: $publishedAtLt\n    title: $title\n    urgent: $urgent\n    url: $url\n  ) {\n    ...PublicationShortCard\n    __typename\n  }\n}\n\nfragment PublicationShortCard on Publication {\n  authorId\n  categories {\n    id\n    name\n    __typename\n  }\n  cover {\n    filename\n    id\n    thumbnailVariantUrl\n    thumbnailWebpVariantUrl\n    __typename\n  }\n  description\n  districtIds\n  id\n  pressRelease\n  publishedAt\n  title\n  urgent\n  url\n  __typename\n}"
+    })
     try:
         if attempts == 0:
-            res = requests.get(
-                f"https://news.myseldon.com/api/Section?utf8=%E2%9C%93&rubricId=4&pageSize=18&pageIndex={page}&requestId=ce128805-9fdd-4678-b835-56c1a328be78&orderBy=1&inTitle=false&articles=false",
-                headers={
-                    "user-agent": USER_AGENT
-                },
-                timeout=DEFAULTS_TIMEOUT
-                )
+            res = requests.post(
+                SEARCH_URL,
+                data=payload,
+                headers=headers,
+                timeout=DEFAULTS_TIMEOUT,
+            )
         else:
-            res = requests.get(
-                f"https://news.myseldon.com/api/Section?utf8=%E2%9C%93&rubricId=4&pageSize=18&pageIndex={page}&requestId=ce128805-9fdd-4678-b835-56c1a328be78&orderBy=1&inTitle=false&articles=false",
-                headers={
-                    "user-agent": USER_AGENT
-                },
+            res = requests.post(
+                SEARCH_URL,
+                data=payload,
+                headers=headers,
                 proxies=proxy.get(list(proxy.keys())[0]),
                 timeout=DEFAULTS_TIMEOUT
                 )
-
-
     except Exception as e:
         stop_proxy(proxy)
         # logger.info(str(e))
@@ -68,13 +91,13 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
         return False, body, proxy
     if res.ok:
 
-        for new in res.json().get("news", []):
+        for new in res.json().get("data", {}).get("publicationsGet", []):
             site_date = None
             try:
-                site_date = dateparser.parse(new.get("date"))
+                site_date = dateparser.parse(new.get("publishedAt"))
                 body.append({
                     "title": new.get("title"),
-                    "href": f"https://news.myseldon.com/ru/news/index/{new.get('''newsId''')}",
+                    "href":  PAGE_URL + new['url'],
                     "date": site_date
                 })
             except Exception:
@@ -147,5 +170,5 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_news_myseldon(datetime.strptime("15/06/2024", "%d/%m/%Y"), None)
+    articles, proxy = parsing_raioni(datetime.strptime("15/06/2024", "%d/%m/%Y"), None)
     print(1)
