@@ -57,8 +57,8 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
     payload = json.dumps({
         "operationName": "publicationsShortCardGet",
         "variables": {
-            "limit": 100,
-            "offset": 0,
+            "limit": page*50,
+            "offset": 50,
             "publishedAt": "DESC",
             "pressRelease": False,
             "districtIds": [
@@ -97,7 +97,7 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
                 site_date = dateparser.parse(new.get("publishedAt"))
                 body.append({
                     "title": new.get("title"),
-                    "href":  PAGE_URL + new['url'],
+                    "href":  new['url'],
                     "date": site_date
                 })
             except Exception:
@@ -117,37 +117,53 @@ def get_page(articles, article_body, proxy, attempt=0):
     sounds = []
     videos = []
     try:
-        url = article_body['href']
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0',
+            'Accept': '*/*',
+            'Accept-Language': 'ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3',
+            'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'Referer': 'https://xn--80asmdh4e.xn--p1ai/2024/08/22/pomnim-proshloe-chtim-geroev-v-muzee-istorii-religii',
+            'content-type': 'application/json',
+            'Origin': 'https://xn--80asmdh4e.xn--p1ai',
+            'Connection': 'keep-alive',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'Priority': 'u=4'
+        }
+        payload = json.dumps({
+            "operationName": "publicationsGet",
+            "variables": {
+                "url": article_body['href']
+            },
+            "query": "query publicationsGet($authorId: ID, $categoryIds: [ID!], $categoryUrl: String, $districtIds: [ID!], $districtPublication: Boolean, $ids: [ID!], $limit: Int, $mainline: Boolean, $offset: Int, $pressRelease: Boolean, $publishedAt: OrderDirection, $publishedAtGt: ISO8601Date, $publishedAtLt: ISO8601Date, $title: String, $urgent: Boolean, $url: String) {\n  publicationsGet(\n    authorId: $authorId\n    categoryIds: $categoryIds\n    categoryUrl: $categoryUrl\n    districtIds: $districtIds\n    districtPublication: $districtPublication\n    ids: $ids\n    limit: $limit\n    mainline: $mainline\n    offset: $offset\n    pressRelease: $pressRelease\n    publishedAt: $publishedAt\n    publishedAtGt: $publishedAtGt\n    publishedAtLt: $publishedAtLt\n    title: $title\n    urgent: $urgent\n    url: $url\n  ) {\n    ...Publication\n    __typename\n  }\n}\n\nfragment Publication on Publication {\n  author {\n    ...Author\n    __typename\n  }\n  authorId\n  categories {\n    ...Category\n    __typename\n  }\n  categoryIds\n  content\n  contentAttachmentIds\n  contentAttachments {\n    ...Attachment\n    __typename\n  }\n  cover {\n    ...Attachment\n    __typename\n  }\n  coverId\n  coverTitle\n  createdAt\n  description\n  districtIds\n  districtPublication\n  editorVersion\n  id\n  mainline\n  pressRelease\n  published\n  publishedAt\n  rssShow\n  title\n  updatedAt\n  urgent\n  url\n  __typename\n}\n\nfragment Author on Author {\n  fio\n  id\n  __typename\n}\n\nfragment Category on Category {\n  cover {\n    ...Attachment\n    __typename\n  }\n  coverId\n  createdAt\n  description\n  id\n  main\n  menu\n  name\n  position\n  shortName\n  subtitle\n  updatedAt\n  url\n  viewType\n  __typename\n}\n\nfragment Attachment on Attachment {\n  byteSize\n  contentType\n  createdAt\n  filename\n  id\n  mainVariantUrl\n  mainWebpVariantUrl\n  thumbnailVariantUrl\n  thumbnailWebpVariantUrl\n  url\n  __typename\n}"
+        })
         if attempt == 0:
 
-            res = requests.get(url, headers={
-                "user-agent": USER_AGENT
-            },
-                               # proxies=proxy.get(list(proxy.keys())[0]),
-                               timeout=DEFAULTS_TIMEOUT
-                               )
+            res = requests.post(SEARCH_URL, headers=headers, data=payload,
+                                # proxies=proxy.get(list(proxy.keys())[0]),
+                                timeout=DEFAULTS_TIMEOUT
+                                )
         else:
-            res = requests.get(url, headers={
-                "user-agent": USER_AGENT
-            },
-                               proxies=proxy.get(list(proxy.keys())[0]),
-                               timeout=DEFAULTS_TIMEOUT
-                               )
+            res = requests.post(SEARCH_URL, headers=headers, data=payload,
+                                proxies=proxy.get(list(proxy.keys())[0]),
+                                timeout=DEFAULTS_TIMEOUT
+                                )
         if res.ok:
-            soup_all = BeautifulSoup(res.text)
+            res_json = res.json()
             text = ""
             try:
-                for d in soup_all.find("div", {"class": "article"}).find_all("div"):
-                    text += d.text
-                    text += "\r\n <br> "
+                for d in res_json['data']['publicationsGet'][0]['content']:
+                    for t in d.get('children'):
+                        text += t.text
+                        text += "\r\n <br> "
             except Exception:
-                text = soup_all.find("div", {"itemprop": "articleBody"}).text
+                pass
             try:
-                for img in soup_all.find("div", {"class": "article"}).find_all("img"):
-                    try:
-                        photos.append(img.get("src"))
-                    except:
-                        pass
+                try:
+                    photos.append(PAGE_URL + res_json['data']['publicationsGet'][0]['cover']['url'])
+                except:
+                    pass
             except Exception:
                 pass
 
@@ -156,7 +172,8 @@ def get_page(articles, article_body, proxy, attempt=0):
                  "title": article_body['title'],
                  "text": text,
                  "photos": photos,
-                 "href": url,
+                 "href": PAGE_URL + article_body['href'],
+
                  })
 
             return False, articles, proxy
@@ -170,5 +187,5 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    articles, proxy = parsing_raioni(datetime.strptime("15/06/2024", "%d/%m/%Y"), None)
+    articles, proxy = parsing_raioni(datetime.strptime("21/08/2024", "%d/%m/%Y"), None)
     print(1)
