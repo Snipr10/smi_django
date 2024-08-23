@@ -106,7 +106,7 @@ if __name__ == '__main__':
                         # parsing_news_spb(region, limit_date, proxy)
                         attempt += 1
                         stop_proxy(proxy)
-                    save_articles(site.url, articles)
+                    save_articles(site.url, articles, site.site_id)
                     django.db.close_old_connections()
                     if len(articles) > 0:
                         site.last_parsing = update_time_timezone(timezone.localtime())

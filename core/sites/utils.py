@@ -95,7 +95,7 @@ def month_from_ru_to_eng(month):
     return out
 
 
-def get_or_create_author(display_link):
+def get_or_create_author(display_link, profile_id):
     usernames = {
         "https://www.svoboda.org": "Радио Свобода",
         "https://www.radiozenit.ru/": "Радио Зенит",
@@ -112,6 +112,10 @@ def get_or_create_author(display_link):
     }
     display_link = str(display_link)
     try:
+        if profile_id:
+            author = models.PostAuthor.objects.filter(profile_id=profile_id).first()
+            if author is not None:
+                return author.username, author.image
         author = models.PostAuthor.objects.filter(url=display_link).first()
         if author is not None:
             return author.username, author.image
@@ -135,7 +139,7 @@ def get_or_create_author(display_link):
     return None, None
 
 
-def save_articles(display_link, articles):
+def save_articles(display_link, articles, id=None):
     posts = []
     posts_content = []
     # photos_content = []
@@ -148,7 +152,7 @@ def save_articles(display_link, articles):
     parameters = pika.URLParameters("amqp://full_posts_parser:nJ6A07XT5PgY@192.168.5.46:5672/smi_tasks")
     connection = pika.BlockingConnection(parameters=parameters)
     channel = connection.channel()
-    author_username, author_image = get_or_create_author(display_link)
+    author_username, author_image = get_or_create_author(display_link, id)
 
     for article in articles:
 
