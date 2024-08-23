@@ -155,7 +155,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             try:
                 for d in res_json['data']['publicationsGet'][0]['content']:
                     for t in d.get('children'):
-                        text += t.text
+                        text += t['text']
                         text += "\r\n <br> "
             except Exception:
                 pass
