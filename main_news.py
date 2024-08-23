@@ -1,6 +1,6 @@
 import os
 import datetime
-
+import time
 
 if __name__ == '__main__':
 
@@ -117,5 +117,6 @@ if __name__ == '__main__':
                     print(f"start_task_parsing_by_time {site.url} {e}")
                     site.taken = 0
                     site.save(update_fields=["taken"])
+            time.sleep(60)
         except Exception as e:
             print(f"Error {e}")
