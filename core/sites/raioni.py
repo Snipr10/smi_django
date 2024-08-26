@@ -18,7 +18,7 @@ def parsing_raioni(limit_date, proxy):
     print(limit_date)
     # first_request
     articles = []
-    page = 1
+    page = 0
     body = []
     is_parsing_url = True
 
@@ -57,8 +57,8 @@ def get_urls(limit_date, proxy, body, page, attempts=0):
     payload = json.dumps({
         "operationName": "publicationsShortCardGet",
         "variables": {
-            "limit": page*50,
-            "offset": 50,
+            "limit": 50,
+            "offset": page*50,
             "publishedAt": "DESC",
             "pressRelease": False,
             "districtIds": [
