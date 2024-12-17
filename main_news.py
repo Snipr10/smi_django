@@ -108,8 +108,8 @@ if __name__ == '__main__':
                         stop_proxy(proxy)
                     save_articles(site.url, articles, site.site_id)
                     django.db.close_old_connections()
-                    if len(articles) > 0:
-                        site.last_parsing = update_time_timezone(timezone.localtime())
+                    # if len(articles) > 0:
+                    site.last_parsing = update_time_timezone(timezone.localtime())
                     site.taken = 0
                     site.save(update_fields=["taken", "last_parsing"])
 
