@@ -55,14 +55,14 @@ def parsing_gismeteo():
         result.append(ParsingPrecipitation(created_date=date_time_with_specified_time,
                                            level=level))
         ids[date_time_with_specified_time] = level
-    save_results = ParsingPrecipitation.objects.filter(created_date__in=list(ids.keys()))
-
-    updates = []
-    for r in save_results:
-        if ids.get(r.created_date) and abs(r.level - ids.get(r.created_date)) >= 0.1:
-            r.level = ids.get(r.created_date)
-            r.save(update_fields=["level"])
-
+    # save_results = ParsingPrecipitation.objects.filter(created_date__in=list(ids.keys()))
+    #
+    # updates = []
+    # for r in save_results:
+    #     if ids.get(r.created_date) and abs(r.level - ids.get(r.created_date)) >= 0.1:
+    #         r.level = ids.get(r.created_date)
+    #         r.save(update_fields=["level"])
+    #
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
