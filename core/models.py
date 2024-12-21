@@ -178,6 +178,13 @@ class ParsingSite(models.Model):
         db_table = 'prsr_parser_global_parsing_sites'
 
 
+class ParsingPrecipitation(models.Model):
+    created_date = models.DateTimeField(db_index=True)
+    level = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        db_table = 'prsr_parser_precipitation'
+
 # class Post(models.Model):
 #     cache_id = models.IntegerField(primary_key=True)
 #     created_date = models.DateTimeField(null=True, blank=True)
