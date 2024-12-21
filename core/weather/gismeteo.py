@@ -61,8 +61,7 @@ def parsing_gismeteo():
     for r in save_results:
         if ids.get(r.created_date) and abs(r.level - ids.get(r.created_date)) >= 0.1:
             r.level = ids.get(r.created_date)
-            updates.append(r)
-    ParsingPrecipitation.objects.bulk_update(updates, fields=['level'])
+            r.save(update_fields=["level"])
 
 
 # Press the green button in the gutter to run the script.
