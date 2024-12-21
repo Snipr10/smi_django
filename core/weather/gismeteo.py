@@ -36,7 +36,7 @@ def parsing_gismeteo():
     current_date = datetime.now().date()
 
     soup_all = BeautifulSoup(response.text)
-    rain = soup_all.find_all("div", {"class": "item-unit unit-blue"})
+    rain = soup_all.find("div", {"class": "widget-row widget-row-precipitation-bars row-with-caption"}).find_all("div", {"class": "row-item"})[:3]
     date = soup_all.find("div", {"class": "widget-row widget-row-datetime-time"}).find_all("div", {"class": "row-item"})[:len(rain)]
     result = []
     for i, d in enumerate(date):
