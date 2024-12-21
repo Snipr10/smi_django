@@ -44,9 +44,10 @@ def parsing_gismeteo():
         date_time_with_specified_time = datetime.combine(current_date, specified_time)
         if now > date_time_with_specified_time:
             date_time_with_specified_time += timedelta(days=1)
-
         result.append(ParsingPrecipitation(created_date=date_time_with_specified_time,
                                            level=float(rain[i].text.replace(",", "."))))
+    ParsingPrecipitation.objects.bulk_update(result, fields=['level'])
+
     ParsingPrecipitation.objects.bulk_create(
         result, batch_size=200, ignore_conflicts=True
     )
