@@ -55,6 +55,9 @@ def parsing_gismeteo():
         result.append(ParsingPrecipitation(created_date=date_time_with_specified_time,
                                            level=level))
         ids[date_time_with_specified_time] = level
+    ParsingPrecipitation.objects.bulk_create(
+        result, batch_size=200, ignore_conflicts=True
+    )
     # save_results = ParsingPrecipitation.objects.filter(created_date__in=list(ids.keys()))
     #
     # updates = []
