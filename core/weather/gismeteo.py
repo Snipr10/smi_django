@@ -36,22 +36,34 @@ def parsing_gismeteo():
     current_date = datetime.now().date()
 
     soup_all = BeautifulSoup(response.text)
-    rain = soup_all.find("div", {"class": "widget-row widget-row-precipitation-bars row-with-caption"}).find_all("div", {"class": "row-item"})[:3]
-    date = soup_all.find("div", {"class": "widget-row widget-row-datetime-time"}).find_all("div", {"class": "row-item"})[:len(rain)]
+    rain = soup_all.find("div", {"class": "widget-row widget-row-precipitation-bars row-with-caption"}).find_all("div",
+                                                                                                                 {
+                                                                                                                     "class": "row-item"})[
+           :3]
+    date = soup_all.find("div", {"class": "widget-row widget-row-datetime-time"}).find_all("div",
+                                                                                           {"class": "row-item"})[
+           :len(rain)]
     result = []
+    ids = {}
+
     for i, d in enumerate(date):
         specified_time = time(*[int(t) for t in d.text.split(":")])
         date_time_with_specified_time = datetime.combine(current_date, specified_time)
         if now > date_time_with_specified_time:
             date_time_with_specified_time += timedelta(days=1)
+        level = float(rain[i].text.replace(",", "."))
         result.append(ParsingPrecipitation(created_date=date_time_with_specified_time,
-                                           pk=date_time_with_specified_time,
-                                           level=float(rain[i].text.replace(",", "."))))
-    ParsingPrecipitation.objects.bulk_update(result, fields=['level'])
+                                           level=level))
+        ids[date_time_with_specified_time] = level
+    save_results = ParsingPrecipitation.objects.filter(created_date__in=list(ids.keys()))
 
-    ParsingPrecipitation.objects.bulk_create(
-        result, batch_size=200, ignore_conflicts=True
-    )
+    updates = []
+    for r in save_results:
+        if ids.get(r.created_date) and abs(r.level - ids.get(r.created_date)) >= 0.1:
+            r.level = ids.get(r.created_date)
+            updates.append(r)
+    ParsingPrecipitation.objects.bulk_update(updates, fields=['level'])
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
