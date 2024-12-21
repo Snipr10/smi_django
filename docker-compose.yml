@@ -5,6 +5,10 @@ services:
     build: ./
     command: python3 main_news.py
     restart: always
+  main_weather:
+    build: ./
+    command: python3 main_weather.py
+    restart: always
   main_f:
     build: ./
     command: python3 main_vedomosti.py -f
