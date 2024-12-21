@@ -48,10 +48,7 @@ def parsing_gismeteo():
         result.append(ParsingPrecipitation(created_date=date_time_with_specified_time,
                                            level=float(rain[i].text.replace(",", "."))))
     ParsingPrecipitation.objects.bulk_create(
-        result,
-        update_conflicts=True,
-        update_fields=["level"],
-        unique_fields=["created_date"],
+        result, batch_size=200, ignore_conflicts=True
     )
 
 # Press the green button in the gutter to run the script.
