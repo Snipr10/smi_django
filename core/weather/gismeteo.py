@@ -39,7 +39,7 @@ def parsing_gismeteo():
     rain = soup_all.find("div", {"class": "widget-row widget-row-precipitation-bars row-with-caption"}).find_all("div",
                                                                                                                  {
                                                                                                                      "class": "row-item"})[
-           :3]
+           :1]
     date = soup_all.find("div", {"class": "widget-row widget-row-datetime-time"}).find_all("div",
                                                                                            {"class": "row-item"})[
            :len(rain)]
