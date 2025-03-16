@@ -32,7 +32,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
                                "user-agent": USER_AGENT
                            },
                            params={"s": keyword},
-                           # proxies=proxy.get(list(proxy.keys())[0]),
+                           proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
     except Exception as e:
@@ -51,18 +51,13 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
             return True, body, False, proxy
         for article in articles:
             try:
-                article_date = None
-                for i in article.contents:
-                    try:
-                        if "[ru]" in i:
-                            article_date = dateparser.parse(i.replace("[ru]", ""))
-                    except:
-                        pass
+                article_date = dateparser.parse(article.find("span", class_='entry-date').text)
+
                 body.append(
                     {
-                        "href": article.find("a", class_="tl-l").get("href"),
+                        "href": article.find("h4", class_='entry-title').find("a").get("href"),
                         "date": article_date,
-                        "title": article.find("a", class_="tl-l").text
+                        "title": article.find("h4", class_='entry-title').text
                     }
                 )
             except Exception as e:
@@ -82,42 +77,31 @@ def get_page(articles, article_body, proxy, attempt=0):
     try:
         url = article_body['href']
         res = requests.get(url, headers={
-            'authority': 'forpost-sz.ru',
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-            'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-            'cache-control': 'max-age=0',
-            'dnt': '1',
-            'sec-ch-ua': '"Not?A_Brand";v="8", "Chromium";v="108", "Google Chrome";v="108"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Linux"',
-            'sec-fetch-dest': 'document',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-site': 'none',
-            'sec-fetch-user': '?1',
-            'upgrade-insecure-requests': '1',
+
             'user-agent': USER_AGENT
         },
-                           # proxies=proxy.get(list(proxy.keys())[0]),
+                           proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
         if res.ok:
             soup = BeautifulSoup(res.text)
-
+            content_part = soup.find("div", class_="entry-content")
             try:
-                for i in soup.find("div", class_="node-content").find_all("img"):
-                    photos.append(PAGE_URL + i.attrs.get("src"))
+                for i in content_part.find_all("img"):
+                    photos.append(i.attrs.get("src"))
             except Exception:
                 pass
 
             date_ = article_body['date']
-            try:
-                date_ = dateparser.parse(soup.find("div", {"class": "tl-w7 tl-t tl-t-s node-byline-date"}).contents[0])
-            except Exception:
-                pass
+            text = ""
+            for p in content_part.find_all("p"):
+                try:
+                    text += p.text + "\r\n <br> "
+                except Exception:
+                    pass
             articles.append({"date": date_,
                              "title": article_body['title'],
-                             "text": soup.find("div", class_="node-content").text.replace(" ",
-                                                                                          "").strip() + "\r\n <br> ",
+                             "text": text,
                              "href": url,
                              "photos": photos,
                              "sounds": sounds,
