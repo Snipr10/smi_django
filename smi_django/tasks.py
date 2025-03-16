@@ -16,6 +16,7 @@ from core.sites.dp import parsing_dp, PAGE_URL as DP_URL
 from core.sites.echo_msk import parsing_echo_msk
 from core.sites.expertnw import parsing_expertnw
 from core.sites.fontanka import parsing_fontanka
+from core.sites.forpost import parsing_forpost
 from core.sites.gorod_812 import parsing_gorod_812
 from core.sites.gov_spb.pars_gov import start_parsing
 from core.sites.interfax import parsing_interfax
@@ -24,6 +25,7 @@ from core.sites.news_admin_petr import parsing_news_admin_petr
 from core.sites.news_spb import parsing_news_spb
 from core.sites.novayagazeta import parsing_novayagazeta
 from core.sites.radiorus import parsing_radio_rus
+from core.sites.spbformat import parsing_spbformat
 from core.sites.svoboda_new import parsing_svoboda_new
 from core.sites.tass import parsing_tass
 from core.sites.thecitym24 import parsing_thecitym24
@@ -345,6 +347,13 @@ def parsing_key(key_word, last_update, key):
         elif key_word.site_id == 7881634854484899633:
             print("gorod-812")
             articles, proxy = parsing_gorod_812(key, last_update, update_proxy(None), [])
+        elif key_word.site_id == 10477612697664616916:
+            print("spbformat")
+            articles, proxy = parsing_spbformat(key, last_update, update_proxy(None), [])
+
+        elif key_word.site_id == 15258307607886849364:
+            print("forpost")
+            articles, proxy = parsing_forpost(key, last_update, update_proxy(None), [])
 
         # https://expertnw.com
         elif key_word.site_id == 3575266616937685158:
