@@ -5,12 +5,12 @@ from bs4 import BeautifulSoup
 from core.sites.utils import update_proxy, DEFAULTS_TIMEOUT
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
-SEARCH_PAGE_URL = "https://forpost-sz.ru/search"
-PAGE_URL = "https://forpost-sz.ru"
+SEARCH_PAGE_URL = "https://spbformat.ru/page/"
+PAGE_URL = "https://spbformat.ru"
 
 
-def parsing_forpost(keyword, limit_date, proxy, body):
-    for p in range(100):
+def parsing_spbformat(keyword, limit_date, proxy, body):
+    for p in range(1, 100):
         is_not_stopped, body, is_time, proxy = get_urls(keyword, limit_date, proxy, body, p)
         if is_not_stopped:
             break
@@ -26,12 +26,13 @@ def parsing_forpost(keyword, limit_date, proxy, body):
 
 def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
     try:
-        res = requests.get(SEARCH_PAGE_URL,
+        url = SEARCH_PAGE_URL + str(page)
+        res = requests.get(url,
                            headers={
                                "user-agent": USER_AGENT
                            },
-                           params={"text": keyword, "p": page},
-                           proxies=proxy.get(list(proxy.keys())[0]),
+                           params={"s": keyword},
+                           # proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
     except Exception as e:
@@ -43,7 +44,7 @@ def get_urls(keyword, limit_date, proxy, body, page, attempts=0):
         soup = BeautifulSoup(res.text)
         articles = []
         try:
-            articles = soup.find_all("div", class_="tl-tmargin")[0].find_all("p")
+            articles = soup.find("div", class_="archive content-container").find_all("div", class_='cntent-container')
         except Exception:
             pass
         if len(articles) == 0:
@@ -103,7 +104,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             soup = BeautifulSoup(res.text)
 
             try:
-                for i in  soup.find("div", class_="node-content").find_all("img"):
+                for i in soup.find("div", class_="node-content").find_all("img"):
                     photos.append(PAGE_URL + i.attrs.get("src"))
             except Exception:
                 pass
@@ -115,7 +116,8 @@ def get_page(articles, article_body, proxy, attempt=0):
                 pass
             articles.append({"date": date_,
                              "title": article_body['title'],
-                             "text": soup.find("div", class_="node-content").text.replace(" ", "").strip() + "\r\n <br> ",
+                             "text": soup.find("div", class_="node-content").text.replace(" ",
+                                                                                          "").strip() + "\r\n <br> ",
                              "href": url,
                              "photos": photos,
                              "sounds": sounds,
@@ -132,4 +134,4 @@ def get_page(articles, article_body, proxy, attempt=0):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    parsing_forpost("тест", datetime.strptime("01/03/2025", "%d/%m/%Y"), None, [])
+    parsing_spbformat("тест", datetime.strptime("01/03/2025", "%d/%m/%Y"), None, [])
