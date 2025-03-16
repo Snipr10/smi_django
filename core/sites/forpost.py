@@ -96,7 +96,7 @@ def get_page(articles, article_body, proxy, attempt=0):
             'upgrade-insecure-requests': '1',
             'user-agent': USER_AGENT
         },
-                           # proxies=proxy.get(list(proxy.keys())[0]),
+                           proxies=proxy.get(list(proxy.keys())[0]),
                            timeout=DEFAULTS_TIMEOUT
                            )
         if res.ok:
