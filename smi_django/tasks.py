@@ -20,6 +20,7 @@ from core.sites.forpost import parsing_forpost
 from core.sites.gorod_812 import parsing_gorod_812
 from core.sites.gov_spb.pars_gov import start_parsing
 from core.sites.interfax import parsing_interfax
+from core.sites.livejournal import parsing_livejournal
 from core.sites.moika_78 import parsing_moika78
 from core.sites.news_admin_petr import parsing_news_admin_petr
 from core.sites.news_spb import parsing_news_spb
@@ -354,7 +355,9 @@ def parsing_key(key_word, last_update, key):
         elif key_word.site_id == 15258307607886849364:
             print("forpost")
             articles, proxy = parsing_forpost(key, last_update, update_proxy(None), [])
-
+        elif key_word.site_id == 589954783193333503:
+            print("parsing_livejournal")
+            articles, proxy = parsing_livejournal(key, last_update, update_proxy(None), [])
         # https://expertnw.com
         elif key_word.site_id == 3575266616937685158:
             print("expertnw")
