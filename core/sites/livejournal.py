@@ -105,6 +105,12 @@ def get_page(articles, article_body, proxy, attempt=0):
             soup = BeautifulSoup(res.text)
 
             artice_content = soup.find("div", class_="aentry-post__content")
+            if not artice_content:
+                artice_content = soup.find("div", class_="entry-content")
+                if not artice_content:
+                    artice_content = soup.find("div", class_="b-singlepost-bodywrapper")
+            if not artice_content:
+                artice_content = soup
             for i in artice_content.find_all("img"):
                 photos.append(i.get("src"))
             articles.append({"date": article_body['date'],
