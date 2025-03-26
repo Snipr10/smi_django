@@ -11,7 +11,7 @@ SIZE = 100
 
 
 def parsing_livejournal(keyword, limit_date, proxy, body):
-    for p in range(100):
+    for p in range(20):
         is_not_stopped, body, is_time, proxy = get_urls(keyword, limit_date, proxy, body, p)
         if is_not_stopped:
             break
